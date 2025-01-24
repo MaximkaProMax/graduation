@@ -7,13 +7,16 @@ function Home() {
     <div className="home">
       <main className="main-content">
         <div className="background-image"></div>
-        <div className="overlay-text">
-          <div className="text-box">Помогаем с выбором фотостудий</div>
-          <div className="text-box">Обработаем все фотографии со съемки</div>
-          <div className="text-box">Подберем лучший вариант для типографии</div>
-          <div className="text-box">Выберем удобные даты для бронирования</div>
-          <button className="cta-button">Создать заявку</button>
+        <div className="description">
+          PhotoProject - молодая компания, занимающаяся организацией фотосессий
         </div>
+        <div className="services">
+          <div className="service-box">Помогаем с выбором фотостудий</div>
+          <div className="service-box">Подберем лучший вариант для типографии</div>
+          <div className="service-box">Обработаем все фотографии со съемки</div>
+          <div className="service-box">Выберем удобные даты для бронирования</div>
+        </div>
+        <button className="cta-button">Создать заявку</button>
       </main>
       <footer className="footer">
         <a href="#">Политика конфиденциальности</a>

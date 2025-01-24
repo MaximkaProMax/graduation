@@ -1,6 +1,15 @@
 /* src/components/Home.css */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap');
+
+body {
+  margin: 0;
+  font-family: 'Montserrat', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
 .home {
-  font-family: Arial, sans-serif;
+  font-family: 'Montserrat', sans-serif;
 }
 
 .main-content {
@@ -9,6 +18,7 @@
   position: relative;
   height: 100vh; /* Устанавливаем высоту на весь экран */
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden; /* Скрываем переполнение */
@@ -27,32 +37,40 @@
   z-index: -1; /* Помещаем фон ниже других элементов */
 }
 
-.overlay-text {
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  gap: 20px;
-  color: white;
+.description {
+  background-color: white; /* Убираем прозрачность */
+  color: black;
+  padding: 20px;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  font-size: 24px;
+  font-weight: 700;
 }
 
-.text-box {
-  background-color: white; /* Устанавливаем белый фон для текстового блока */
-  color: black; /* Устанавливаем цвет текста черным */
-  padding: 20px; /* Увеличиваем отступы */
+.services {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+
+.service-box {
+  background-color: white; /* Убираем прозрачность */
+  color: black;
+  padding: 20px;
   border-radius: 5px;
-  font-size: 24px; /* Увеличиваем размер шрифта */
+  font-size: 24px;
+  width: 300px;
 }
 
 .cta-button {
-  margin-top: 20px; /* Добавляем отступ сверху, чтобы разместить кнопку ниже текста */
+  margin-top: 20px;
   padding: 10px 20px;
   background-color: yellow;
   border: none;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 24px; /* Увеличиваем размер шрифта кнопки */
+  font-size: 24px;
 }
 
 .footer {
