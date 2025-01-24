@@ -1,17 +1,18 @@
-// src/components/Header.js
 import React from 'react';
-import './Header.css'; // Стили твоего компонента
+import { Link } from 'react-router-dom';
+import './Header.css';
 
 function Header() {
   return (
     <header className="header">
-      <h1>PhotoProject</h1>
-      <nav>
+      <div className="logo">PhotoProject Москва</div>
+      <nav className="nav">
         <ul>
-          <li><a href="/">Главная</a></li>
-          <li><a href="/photostudios">Фотостудии</a></li>
-          <li><a href="/printing">Типография</a></li>
-          <li><a href="/booking">Бронирование</a></li>
+          <li><Link to="/">Главная</Link></li>
+          <li><Link to="/photostudios">Фотостудии</Link></li>
+          <li><Link to="/printing">Типография</Link></li>
+          <li><Link to="/booking">Бронирование</Link></li>
+          <li><Link to="#" className="user-profile">Профиль</Link></li>
         </ul>
       </nav>
     </header>
