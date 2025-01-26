@@ -1,11 +1,13 @@
 // src/components/Booking.js
 import React from 'react';
+import Footer from './Footer';
 
 function Booking() {
   return (
     <div className="booking">
       <h2>Бронирование</h2>
-      <p>Заполните форму для бронирования студии.</p>
+      <p>Выберите удобные даты для бронирования наших услуг.</p>
+      <Footer />
     </div>
   );
 }
