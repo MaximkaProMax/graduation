@@ -1,0 +1,88 @@
+/* src/components/Printing.css */
+.printing {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    color: black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+  
+  .main-content {
+    text-align: center;
+  }
+  
+  .printing-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .printing-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 370px;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+  }
+  
+  .printing-image {
+    width: 370px;
+    height: 490px;
+    background-position: center;
+    background-size: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  .printing-image.layflat {
+    background-image: url('/src/components/assets/images/Printing/LayFlat.jpg');
+  }
+  
+  .printing-image.flexbind {
+    background-image: url('/src/components/assets/images/Printing/FlexBind.jpg');
+  }
+  
+  .printing-info {
+    padding: 20px;
+    text-align: center;
+    color: black; /* Изменяем цвет текста на черный */
+  }
+  
+  .printing-info h3 {
+    margin: 10px 0 5px 0; 
+    min-height: 48px;  
+    line-height: 1.2;
+  }
+  
+  .printing-info p {
+    margin: 5px 0;
+    color: black; /* Изменяем цвет текста на черный */
+  }
+  
+  .action-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+  }
+  
+  .order-button {
+    background-color: #ffeb3b;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .favorite-icon {
+    cursor: pointer;
+    font-size: 18px;
+    color: red; 
+    position: absolute;
+    right: 10px;
+  }  
