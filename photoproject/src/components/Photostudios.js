@@ -1,7 +1,6 @@
 // src/components/Photostudios.js
 import React from 'react';
 import './Photostudios.css';
-import Footer from './Footer';
 
 function Photostudios() {
   return (
@@ -60,7 +59,7 @@ function Photostudios() {
             </div>
           </div>
         </div>
-      </div> <Footer />
+      </div>
     </div>
   );
 }

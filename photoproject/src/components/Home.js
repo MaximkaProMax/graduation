@@ -1,7 +1,6 @@
 // src/components/Home.js
 import React from 'react';
 import './Home.css';
-import Footer from './Footer';
 
 function Home() {
   return (
@@ -23,7 +22,6 @@ function Home() {
         </div>
         <button className="cta-button">Создать заявку</button>
       </main>
-      <Footer />
     </div>
   );
 }

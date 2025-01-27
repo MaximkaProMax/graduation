@@ -78,9 +78,12 @@ body {
 }
 
 .cta-button {
+  display: inline-block; /* Ограничиваем размер кнопки */
+  width: auto; /* Добавляем это свойство, чтобы кнопка не растягивалась на всю ширину */
   margin-top: 20px;
   padding: 10px 20px;
-  background-color: yellow;
+  background-color: yellow; /* Задаем цвет кнопки */
+  color: black; /* Возвращаем цвет текста на черный */
   border: none;
   border-radius: 5px;
   cursor: pointer;
