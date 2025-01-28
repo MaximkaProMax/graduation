@@ -1,34 +1,35 @@
+// Login.js
 import React, { useState } from 'react';
-import './Login.css';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './Login.css';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate(); // Хук для навигации
+  const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/login', {
-        username,
-        password,
-      });
+      console.log('Отправка данных на сервер:', { login: username, password });
+      const response = await axios.post('http://localhost:3001/api/users/login', { login: username, password }); // Исправьте URL
+      console.log('Ответ от сервера:', response.data);
 
       if (response.data.success) {
         window.location.href = '/account';
       } else {
-        setError(response.data.message || 'Пользователь не существует. Пожалуйста, зарегистрируйтесь.');
+        setError(response.data.error || 'Неверный логин или пароль.');
       }
     } catch (error) {
+      console.error('Произошла ошибка при попытке входа:', error);
       setError('Произошла ошибка при попытке входа. Пожалуйста, попробуйте позже.');
     }
   };
 
   const handleRegisterClick = () => {
-    navigate('/registration'); // Редирект на страницу регистрации
+    navigate('/registration');
   };
 
   return (
@@ -55,7 +56,7 @@ function Login() {
           <button type="submit">Войти</button>
           {error && <p className="error">{error}</p>}
         </form>
-        <button className="register-button" onClick={handleRegisterClick}>Регистрация</button> {/* Обновим кнопку */}
+        <button className="register-button" onClick={handleRegisterClick}>Регистрация</button>
         <a className="forgot-password" href="/reset-password">Сброс пароля</a>
       </div>
     </div>

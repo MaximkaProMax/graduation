@@ -1,25 +1,35 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Registration.css'; // Не забываем о стилях
+import './Registration.css';
 
 const Registration = () => {
   const [fullName, setFullName] = useState('');
   const [login, setLogin] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
+  const [email, setEmail] = useState(''); // Добавлено поле для электронной почты
+  const [error, setError] = useState('');
+  const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const userData = { fullName, login, phone, password };
+    const userData = { fullName, login, phone, email, password, role: 'user' }; // Добавляем email
 
     try {
-      const response = await axios.post('/api/register', userData); // Замените URL на нужный
-      console.log('Registration Successful:', response.data);
-      alert('Регистрация успешна!');
-      // Здесь вы можете направлять пользователя на страницу авторизации или куда-то еще
+      console.log('Отправка данных на сервер:', userData);
+      const response = await axios.post('http://localhost:3001/api/users/register', userData); // Убедитесь, что URL верный
+      console.log('Ответ от сервера:', response.data);
+
+      if (response.data.success) {
+        alert('Регистрация успешна!');
+        navigate('/login');
+      } else {
+        setError(response.data.error || 'Ошибка регистрации. Пожалуйста, попробуйте ещё раз.');
+      }
     } catch (error) {
-      console.error('Registration Error:', error);
-      alert('Ошибка регистрации. Пожалуйста, попробуйте еще раз.');
+      console.error('Произошла ошибка при отправке запроса:', error);
+      setError('Произошла ошибка при попытке регистрации. Пожалуйста, попробуйте позже.');
     }
   };
 
@@ -55,6 +65,15 @@ const Registration = () => {
               required
             />
           </div>
+          <div className="input-group"> {/* Поле для электронной почты */}
+            <label>Почта</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
+          </div>
           <div className="input-group">
             <label>Пароль</label>
             <input
@@ -64,6 +83,7 @@ const Registration = () => {
               required
             />
           </div>
+          {error && <p className="error">{error}</p>}
           <button type="submit">Зарегистрироваться</button>
         </form>
       </div>
