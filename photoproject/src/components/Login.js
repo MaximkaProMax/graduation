@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import './Login.css';
+import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const navigate = useNavigate(); // Хук для навигации
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -16,7 +18,6 @@ function Login() {
       });
 
       if (response.data.success) {
-        // Redirect to the user's account page
         window.location.href = '/account';
       } else {
         setError(response.data.message || 'Пользователь не существует. Пожалуйста, зарегистрируйтесь.');
@@ -24,6 +25,10 @@ function Login() {
     } catch (error) {
       setError('Произошла ошибка при попытке входа. Пожалуйста, попробуйте позже.');
     }
+  };
+
+  const handleRegisterClick = () => {
+    navigate('/registration'); // Редирект на страницу регистрации
   };
 
   return (
@@ -48,9 +53,10 @@ function Login() {
             />
           </div>
           <button type="submit">Войти</button>
+          {error && <p className="error">{error}</p>}
         </form>
-        {error && <p className="error">{error}</p>}
-        <a href="/reset-password">Сброс пароля</a>
+        <button className="register-button" onClick={handleRegisterClick}>Регистрация</button> {/* Обновим кнопку */}
+        <a className="forgot-password" href="/reset-password">Сброс пароля</a>
       </div>
     </div>
   );

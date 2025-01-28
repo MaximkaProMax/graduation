@@ -6,6 +6,7 @@ import Printing from './components/Printing';
 import Booking from './components/Booking';
 import Home from './components/Home';
 import Login from './components/Login'; // Импортируем компонент Login
+import Registration from './components/Registration'; // Импортируем компонент Registration
 import Footer from './components/Footer'; // Импортируем компонент Footer
 import './App.css';
 
@@ -21,6 +22,7 @@ function App() {
             <Route path="/booking" element={<Booking />} />
             <Route path="/" element={<Home />} /> {/* Главная страница */}
             <Route path="/login" element={<Login />} /> {/* Страница авторизации */}
+            <Route path="/registration" element={<Registration />} /> {/* Страница регистрации */}
           </Routes>
         </main>
         <Footer /> {/* Располагаем футер здесь */}

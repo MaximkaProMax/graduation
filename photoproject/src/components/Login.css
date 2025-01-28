@@ -60,3 +60,17 @@ a {
   margin-top: 10px;
   color: #ffcc00;
 }
+
+.register-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #B6D1DF; /* Задаем цвет кнопки */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
+.register-button:hover {
+  background-color: #e7eceb; /* Цвет при наведении */
+}
