@@ -1,8 +1,14 @@
-// src/components/Photostudios.js
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Photostudios.css';
 
 function Photostudios() {
+  const navigate = useNavigate();
+
+  const handleBookButtonClick = () => {
+    navigate('/calendar');
+  };
+
   return (
     <div className="photostudios">
       <h2>Фотостудии</h2>
@@ -15,7 +21,7 @@ function Photostudios() {
             <p>09:00 - 21:00</p>
             <p>2500₽</p>
             <div className="action-container">
-              <button className="book-button">Забронировать</button>
+              <button className="book-button" onClick={handleBookButtonClick}>Забронировать</button>
               <span className="favorite-icon">❤️</span>
             </div>
           </div>
@@ -28,7 +34,7 @@ function Photostudios() {
             <p>09:00 - 21:00</p>
             <p>1600₽</p>
             <div className="action-container">
-              <button className="book-button">Забронировать</button>
+              <button className="book-button" onClick={handleBookButtonClick}>Забронировать</button>
               <span className="favorite-icon">❤️</span>
             </div>
           </div>
@@ -41,7 +47,7 @@ function Photostudios() {
             <p>09:00 - 21:00</p>
             <p>2200₽</p>
             <div className="action-container">
-              <button className="book-button">Забронировать</button>
+              <button className="book-button" onClick={handleBookButtonClick}>Забронировать</button>
               <span className="favorite-icon">❤️</span>
             </div>
           </div>
@@ -54,7 +60,7 @@ function Photostudios() {
             <p>09:00 - 21:00</p>
             <p>1600₽</p>
             <div className="action-container">
-              <button className="book-button">Забронировать</button>
+              <button className="book-button" onClick={handleBookButtonClick}>Забронировать</button>
               <span className="favorite-icon">❤️</span>
             </div>
           </div>

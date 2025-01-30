@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Printing.css';
 
 const Printing = () => {
   const [printingOptions, setPrintingOptions] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // В реальном приложении данные будут получены из базы данных
@@ -27,6 +29,16 @@ const Printing = () => {
     fetchData();
   }, []);
 
+  const handleOrderClick = (option) => {
+    if (option.name === 'LayFlat') {
+      navigate('/printing-layflat');
+    } else if (option.name === 'FlexBind') {
+      navigate('/printing-flexbind');
+    } else {
+      // Другие действия для других типов печати
+    }
+  };
+
   return (
     <div className="printing">
       <main className="main-content">
@@ -41,7 +53,7 @@ const Printing = () => {
                 <p>{option.description}</p>
                 <p>Форматы: {option.formats.join(' / ')}</p>
                 <div className="action-container">
-                  <button className="order-button">Заказать</button>
+                  <button className="order-button" onClick={() => handleOrderClick(option)}>Заказать</button>
                   <span className="favorite-icon">❤️</span>
                 </div>
               </div>

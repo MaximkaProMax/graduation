@@ -12,6 +12,7 @@ function Header() {
           <li><Link to="/photostudios">Фотостудии</Link></li>
           <li><Link to="/printing">Типография</Link></li>
           <li><Link to="/booking">Бронирования</Link></li>
+          <li><Link to="/cart">Корзина</Link></li>
           <li><Link to="/login">Профиль</Link></li>
         </ul>
       </nav>

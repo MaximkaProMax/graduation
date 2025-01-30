@@ -8,6 +8,10 @@ import Home from './components/Home';
 import Login from './components/Login'; // Импортируем компонент Login
 import Registration from './components/Registration'; // Импортируем компонент Registration
 import Footer from './components/Footer'; // Импортируем компонент Footer
+import PrintingLayFlat from './components/PrintingLayFlat'; // Импортируйте компонент PrintingLayFlat
+import PrintingFlexBind from './components/PrintingFlexBind';
+import Calendar from './components/Calendar'; // Импортируйте компонент Calendar
+import Cart from './components/Cart';  // Импорт компонента Cart
 import './App.css';
 
 function App() {
@@ -23,6 +27,10 @@ function App() {
             <Route path="/" element={<Home />} /> {/* Главная страница */}
             <Route path="/login" element={<Login />} /> {/* Страница авторизации */}
             <Route path="/registration" element={<Registration />} /> {/* Страница регистрации */}
+            <Route path="/printing-layflat" element={<PrintingLayFlat />} /> {/* Типография LayFlat */}
+            <Route path="/printing-flexbind" element={<PrintingFlexBind />} /> {/* Типография FlexBind */}
+            <Route path="/calendar" element={<Calendar />} /> {/* Календарь */}
+            <Route path="/cart" element={<Cart />} /> {/* Корзина */}
           </Routes>
         </main>
         <Footer /> {/* Располагаем футер здесь */}

@@ -1,0 +1,85 @@
+.cart {
+    max-width: 1200px; /* Увеличили ширину контейнера */
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    color: black;
+  }
+  
+  .cart h2 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .cart-content {
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .cart-items {
+    flex: 2;
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: flex-start;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    padding: 20px;
+  }
+  
+  .cart-image {
+    width: 300px; /* Увеличили ширину изображения */
+    height: 300px; /* Увеличили высоту изображения */
+    margin-right: 20px;
+    border-radius: 5px;
+    background-size: cover;
+    background-position: center;
+  }
+  
+  .flex-bind {
+    background-image: url('/src/components/assets/images/Printing/FlexBind_1.jpg');
+  }
+  
+  .studio {
+    background-image: url('/src/components/assets/images/Photostudios/Hot Yellow.png');
+  }
+  
+  .cart-details {
+    flex: 1;
+  }
+  
+  .contact-section {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    margin-left: 20px;
+  }
+  
+  .price-details,
+  .contact-details {
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+  
+  .contact-details {
+    margin-bottom: 20px; /* Создаем пространство между карточками */
+  }
+  
+  .price-details h3,
+  .contact-details h3 {
+    margin-top: 0;
+  }
+  
+  .cart-item h3 {
+    margin-top: 0;
+  }
+  
+  .cart-item p {
+    margin: 5px 0;
+  }  
