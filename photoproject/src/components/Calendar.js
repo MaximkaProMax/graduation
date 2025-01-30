@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Calendar.css';
 
 const Calendar = () => {
@@ -9,6 +10,7 @@ const Calendar = () => {
   const [bookings, setBookings] = useState([]);
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
+  const navigate = useNavigate();
 
   useEffect(() => {
     setCurrentDate(new Date());
@@ -33,6 +35,9 @@ const Calendar = () => {
     setStartTime('09:00');
     setEndTime('10:00');
     event.target.reset();
+
+    // Переход на страницу оплаты
+    navigate('/payment');
   };
 
   const handleMonthChange = (event) => {

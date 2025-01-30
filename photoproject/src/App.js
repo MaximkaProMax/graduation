@@ -12,6 +12,7 @@ import PrintingLayFlat from './components/PrintingLayFlat'; // Импортир�
 import PrintingFlexBind from './components/PrintingFlexBind';
 import Calendar from './components/Calendar'; // Импортируйте компонент Calendar
 import Cart from './components/Cart';  // Импорт компонента Cart
+import Payment from './components/Payment'; 
 import './App.css';
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/printing-flexbind" element={<PrintingFlexBind />} /> {/* Типография FlexBind */}
             <Route path="/calendar" element={<Calendar />} /> {/* Календарь */}
             <Route path="/cart" element={<Cart />} /> {/* Корзина */}
+            <Route path="/payment" element={<Payment />} /> {/* Оплата */}
           </Routes>
         </main>
         <Footer /> {/* Располагаем футер здесь */}
