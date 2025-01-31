@@ -1,12 +1,13 @@
 import React from 'react';
 import './Payment.css';
+import sbpLogo from './assets/images/sbp.png'; // Импортируем логотип
 
 const Payment = () => {
   return (
     <div className="payment-container">
       <div className="payment-header">
-        <img src="/path/to/your/sbp-logo.png" alt="сбп" className="sbp-logo" /> {/* Замените путь к логотипу на ваш */}
-        <h2>Оплата</h2>
+        <img src={sbpLogo} alt="сбп" className="sbp-logo" /> {/* Используем стандартный тег img */}
+        <h2 className="payment-title">Оплата</h2>
       </div>
       <form className="payment-form">
         <div className="form-group">
