@@ -1,5 +1,5 @@
-// src/components/Footer.js
 import React from 'react';
+import { Link } from 'react-router-dom'; // Импортируем Link
 import './Footer.css';
 
 function Footer() {
@@ -10,7 +10,7 @@ function Footer() {
         <div>PhotoProject 2025©</div>
         <a href="#">О компании</a>
         <a href="#">Контакты</a>
-        <a href="#">Отзывы</a>
+        <Link to="/reviews">Отзывы</Link> {/* Используем Link для перехода на страницу отзывов */}
       </footer>
     </div>
   );

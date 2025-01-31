@@ -11,8 +11,11 @@ import Footer from './components/Footer'; // Импортируем компон
 import PrintingLayFlat from './components/PrintingLayFlat'; // Импортируйте компонент PrintingLayFlat
 import PrintingFlexBind from './components/PrintingFlexBind';
 import Calendar from './components/Calendar'; // Импортируйте компонент Calendar
-import Cart from './components/Cart';  // Импорт компонента Cart
-import Payment from './components/Payment'; 
+import Cart from './components/Cart'; // Импорт компонента Cart
+import Payment from './components/Payment'; // Импорт компонента Payment
+import Reviews from './components/Reviews'; // Импорт компонента Reviews
+import Admin from './components/Admin'; // Импорт компонента Admin
+import EditUserGroups from './components/EditUserGroups'; // Импорт компонента EditUserGroups
 import './App.css';
 
 function App() {
@@ -33,6 +36,9 @@ function App() {
             <Route path="/calendar" element={<Calendar />} /> {/* Календарь */}
             <Route path="/cart" element={<Cart />} /> {/* Корзина */}
             <Route path="/payment" element={<Payment />} /> {/* Оплата */}
+            <Route path="/reviews" element={<Reviews />} /> {/* Отзывы */}
+            <Route path="/admin" element={<Admin />} /> {/* Админ */}
+            <Route path="/edit-user-groups" element={<EditUserGroups />} /> {/* Редактирование групп пользователей */}
           </Routes>
         </main>
         <Footer /> {/* Располагаем футер здесь */}

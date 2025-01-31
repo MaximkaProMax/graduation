@@ -7,10 +7,14 @@ const User = sequelize.define('User', {
     primaryKey: true,
     autoIncrement: true,
   },
-  role: {
-    type: DataTypes.STRING,
+  roleId: {
+    type: DataTypes.INTEGER,
     allowNull: false,
-    defaultValue: 'user' // Устанавливаем значение по умолчанию для role
+    references: {
+      model: 'Roles',
+      key: 'roleId',
+    },
+    defaultValue: 2 // Устанавливаем значение по умолчанию для roleId, например, для роли 'User'
   },
   login: {
     type: DataTypes.STRING,
@@ -29,7 +33,7 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    defaultValue: 'missing@address.com' // Добавляем значение по умолчанию для email
+    defaultValue: 'missing@address.com'
   },
   telephone: {
     type: DataTypes.STRING,

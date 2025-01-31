@@ -1,4 +1,3 @@
-// Login.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -14,7 +13,7 @@ function Login() {
     e.preventDefault();
     try {
       console.log('Отправка данных на сервер:', { login: username, password });
-      const response = await axios.post('http://localhost:3001/api/users/login', { login: username, password }); // Исправьте URL
+      const response = await axios.post('http://localhost:3001/api/users/login', { login: username, password });
       console.log('Ответ от сервера:', response.data);
 
       if (response.data.success) {

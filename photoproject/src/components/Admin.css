@@ -1,0 +1,33 @@
+.admin-container {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    text-align: center;
+  }
+  
+  .admin-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Выровняем кнопки по центру */
+    gap: 10px;
+  }
+  
+  .admin-button {
+    width: 263.5px; /* Уменьшаем ширину вдвое */
+    height: 56.5px; /* Уменьшаем высоту вдвое */
+    padding: 10px;
+    background-color: #F0BB29; /* Устанавливаем цвет кнопки */
+    border: none;
+    border-radius: 5px;
+    color: white; /* Устанавливаем цвет шрифта */
+    font-weight: bold;
+    cursor: pointer;
+    text-align: center;
+  }
+  
+  .admin-button:hover {
+    background-color: #e6b800;
+  }  

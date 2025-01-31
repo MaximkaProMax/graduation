@@ -1,9 +1,11 @@
-// config/database.js
-const { Sequelize } = require('sequelize');
+const { Pool } = require('pg');
 
-const sequelize = new Sequelize('photoproject', 'Max', 'Max', {
+const pool = new Pool({
+  user: 'Max',
   host: '127.0.0.1',
-  dialect: 'postgres',
+  database: 'photoproject',
+  password: 'Max',
+  port: 5432,
 });
 
-module.exports = sequelize;
+module.exports = pool;

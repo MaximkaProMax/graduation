@@ -1,4 +1,3 @@
-// routes/reviewRoutes.js
 const express = require('express');
 const Review = require('../models/Reviews');  // Путь должен указывать на 'Reviews'
 const router = express.Router();

@@ -4,7 +4,8 @@ const cors = require('cors');
 const sequelize = require('./config/database');
 const User = require('./models/User');
 const reviewRoute = require('./routes/reviewRoutes');
-const userRoute = require('./routes/userRoutes'); 
+const userRoute = require('./routes/userRoutes');
+const roleRoutes = require('./routes/roleRoutes');  // Импортируем маршрут для ролей
 
 const app = express();
 app.use(cors());
@@ -26,9 +27,10 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// Подключение маршрутов для пользователей и отзывов
+// Подключение маршрутов для пользователей, отзывов и ролей
 app.use('/api/users', userRoute);
 app.use('/api/reviews', reviewRoute);
+app.use('/api/roles', roleRoutes);  // Подключаем маршрут для ролей
 
 // Маршрут для получения информации о пользователях
 app.get('/api/users', async (req, res) => {
