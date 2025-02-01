@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './EditUserGroups.css';
-import { useNavigate } from 'react-router-dom'; // Импортируем useNavigate для перехода
+import { useNavigate } from 'react-router-dom';
 
 const EditUserGroups = () => {
   const [roles, setRoles] = useState([]);
-  const navigate = useNavigate(); // Инициализируем navigate
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchRoles();
@@ -76,7 +76,7 @@ const EditUserGroups = () => {
     <div className="edit-user-groups-container">
       <h2>Редактирование групп пользователей</h2>
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
-      <table>
+      <table className="edit-user-groups-table">
         <thead>
           <tr>
             <th>ID роли</th>
@@ -90,8 +90,8 @@ const EditUserGroups = () => {
               <td>{role.roleId}</td>
               <td>{role.roleName}</td>
               <td>
-                <button onClick={() => handleEditRole(role.roleId)}>Редактировать</button>
-                <button onClick={() => handleDeleteRole(role.roleId)}>Удалить</button>
+                <button className="edit-user-groups-button" onClick={() => handleEditRole(role.roleId)}>Редактировать</button>
+                <button className="edit-user-groups-button" onClick={() => handleDeleteRole(role.roleId)}>Удалить</button>
               </td>
             </tr>
           ))}

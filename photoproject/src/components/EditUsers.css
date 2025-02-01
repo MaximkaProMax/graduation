@@ -1,65 +1,65 @@
 .edit-users-container {
-    max-width: 1000px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  .edit-users-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-  }
-  
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    margin-bottom: 20px;
-  }
-  
-  table th, table td {
-    border: 1px solid #ddd;
-    padding: 10px;
-    text-align: left;
-  }
-  
-  table th {
-    background-color: #f2f2f2;
-  }
-  
-  table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  button {
-    padding: 8px 12px;
-    background-color: #F0BB29;
-    border: none;
-    border-radius: 5px;
-    color: black;
-    font-weight: bold;
-    cursor: pointer;
-    margin-right: 5px;
-  }
-  
-  button:hover {
-    background-color: #e0aa1e;
-  }
-  
-  .add-user-button {
-    margin-top: 10px;
-    width: 100%;
-    padding: 10px;
-  }
-  
-  .back-button {
-    margin-bottom: 20px;
-    padding: 10px;
-    background-color: #6c757d;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .back-button:hover {
-    background-color: #5a6268;
-  }  
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.edit-users-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.edit-users-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.edit-users-table th, .edit-users-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
+  text-align: left;
+}
+
+.edit-users-table th {
+  background-color: #f2f2f2;
+}
+
+.edit-users-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.edit-users-button {
+  padding: 8px 12px;
+  background-color: #F0BB29;
+  border: none;
+  border-radius: 5px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+.edit-users-button:hover {
+  background-color: #e0aa1e;
+}
+
+.add-user-button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+}
+
+.back-button {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
+}

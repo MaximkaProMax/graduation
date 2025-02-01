@@ -9,27 +9,27 @@
   margin-bottom: 20px;
 }
 
-table {
+.edit-user-groups-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
 }
 
-table th, table td {
+.edit-user-groups-table th, .edit-user-groups-table td {
   border: 1px solid #ddd;
   padding: 10px;
   text-align: left;
 }
 
-table th {
+.edit-user-groups-table th {
   background-color: #f2f2f2;
 }
 
-table tr:nth-child(even) {
+.edit-user-groups-table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-button {
+.edit-user-groups-button {
   padding: 8px 12px;
   background-color: #F0BB29;
   border: none;
@@ -40,7 +40,7 @@ button {
   margin-right: 5px;
 }
 
-button:hover {
+.edit-user-groups-button:hover {
   background-color: #e0aa1e;
 }
 

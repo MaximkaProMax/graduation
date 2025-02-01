@@ -94,7 +94,7 @@ const EditUsers = () => {
     <div className="edit-users-container">
       <h2>Редактирование пользователей</h2>
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
-      <table>
+      <table className="edit-users-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -114,8 +114,8 @@ const EditUsers = () => {
               <td>{user.telephone}</td>
               <td>{user.email}</td>
               <td>
-                <button onClick={() => handleEditUser(user.userId)}>Редактировать</button>
-                <button onClick={() => handleDeleteUser(user.userId)}>Удалить</button>
+                <button className="edit-users-button" onClick={() => handleEditUser(user.userId)}>Редактировать</button>
+                <button className="edit-users-button" onClick={() => handleDeleteUser(user.userId)}>Удалить</button>
               </td>
             </tr>
           ))}

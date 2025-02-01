@@ -136,7 +136,6 @@ const EditDatabase = () => {
         });
     }
   };
-
   const handleEditTypography = (typographyId) => {
     const typographyName = prompt('Введите новое название типографии:');
     const typographyFormats = prompt('Введите новые форматы типографии:');
@@ -193,7 +192,7 @@ const EditDatabase = () => {
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
 
       <h3>Фотостудии</h3>
-      <table>
+      <table className="edit-database-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -221,8 +220,8 @@ const EditDatabase = () => {
               <td>{new Date(studio.createdAt).toLocaleDateString()}</td>
               <td>{new Date(studio.updatedAt).toLocaleDateString()}</td>
               <td>
-                <button onClick={() => handleEditStudio(studio.studioId)}>Редактировать</button>
-                <button onClick={() => handleDeleteStudio(studio.studioId)}>Удалить</button>
+                <button className="edit-database-button" onClick={() => handleEditStudio(studio.studioId)}>Редактировать</button>
+                <button className="edit-database-button" onClick={() => handleDeleteStudio(studio.studioId)}>Удалить</button>
               </td>
             </tr>
           ))}
@@ -231,7 +230,7 @@ const EditDatabase = () => {
       <button className="add-studio-button" onClick={handleAddStudio}>Добавить фотостудию</button>
 
       <h3>Типографии</h3>
-      <table>
+      <table className="edit-database-table">
         <thead>
           <tr>
             <th>ID</th>
@@ -265,8 +264,8 @@ const EditDatabase = () => {
               <td>{new Date(typography.createdAt).toLocaleDateString()}</td>
               <td>{new Date(typography.updatedAt).toLocaleDateString()}</td>
               <td>
-                <button onClick={() => handleEditTypography(typography.typographyId)}>Редактировать</button>
-                <button onClick={() => handleDeleteTypography(typography.typographyId)}>Удалить</button>
+                <button className="edit-database-button" onClick={() => handleEditTypography(typography.typographyId)}>Редактировать</button>
+                <button className="edit-database-button" onClick={() => handleDeleteTypography(typography.typographyId)}>Удалить</button>
               </td>
             </tr>
           ))}
