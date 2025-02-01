@@ -1,17 +1,37 @@
-/* src/components/Footer.css */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+.footer-container {
+  flex-shrink: 0;
+}
+
 .footer {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    padding: 20px;
-    color: white;
-  }
-  
-  .footer a {
-    color: white;
-    text-decoration: none;
-  }
-  
-  .footer a:hover {
-    text-decoration: underline;
-  }
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  color: white;
+  background-color: #2c3e50; /* Фон подвала */
+  width: 100%;
+}
+
+.footer a {
+  color: white;
+  text-decoration: none;
+}
+
+.footer a:hover {
+  text-decoration: underline;
+}
+
+.wrapper {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.content {
+  flex: 1;
+}
