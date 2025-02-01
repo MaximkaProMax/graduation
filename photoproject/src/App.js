@@ -18,6 +18,9 @@ import Admin from './components/Admin'; // Импорт компонента Adm
 import EditUserGroups from './components/EditUserGroups'; // Импорт компонента EditUserGroups
 import EditDatabase from './components/EditDatabase';
 import EditUsers from './components/EditUsers';
+import Manager from './components/Manager';
+import Requests from './components/Requests';
+import PersonalData from './components/PersonalData'
 import './App.css';
 
 function App() {
@@ -43,6 +46,9 @@ function App() {
             <Route path="/edit-user-groups" element={<EditUserGroups />} /> {/* Редактирование групп пользователей */}
             <Route path="/admin/edit-users" element={<EditUsers />} /> {/* Редактирование пользователей */}
             <Route path="/admin/edit-database" element={<EditDatabase />} /> {/* Редактирование БД */}
+            <Route path="/manager" element={<Manager />} />  {/* Менеджер БД */}
+            <Route path="/manager/requests" element={<Requests />} />
+            <Route path="/manager/personal-data" element={<PersonalData />} />
           </Routes>
         </main>
         <Footer />

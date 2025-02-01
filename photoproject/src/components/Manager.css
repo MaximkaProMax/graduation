@@ -1,0 +1,25 @@
+.manager-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .manager-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  .manager-button {
+    padding: 10px 20px;
+    background-color: #F0BB29;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+    margin: 10px;
+  }
+  
+  .manager-button:hover {
+    background-color: #e0aa1e;
+  }  
