@@ -1,15 +1,60 @@
+// routes/userRoutes.js
+
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
 const router = express.Router();
-const pool = require('../config/database'); // Импортируем настройку подключения к базе данных
+
+// Получить всех пользователей
+router.get('/', async (req, res) => {
+  try {
+    const users = await User.findAll();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Ошибка получения пользователей:', error.message);
+    res.status(500).json({ error: 'Ошибка получения пользователей' });
+  }
+});
+
+// Получить пользователя по ID
+router.get('/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const user = await User.findByPk(userId);
+    if (!user) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Ошибка получения пользователя:', error.message);
+    res.status(500).json({ error: 'Ошибка получения пользователя' });
+  }
+});
+
+// Создать нового пользователя
+router.post('/', async (req, res) => {
+  try {
+    // Хеширование пароля
+    const hashedPassword = await bcrypt.hash(req.body.password, 10);
+    const userData = {
+      ...req.body,
+      password: hashedPassword,
+    };
+    const user = await User.create(userData);
+    res.status(201).json(user);
+  } catch (error) {
+    console.error('Ошибка создания пользователя:', error.message);
+    res.status(500).json({ error: 'Ошибка создания пользователя' });
+  }
+});
 
 // Регистрация пользователя
 router.post('/register', async (req, res) => {
   const { fullName, login, phone, password, email } = req.body;
 
   try {
-    // Проверка, существует ли уже email или логин
+    // Проверка существования пользователя
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
       return res.status(400).json({ success: false, error: 'Пользователь с таким email уже существует.' });
@@ -22,7 +67,7 @@ router.post('/register', async (req, res) => {
       telephone: phone,
       password: hashedPassword,
       email,
-      roleId: 2 // Пример: установить роль по умолчанию (User)
+      roleId: 2, // Роль по умолчанию (например, User)
     });
 
     res.status(201).json({ success: true, userId: user.userId });
@@ -54,47 +99,35 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Маршрут для получения всех пользователей
-router.get('/', async (req, res) => {
+// Обновить пользователя
+router.put('/:userId', async (req, res) => {
+  const { userId } = req.params;
+
   try {
-    const users = await pool.query('SELECT * FROM "Users"');
-    res.json(users.rows);
-  } catch (err) {
-    console.error(err.message);
+    const [updatedRows] = await User.update(req.body, { where: { userId } });
+    if (updatedRows === 0) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Ошибка обновления пользователя:', error.message);
+    res.status(500).json({ error: 'Ошибка обновления пользователя' });
   }
 });
 
-// Маршрут для обновления роли пользователя
-router.put('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { roleId } = req.body;
-    const updateUser = await pool.query('UPDATE "Users" SET "roleId" = $1 WHERE "userId" = $2 RETURNING *', [roleId, id]);
-    res.json(updateUser.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
+// Удалить пользователя
+router.delete('/:userId', async (req, res) => {
+  const { userId } = req.params;
 
-// Маршрут для добавления нового пользователя
-router.post('/', async (req, res) => {
   try {
-    const { name, roleId } = req.body;
-    const newUser = await pool.query('INSERT INTO "Users" (name, "roleId") VALUES ($1, $2) RETURNING *', [name, roleId]);
-    res.json(newUser.rows[0]);
-  } catch (err) {
-    console.error(err.message);
-  }
-});
-
-// Маршрут для удаления пользователя
-router.delete('/:id', async (req, res) => {
-  try {
-    const { id } = req.params;
-    await pool.query('DELETE FROM "Users" WHERE "userId" = $1', [id]);
-    res.json({ message: 'Пользователь удален' });
-  } catch (err) {
-    console.error(err.message);
+    const deletedRows = await User.destroy({ where: { userId } });
+    if (deletedRows === 0) {
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    res.status(200).json({ success: true });
+  } catch (error) {
+    console.error('Ошибка удаления пользователя:', error.message);
+    res.status(500).json({ error: 'Ошибка удаления пользователя' });
   }
 });
 

@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const Role = require('./Role'); // Импортируем модель Role для создания связей
 
 const User = sequelize.define('User', {
   userId: {
@@ -33,14 +34,14 @@ const User = sequelize.define('User', {
     type: DataTypes.STRING,
     allowNull: false,
     unique: true,
-    defaultValue: 'missing@address.com'
+    defaultValue: 'missing@address.com',
   },
   telephone: {
     type: DataTypes.STRING,
   },
   review: {
     type: DataTypes.TEXT,
-    defaultValue: ''
+    defaultValue: '',
   },
   createdAt: {
     type: DataTypes.DATE,
@@ -50,6 +51,12 @@ const User = sequelize.define('User', {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+}, {
+  tableName: 'Users',
+  timestamps: true,
 });
+
+// Устанавливаем связь между User и Role
+User.belongsTo(Role, { foreignKey: 'roleId', onDelete: 'RESTRICT' });
 
 module.exports = User;

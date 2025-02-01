@@ -10,8 +10,8 @@ const Admin = () => {
       <h2>Страница администратора</h2>
       <div className="admin-buttons">
         <button className="admin-button" onClick={() => navigate('/edit-user-groups')}>Редактировать группы пользователей</button>
-        <button className="admin-button">Редактировать пользователей</button>
-        <button className="admin-button">Редактировать базы данных</button>
+        <button className="admin-button" onClick={() => navigate('/admin/edit-users')}>Редактировать пользователей</button>
+        <button className="admin-button" onClick={() => navigate('/admin/edit-database')}>Редактировать базы данных</button>
       </div>
     </div>
   );

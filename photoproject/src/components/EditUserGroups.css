@@ -2,10 +2,6 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
-  text-align: center;
 }
 
 .edit-user-groups-container h2 {
@@ -31,4 +27,39 @@ table th {
 
 table tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+button {
+  padding: 8px 12px;
+  background-color: #F0BB29;
+  border: none;
+  border-radius: 5px;
+  color: black;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 5px;
+}
+
+button:hover {
+  background-color: #e0aa1e;
+}
+
+.add-role-button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+}
+
+.back-button {
+  margin-bottom: 20px;
+  padding: 10px;
+  background-color: #6c757d;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  background-color: #5a6268;
 }

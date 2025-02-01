@@ -3,20 +3,24 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 const sequelize = require('./config/database');
 const User = require('./models/User');
-const reviewRoute = require('./routes/reviewRoutes');
-const userRoute = require('./routes/userRoutes');
-const roleRoutes = require('./routes/roleRoutes');  // Импортируем маршрут для ролей
+const Role = require('./models/Role'); // Импортируем модель Role
+const userRoutes = require('./routes/userRoutes');
+const roleRoutes = require('./routes/roleRoutes'); // Импортируем маршруты ролей
 
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // Для обработки JSON тела запросов
 
-// Маршруты
+// Подключение маршрутов для пользователей и ролей
+app.use('/api/users', userRoutes);
+app.use('/api/roles', roleRoutes); // Подключаем маршруты ролей
+
+// Маршрут по умолчанию
 app.get('/', (req, res) => {
   res.send('Hello from PhotoProject API!');
 });
 
-// Пример маршрута для создания пользователя
+// Пример маршрута для создания пользователя (остается на всякий случай)
 app.post('/users', async (req, res) => {
   try {
     const user = await User.create(req.body);
@@ -26,11 +30,6 @@ app.post('/users', async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 });
-
-// Подключение маршрутов для пользователей, отзывов и ролей
-app.use('/api/users', userRoute);
-app.use('/api/reviews', reviewRoute);
-app.use('/api/roles', roleRoutes);  // Подключаем маршрут для ролей
 
 // Маршрут для получения информации о пользователях
 app.get('/api/users', async (req, res) => {
@@ -79,10 +78,11 @@ app.delete('/api/users/:userId', async (req, res) => {
   }
 });
 
+// Запуск сервера после синхронизации с базой данных
 sequelize.sync()
   .then(() => {
     app.listen(3001, () => {
-      console.log('Server is running on port 3001');
+      console.log('Сервер запущен на порту 3001');
     });
   })
-  .catch(err => console.error('Database sync error:', err));
+  .catch(err => console.error('Ошибка синхронизации с базой данных:', err));

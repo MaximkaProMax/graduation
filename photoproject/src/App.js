@@ -16,6 +16,8 @@ import Payment from './components/Payment'; // Импорт компонента
 import Reviews from './components/Reviews'; // Импорт компонента Reviews
 import Admin from './components/Admin'; // Импорт компонента Admin
 import EditUserGroups from './components/EditUserGroups'; // Импорт компонента EditUserGroups
+import EditDatabase from './components/EditDatabase'
+import EditUsers from './components/EditUsers';
 import './App.css';
 
 function App() {
@@ -39,6 +41,8 @@ function App() {
             <Route path="/reviews" element={<Reviews />} /> {/* Отзывы */}
             <Route path="/admin" element={<Admin />} /> {/* Админ */}
             <Route path="/edit-user-groups" element={<EditUserGroups />} /> {/* Редактирование групп пользователей */}
+            <Route path="/admin/edit-users" element={<EditUsers />} /> {/* Редактирование пользователей */}
+            <Route path="/admin/edit-database" element={<EditDatabase />} /> {/* Редактирование БД */}
           </Routes>
         </main>
         <Footer /> {/* Располагаем футер здесь */}
