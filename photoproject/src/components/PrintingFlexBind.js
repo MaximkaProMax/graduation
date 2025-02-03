@@ -3,7 +3,6 @@ import './PrintingFlexBind.css';
 
 const PrintingFlexBind = () => {
   const [format, setFormat] = useState('20x30');
-  const [base, setBase] = useState('С основой');
   const [spreads, setSpreads] = useState(2);
   const [lamination, setLamination] = useState('Матовый');
   const [quantity, setQuantity] = useState(1);
@@ -11,10 +10,6 @@ const PrintingFlexBind = () => {
 
   const handleFormatChange = (event) => {
     setFormat(event.target.value);
-  };
-
-  const handleBaseChange = (event) => {
-    setBase(event.target.value);
   };
 
   const handleSpreadsChange = (event) => {
