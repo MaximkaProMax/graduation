@@ -1,30 +1,41 @@
 .booking-container {
-    margin: 20px;
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
+  margin: 20px;
+  padding: 20px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+.booking-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.booking-table th,
+.booking-table td {
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: left;
+}
+
+.booking-table th {
+  background-color: #f2f2f2;
+}
+
+.booking-table tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.booking-table tr:hover {
+  background-color: #ddd;
+}
+
+/* Медиа-запросы для мобильной оптимизации */
+@media (max-width: 768px) {
+  .booking-container {
+    overflow-x: auto; /* Добавляем полосу прокрутки */
   }
-  
+
   .booking-table {
-    width: 100%;
-    border-collapse: collapse;
+    width: 1000px; /* Устанавливаем фиксированную ширину для таблицы */
   }
-  
-  .booking-table th,
-  .booking-table td {
-    border: 1px solid #ddd;
-    padding: 8px;
-    text-align: left;
-  }
-  
-  .booking-table th {
-    background-color: #f2f2f2;
-  }
-  
-  .booking-table tr:nth-child(even) {
-    background-color: #f9f9f9;
-  }
-  
-  .booking-table tr:hover {
-    background-color: #ddd;
-  }  
+}

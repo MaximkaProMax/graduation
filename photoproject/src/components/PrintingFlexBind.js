@@ -7,7 +7,7 @@ const PrintingFlexBind = () => {
   const [spreads, setSpreads] = useState(2);
   const [lamination, setLamination] = useState('Матовый');
   const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState(1024);
+  const [price] = useState(1024); // Цена не изменяется, можно оставить без useState
 
   const handleFormatChange = (event) => {
     setFormat(event.target.value);

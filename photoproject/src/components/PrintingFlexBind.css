@@ -1,80 +1,123 @@
 .printing-flexbind {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start; /* Выровняем элементы по верхнему краю */
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: white;
-    color: black;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-  }
-  
-  .left-section {
-    flex: 1;
-    margin-right: 20px;
-  }
-  
-  .flexbind-image {
-    width: 100%;
-    height: 500px;
-    background-image: url('/src/components/assets/images/Printing/FlexBind_1.jpg'); /* Правильный путь */
-    background-position: center;
-    background-size: cover;
-    border-radius: 5px;
-    margin-bottom: 20px;
-  }
-  
-  .product-description {
-    margin-top: 20px;
-    text-align: left; /* Центрирование по левому краю */
-  }
-  
-  .right-section {
-    flex: 1;
-    display: flex;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Выровняем элементы по верхнему краю */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  color: black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.left-section {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.flexbind-image {
+  width: 100%;
+  height: 500px;
+  background-image: url('/src/components/assets/images/Printing/FlexBind_1.jpg'); /* Правильный путь */
+  background-position: center;
+  background-size: cover;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.product-description {
+  margin-top: 20px;
+  text-align: left; /* Центрирование по левому краю */
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Центрирование по верхнему краю */
+  padding-top: 20px; /* Обеспечиваем, чтобы блок параметров начинался на одной высоте с картинкой */
+  text-align: left; /* Центрирование по левому краю */
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.option label {
+  flex: 1;
+}
+
+.option select,
+.option input {
+  flex: 2;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.total-price {
+  text-align: center; /* Центрирование по центру */
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #C17900; /* Цвет прямоугольника */
+  padding: 10px;
+  border-radius: 5px;
+  color: white; /* Цвет текста белый */
+}
+
+/* Медиа-запросы для мобильной оптимизации */
+@media (max-width: 768px) {
+  .printing-flexbind {
     flex-direction: column;
-    justify-content: flex-start; /* Центрирование по верхнему краю */
-    padding-top: 20px; /* Обеспечиваем, чтобы блок параметров начинался на одной высоте с картинкой */
-    text-align: left; /* Центрирование по левому краю */
-  }
-  
-  h2 {
-    margin-top: 0;
-  }
-  
-  .options {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .option {
-    display: flex;
-    justify-content: space-between;
     align-items: center;
   }
-  
-  .option label {
-    flex: 1;
+
+  .left-section,
+  .right-section {
+    width: 100%;
+    margin-right: 0;
   }
-  
+
+  .left-section {
+    order: 1; /* Картинка отображается первой в мобильной версии */
+  }
+
+  .product-description {
+    order: 2; /* Описание товара отображается вторым */
+  }
+
+  .right-section {
+    order: 3; /* Параметры альбома отображаются третьими */
+  }
+
+  .total-price {
+    order: 4; /* Итоговая цена отображается последней */
+    width: 100%;
+  }
+
+  .option {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .option label,
   .option select,
   .option input {
-    flex: 2;
-    padding: 5px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
+    width: 100%;
+    margin-bottom: 10px;
   }
-  
-  .total-price {
-    text-align: center; /* Центрирование по центру */
-    margin-top: 20px;
-    font-size: 18px;
-    font-weight: bold;
-    background-color: #C17900; /* Цвет прямоугольника */
-    padding: 10px;
-    border-radius: 5px;
-    color: white; /* Цвет текста белый */
-  }  
+}

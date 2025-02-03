@@ -35,3 +35,16 @@ html, body {
 .content {
   flex: 1;
 }
+
+/* Медиа-запросы для мобильной оптимизации */
+@media (max-width: 768px) {
+  .footer {
+    flex-direction: column; /* Переключаем на вертикальное расположение */
+    align-items: flex-start; /* Выравниваем элементы по левому краю */
+  }
+
+  .footer a, 
+  .footer div {
+    margin-bottom: 10px; /* Добавляем отступ снизу для элементов */
+  }
+}
