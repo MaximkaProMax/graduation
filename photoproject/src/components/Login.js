@@ -13,11 +13,14 @@ function Login() {
     e.preventDefault();
     try {
       console.log('Отправка данных на сервер:', { login: username, password });
-      const response = await axios.post('http://localhost:3001/api/users/login', { login: username, password });
+      const response = await axios.post('http://localhost:3001/api/users/login', 
+        { login: username, password },
+        { withCredentials: true } // Добавляем опцию для отправки cookies
+      );
       console.log('Ответ от сервера:', response.data);
 
       if (response.data.success) {
-        window.location.href = '/account';
+        navigate('/manager/personal-data'); // Перенаправление на личные данные
       } else {
         setError(response.data.error || 'Неверный логин или пароль.');
       }

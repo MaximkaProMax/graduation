@@ -1,6 +1,9 @@
+require('dotenv').config(); // Подключаем dotenv для использования .env файла
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const session = require('express-session'); // Импортируем express-session для сессий
 const sequelize = require('./config/database');
 const User = require('./models/User');
 const Role = require('./models/Role'); // Импортируем модель Role
@@ -8,8 +11,19 @@ const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes'); // Импортируем маршруты ролей
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Указываем адрес фронтенда для разрешения CORS
+  credentials: true // Разрешаем отправку cookies
+}));
 app.use(bodyParser.json()); // Для обработки JSON тела запросов
+
+// Настройка сессии
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'temporary_secret_key', // Используем секретный ключ из .env файла или временный ключ
+  resave: false,
+  saveUninitialized: false, // Изменено на false для предотвращения создания пустых сессий
+  cookie: { secure: false } // Убедитесь, что secure: false для локальной разработки
+}));
 
 // Подключение маршрутов для пользователей и ролей
 app.use('/api/users', userRoutes);
@@ -28,53 +42,6 @@ app.post('/users', async (req, res) => {
   } catch (error) {
     console.error('Ошибка создания пользователя:', error.message);
     res.status(500).json({ error: 'Server error' });
-  }
-});
-
-// Маршрут для получения информации о пользователях
-app.get('/api/users', async (req, res) => {
-  try {
-    const users = await User.findAll();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error('Ошибка получения пользователей:', error.message);
-    res.status(500).json({ error: 'Ошибка получения пользователей' });
-  }
-});
-
-// Маршрут для обновления информации о пользователе
-app.put('/api/users/:userId', async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
-    }
-
-    await User.update(req.body, { where: { userId } });
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Ошибка обновления пользователя:', error.message);
-    res.status(500).json({ error: 'Ошибка обновления пользователя' });
-  }
-});
-
-// Маршрут для удаления пользователя
-app.delete('/api/users/:userId', async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
-    }
-
-    await User.destroy({ where: { userId } });
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Ошибка удаления пользователя:', error.message);
-    res.status(500).json({ error: 'Ошибка удаления пользователя' });
   }
 });
 

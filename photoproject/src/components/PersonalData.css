@@ -1,31 +1,31 @@
 .personal-data-container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    text-align: center;
-  }
-  
-  .personal-data-container h2 {
-    margin-bottom: 20px;
-  }
-  
-  .buttons-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 10px;
-  }
-  
-  .personal-data-button {
-    padding: 10px 20px;
-    background-color: #F0BB29;
-    border: none;
-    border-radius: 5px;
-    color: white;
-    font-weight: bold;
-    cursor: pointer;
-  }
-  
-  .personal-data-button:hover {
-    background-color: #e0aa1e;
-  }  
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  text-align: center;
+}
+
+.personal-data-container h2 {
+  margin-bottom: 20px;
+}
+
+.buttons-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.personal-data-button {
+  padding: 10px 20px;
+  background-color: #F0BB29;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.personal-data-button:hover {
+  background-color: #e0aa1e;
+}

@@ -20,7 +20,8 @@ import EditDatabase from './components/EditDatabase';
 import EditUsers from './components/EditUsers';
 import Manager from './components/Manager';
 import Requests from './components/Requests';
-import PersonalData from './components/PersonalData'
+import PersonalData from './components/PersonalData';
+import EditPersonalData from './components/EditPersonalData'; // Импортируем компонент EditPersonalData
 import './App.css';
 
 function App() {
@@ -49,6 +50,7 @@ function App() {
             <Route path="/manager" element={<Manager />} />  {/* Менеджер БД */}
             <Route path="/manager/requests" element={<Requests />} />
             <Route path="/manager/personal-data" element={<PersonalData />} />
+            <Route path="/manager/edit-personal-data" element={<EditPersonalData />} /> {/* Редактирование личных данных */}
           </Routes>
         </main>
         <Footer />

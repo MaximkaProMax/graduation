@@ -1,5 +1,3 @@
-// routes/userRoutes.js
-
 const express = require('express');
 const bcrypt = require('bcrypt');
 const User = require('../models/User');
@@ -13,22 +11,6 @@ router.get('/', async (req, res) => {
   } catch (error) {
     console.error('Ошибка получения пользователей:', error.message);
     res.status(500).json({ error: 'Ошибка получения пользователей' });
-  }
-});
-
-// Получить пользователя по ID
-router.get('/:userId', async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
-    }
-    res.status(200).json(user);
-  } catch (error) {
-    console.error('Ошибка получения пользователя:', error.message);
-    res.status(500).json({ error: 'Ошибка получения пользователя' });
   }
 });
 
@@ -57,6 +39,7 @@ router.post('/register', async (req, res) => {
     // Проверка существования пользователя
     const existingUser = await User.findOne({ where: { email } });
     if (existingUser) {
+      console.log('Пользователь с таким email уже существует');
       return res.status(400).json({ success: false, error: 'Пользователь с таким email уже существует.' });
     }
 
@@ -92,6 +75,10 @@ router.post('/login', async (req, res) => {
       return res.status(400).json({ success: false, error: 'Неверный логин или пароль.' });
     }
 
+    // Сохраняем userId в сессии
+    req.session.userId = user.userId;
+    console.log(`User ${user.userId} logged in. Session: `, req.session);
+
     res.status(200).json({ success: true, userId: user.userId });
   } catch (error) {
     console.error('Ошибка авторизации:', error.message);
@@ -99,19 +86,76 @@ router.post('/login', async (req, res) => {
   }
 });
 
-// Обновить пользователя
-router.put('/:userId', async (req, res) => {
-  const { userId } = req.params;
+// Получить данные авторизованного пользователя
+router.get('/user', async (req, res) => {
+  console.log('Получение данных пользователя. Session: ', req.session);
+
+  let userId = req.session.userId; // Предполагаем, что идентификатор пользователя хранится в сессии
+  console.log('Полученный userId из сессии:', userId);
+
+  if (!userId) {
+    console.log('Пользователь не авторизован');
+    return res.status(401).json({ error: 'Пользователь не авторизован' });
+  }
+
+  // Преобразование userId в число, если это строка
+  userId = parseInt(userId, 10);
+
+  if (isNaN(userId)) {
+    console.error(`Ошибка получения пользователя: неверный синтаксис для типа integer: ${userId}`);
+    return res.status(500).json({ error: `Ошибка получения пользователя: неверный синтаксис для типа integer: ${userId}` });
+  }
 
   try {
-    const [updatedRows] = await User.update(req.body, { where: { userId } });
-    if (updatedRows === 0) {
+    const user = await User.findByPk(userId, {
+      attributes: ['name', 'login', 'telephone', 'email']
+    });
+    if (!user) {
+      console.log('Пользователь не найден');
       return res.status(404).json({ error: 'Пользователь не найден' });
     }
+    console.log('Данные пользователя: ', user);
+    res.status(200).json(user);
+  } catch (error) {
+    console.error('Ошибка получения данных пользователя:', error.message);
+    res.status(500).json({ error: 'Ошибка получения данных пользователя' });
+  }
+});
+
+// Обновить данные авторизованного пользователя
+router.put('/user', async (req, res) => {
+  let userId = req.session.userId; // Предполагаем, что идентификатор пользователя хранится в сессии
+  const { name, login, telephone, email, password } = req.body;
+
+  console.log('Обновление данных пользователя. Session: ', req.session);
+
+  if (!userId) {
+    console.log('Пользователь не авторизован');
+    return res.status(401).json({ error: 'Пользователь не авторизован' });
+  }
+
+  // Преобразование userId в число, если это строка
+  userId = parseInt(userId, 10);
+
+  if (isNaN(userId)) {
+    console.error(`Ошибка обновления данных пользователя: неверный синтаксис для типа integer: ${userId}`);
+    return res.status(500).json({ error: `Ошибка обновления данных пользователя: неверный синтаксис для типа integer: ${userId}` });
+  }
+
+  try {
+    const [updatedRows] = await User.update(
+      { name, login, telephone, email, password },
+      { where: { userId } }
+    );
+    if (updatedRows === 0) {
+      console.log('Пользователь не найден');
+      return res.status(404).json({ error: 'Пользователь не найден' });
+    }
+    console.log('Данные успешно обновлены');
     res.status(200).json({ success: true });
   } catch (error) {
-    console.error('Ошибка обновления пользователя:', error.message);
-    res.status(500).json({ error: 'Ошибка обновления пользователя' });
+    console.error('Ошибка обновления данных пользователя:', error.message);
+    res.status(500).json({ error: 'Ошибка обновления данных пользователя' });
   }
 });
 
@@ -119,11 +163,20 @@ router.put('/:userId', async (req, res) => {
 router.delete('/:userId', async (req, res) => {
   const { userId } = req.params;
 
+  // Преобразование userId в число
+  const parsedUserId = parseInt(userId, 10);
+  if (isNaN(parsedUserId)) {
+    console.error(`Ошибка удаления пользователя: неверный синтаксис для типа integer: ${userId}`);
+    return res.status(500).json({ error: `Ошибка удаления пользователя: неверный синтаксис для типа integer: ${userId}` });
+  }
+
   try {
-    const deletedRows = await User.destroy({ where: { userId } });
+    const deletedRows = await User.destroy({ where: { userId: parsedUserId } });
     if (deletedRows === 0) {
+      console.log('Пользователь не найден');
       return res.status(404).json({ error: 'Пользователь не найден' });
     }
+    console.log('Пользователь успешно удален');
     res.status(200).json({ success: true });
   } catch (error) {
     console.error('Ошибка удаления пользователя:', error.message);
