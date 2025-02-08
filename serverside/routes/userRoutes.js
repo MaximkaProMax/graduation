@@ -159,6 +159,34 @@ router.put('/user', async (req, res) => {
   }
 });
 
+// Обновить пароль пользователя
+router.put('/update-password', async (req, res) => {
+  const { login, currentPassword, newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { login } });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+    }
+
+    const isMatch = await bcrypt.compare(currentPassword, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ success: false, message: 'Неверный текущий пароль' });
+    }
+
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+
+    user.password = hashedPassword;
+    await user.save();
+
+    res.json({ success: true, message: 'Пароль успешно обновлен' });
+  } catch (error) {
+    console.error('Ошибка при обновлении пароля:', error);
+    res.status(500).json({ success: false, message: 'Ошибка сервера' });
+  }
+});
+
 // Удалить пользователя
 router.delete('/:userId', async (req, res) => {
   const { userId } = req.params;
