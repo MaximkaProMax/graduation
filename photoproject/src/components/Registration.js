@@ -4,17 +4,17 @@ import axios from 'axios';
 import './Registration.css';
 
 const Registration = () => {
-  const [fullName, setFullName] = useState('');
+  const [name, setName] = useState(''); // Переименовано с fullName на name
   const [login, setLogin] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
-  const [email, setEmail] = useState(''); // Добавлено поле для электронной почты
+  const [email, setEmail] = useState('');
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const userData = { fullName, login, phone, email, password, role: 'user' }; // Добавляем email
+    const userData = { name, login, phone, email, password, role: 'user' }; // Переименовано с fullName на name
 
     try {
       console.log('Отправка данных на сервер:', userData);
@@ -42,8 +42,8 @@ const Registration = () => {
             <label>ФИО</label>
             <input
               type="text"
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
+              value={name} // Переименовано с fullName на name
+              onChange={(e) => setName(e.target.value)} // Переименовано с setFullName на setName
               required
             />
           </div>

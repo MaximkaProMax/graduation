@@ -26,6 +26,7 @@ const EditPersonalData = () => {
       })
       .catch(error => {
         console.error('Ошибка при получении данных пользователя:', error);
+        setErrorMessage('Ошибка при получении данных пользователя');
       });
   };
 

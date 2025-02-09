@@ -4,6 +4,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const session = require('express-session'); // Импортируем express-session для сессий
+const cookieParser = require('cookie-parser'); // Импортируем cookie-parser для работы с cookies
+const jwt = require('jsonwebtoken'); // Импортируем jsonwebtoken для работы с JWT
 const sequelize = require('./config/database');
 const User = require('./models/User');
 const Role = require('./models/Role'); // Импортируем модель Role
@@ -16,6 +18,7 @@ app.use(cors({
   credentials: true // Разрешаем отправку cookies
 }));
 app.use(bodyParser.json()); // Для обработки JSON тела запросов
+app.use(cookieParser()); // Для работы с cookies
 
 // Настройка сессии
 app.use(session({
@@ -24,6 +27,18 @@ app.use(session({
   saveUninitialized: false, // Изменено на false для предотвращения создания пустых сессий
   cookie: { secure: false } // Убедитесь, что secure: false для локальной разработки
 }));
+
+// Middleware для проверки JWT токенов
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
 
 // Подключение маршрутов для пользователей и ролей
 app.use('/api/users', userRoutes);
