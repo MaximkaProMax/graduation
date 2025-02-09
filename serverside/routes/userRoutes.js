@@ -72,7 +72,7 @@ router.post('/register', async (req, res) => {
   }
 });
 
-// Авторизация пользователя
+// Маршрут для входа пользователя
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
@@ -186,7 +186,7 @@ router.put('/update-password', authenticateToken, async (req, res) => {
 // Маршрут для обновления существующего пользователя
 router.put('/:userId', async (req, res) => {
   const { userId } = req.params;
-  const { name, login, telephone, email, password } = req.body;
+  const { name, login, telephone, email, currentPassword, newPassword } = req.body;
 
   try {
     const user = await User.findByPk(userId);
@@ -195,14 +195,18 @@ router.put('/:userId', async (req, res) => {
       return res.status(404).json({ message: 'Пользователь не найден' });
     }
 
+    if (currentPassword && newPassword) {
+      const isMatch = await bcrypt.compare(currentPassword, user.password);
+      if (!isMatch) {
+        return res.status(400).json({ success: false, message: 'Текущий пароль неверен' });
+      }
+      user.password = await bcrypt.hash(newPassword, 10);
+    }
+
     user.name = name;
     user.login = login;
     user.telephone = telephone;
     user.email = email;
-
-    if (password) {
-      user.password = await bcrypt.hash(password, 10);
-    }
 
     await user.save();
 
@@ -253,6 +257,7 @@ router.post('/send-2fa-code', async (req, res) => {
   }
 });
 
+// Маршрут для проверки кода двухфакторной аутентификации
 router.post('/verify-2fa-code', async (req, res) => {
   const { code, email } = req.body;
 

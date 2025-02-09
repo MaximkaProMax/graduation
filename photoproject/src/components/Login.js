@@ -63,6 +63,7 @@ function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
           <div className="input-group">
@@ -71,6 +72,7 @@ function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              required
             />
           </div>
           <button type="submit">Войти</button>
@@ -81,6 +83,7 @@ function Login() {
                 type="text"
                 value={twoFactorCode}
                 onChange={(e) => setTwoFactorCode(e.target.value)}
+                required
               />
               <button type="button" onClick={handleVerifyTwoFactorCode}>Подтвердить</button>
             </div>

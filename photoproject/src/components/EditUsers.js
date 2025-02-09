@@ -7,6 +7,11 @@ const EditUsers = () => {
   const [users, setUsers] = useState([]);
   const [editableUser, setEditableUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmNewPassword, setConfirmNewPassword] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -30,39 +35,68 @@ const EditUsers = () => {
     setEditableUser({ ...editableUser, [name]: value });
   };
 
+  const handlePasswordChange = (e) => {
+    const { name, value } = e.target;
+    if (name === 'currentPassword') {
+      setCurrentPassword(value);
+    } else if (name === 'newPassword') {
+      setNewPassword(value);
+    } else if (name === 'confirmNewPassword') {
+      setConfirmNewPassword(value);
+    }
+  };
+
   const handleSaveUser = () => {
-    const { userId, name, login, telephone, email, password } = editableUser;
+    const { userId, name, login, telephone, email } = editableUser;
 
     if (name && login && telephone && email) {
-      const updateData = { name, login, telephone, email, password };
+      const updateData = {
+        name,
+        login,
+        telephone,
+        email,
+        currentPassword,
+        newPassword,
+      };
 
-      if (userId) {
-        // Обновление существующего пользователя
-        axios.put(`http://localhost:3001/api/users/${userId}`, updateData)
-          .then(() => {
-            console.log('Пользователь успешно отредактирован');
-            fetchUsers();
-            setIsEditing(false);
-            setEditableUser({});
-          })
-          .catch(error => {
-            console.error('Ошибка при редактировании пользователя:', error);
-          });
-      } else {
-        // Добавление нового пользователя
-        axios.post('http://localhost:3001/api/users', updateData)
-          .then(() => {
-            console.log('Пользователь успешно добавлен');
-            fetchUsers();
-            setIsEditing(false);
-            setEditableUser({});
-          })
-          .catch(error => {
-            console.error('Ошибка при добавлении пользователя:', error);
-          });
+      if (currentPassword && newPassword && confirmNewPassword) {
+        if (newPassword !== confirmNewPassword) {
+          setErrorMessage('Новый пароль и подтверждение пароля не совпадают');
+          setSuccessMessage('');
+          return;
+        }
       }
+
+      console.log('Отправка данных на сервер:', updateData);
+
+      axios.put(`http://localhost:3001/api/users/${userId}`, updateData)
+        .then(response => {
+          if (response.data.success) {
+            console.log('Данные пользователя успешно обновлены');
+            fetchUsers();
+            setIsEditing(false);
+            setCurrentPassword('');
+            setNewPassword('');
+            setConfirmNewPassword('');
+            setErrorMessage('');
+            setSuccessMessage('Данные пользователя успешно обновлены');
+          } else {
+            setErrorMessage(response.data.message || 'Ошибка при обновлении данных пользователя');
+            setSuccessMessage('');
+          }
+        })
+        .catch(error => {
+          if (error.response && error.response.status === 400) {
+            setErrorMessage('Текущий пароль неверен');
+          } else {
+            setErrorMessage('Ошибка при обновлении данных пользователя');
+          }
+          setSuccessMessage('');
+          console.error('Ошибка при обновлении данных пользователя:', error);
+        });
     } else {
-      console.error('Все поля должны быть заполнены');
+      setErrorMessage('Все поля должны быть заполнены');
+      setSuccessMessage('');
     }
   };
 
@@ -74,6 +108,11 @@ const EditUsers = () => {
   const handleCancelEdit = () => {
     setIsEditing(false);
     setEditableUser({});
+    setCurrentPassword('');
+    setNewPassword('');
+    setConfirmNewPassword('');
+    setErrorMessage('');
+    setSuccessMessage('');
   };
 
   const handleDeleteUser = (userId) => {
@@ -102,6 +141,8 @@ const EditUsers = () => {
     <div className="edit-users-container">
       <h2>Редактирование пользователей</h2>
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
+      {errorMessage && <div className="error-message">{errorMessage}</div>}
+      {successMessage && <div className="success-message">{successMessage}</div>}
       <table className="edit-users-table">
         <thead>
           <tr>
