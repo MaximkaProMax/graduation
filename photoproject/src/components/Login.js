@@ -28,7 +28,11 @@ function Login() {
       }
     } catch (error) {
       console.error('Произошла ошибка при попытке входа:', error);
-      setErrorMessage('Произошла ошибка при попытке входа. Пожалуйста, попробуйте позже.');
+      if (error.response && error.response.status === 404) {
+        setErrorMessage('Пользователь не найден. Пожалуйста, зарегистрируйтесь.');
+      } else {
+        setErrorMessage('Произошла ошибка при попытке входа. Пожалуйста, попробуйте позже.');
+      }
     }
   };
 
