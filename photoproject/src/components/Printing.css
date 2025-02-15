@@ -25,14 +25,14 @@
   background-color: white;
   border: 1px solid #ddd;
   border-radius: 5px;
-  width: 370px;
+  width: 490px;
   margin-bottom: 20px;
   padding-bottom: 20px;
 }
 
 .printing-image {
-  width: 370px;
-  height: 490px;
+  width: 490px;
+  height: 370px;
   background-position: center;
   background-size: cover;
   border-top-left-radius: 5px;
