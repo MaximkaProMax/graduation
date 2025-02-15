@@ -5,12 +5,8 @@ import './PersonalData.css';
 const PersonalData = () => {
   const navigate = useNavigate();
 
-  const handleChangePassword = () => {
-    // Логика для изменения пароля
-  };
-
   const handleEditPersonalData = () => {
-    // Логика для редактирования личных данных
+    navigate('/manager/edit-personal-data'); // Переход на страницу редактирования личных данных
   };
 
   const handleViewRequests = () => {
@@ -21,7 +17,6 @@ const PersonalData = () => {
     <div className="personal-data-container">
       <h2>Управление личными данными</h2>
       <div className="buttons-container">
-        <button className="personal-data-button" onClick={handleChangePassword}>Изменение пароля</button>
         <button className="personal-data-button" onClick={handleEditPersonalData}>Редактирование личных данных</button>
         <button className="personal-data-button" onClick={handleViewRequests}>Просмотр заявок</button>
       </div>

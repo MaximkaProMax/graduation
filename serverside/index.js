@@ -1,19 +1,50 @@
+require('dotenv').config(); // Подключаем dotenv для использования .env файла
+
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
+const session = require('express-session'); // Импортируем express-session для сессий
+const cookieParser = require('cookie-parser'); // Импортируем cookie-parser для работы с cookies
+const jwt = require('jsonwebtoken'); // Импортируем jsonwebtoken для работы с JWT
 const sequelize = require('./config/database');
 const User = require('./models/User');
 const Role = require('./models/Role'); // Импортируем модель Role
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes'); // Импортируем маршруты ролей
+const photostudiosRoutes = require('./routes/photostudiosRoutes'); // Импортируем маршруты фотостудий
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: 'http://localhost:3000', // Указываем адрес фронтенда для разрешения CORS
+  credentials: true // Разрешаем отправку cookies
+}));
 app.use(bodyParser.json()); // Для обработки JSON тела запросов
+app.use(cookieParser()); // Для работы с cookies
+
+// Настройка сессии
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'temporary_secret_key', // Используем секретный ключ из .env файла или временный ключ
+  resave: false,
+  saveUninitialized: false, // Изменено на false для предотвращения создания пустых сессий
+  cookie: { secure: false } // Убедитесь, что secure: false для локальной разработки
+}));
+
+// Middleware для проверки JWT токенов
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
 
 // Подключение маршрутов для пользователей и ролей
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes); // Подключаем маршруты ролей
+app.use('/api/photostudios', photostudiosRoutes); // Подключаем маршруты фотостудий
 
 // Маршрут по умолчанию
 app.get('/', (req, res) => {
@@ -31,50 +62,17 @@ app.post('/users', async (req, res) => {
   }
 });
 
-// Маршрут для получения информации о пользователях
-app.get('/api/users', async (req, res) => {
+// Пример маршрута для получения всех фотостудий
+app.get('/api/photostudios', async (req, res) => {
   try {
-    const users = await User.findAll();
-    res.status(200).json(users);
+    const studios = await sequelize.query('SELECT * FROM Photostudios', {
+      type: sequelize.QueryTypes.SELECT
+    });
+    console.log('Данные из базы данных:', studios); // Лог данных из базы данных
+    res.json(studios);
   } catch (error) {
-    console.error('Ошибка получения пользователей:', error.message);
-    res.status(500).json({ error: 'Ошибка получения пользователей' });
-  }
-});
-
-// Маршрут для обновления информации о пользователе
-app.put('/api/users/:userId', async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
-    }
-
-    await User.update(req.body, { where: { userId } });
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Ошибка обновления пользователя:', error.message);
-    res.status(500).json({ error: 'Ошибка обновления пользователя' });
-  }
-});
-
-// Маршрут для удаления пользователя
-app.delete('/api/users/:userId', async (req, res) => {
-  const { userId } = req.params;
-
-  try {
-    const user = await User.findByPk(userId);
-    if (!user) {
-      return res.status(404).json({ error: 'Пользователь не найден' });
-    }
-
-    await User.destroy({ where: { userId } });
-    res.status(200).json({ success: true });
-  } catch (error) {
-    console.error('Ошибка удаления пользователя:', error.message);
-    res.status(500).json({ error: 'Ошибка удаления пользователя' });
+    console.error('Ошибка при получении данных из базы данных:', error.message);
+    res.status(500).json({ error: 'Server error' });
   }
 });
 
