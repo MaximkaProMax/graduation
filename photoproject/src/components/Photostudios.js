@@ -14,9 +14,14 @@ function Photostudios() {
       .then(response => {
         console.log('Данные из API:', response.data); // Лог данных из API
         setStudios(response.data);
+        localStorage.setItem('studios', JSON.stringify(response.data)); // Сохранение данных в localStorage
       })
       .catch(error => {
         console.error('Ошибка при загрузке данных:', error);
+        const cachedStudios = localStorage.getItem('studios');
+        if (cachedStudios) {
+          setStudios(JSON.parse(cachedStudios)); // Загрузка данных из localStorage
+        }
       });
   }, []);
 
