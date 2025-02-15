@@ -11,6 +11,7 @@ const User = require('./models/User');
 const Role = require('./models/Role'); // Импортируем модель Role
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes'); // Импортируем маршруты ролей
+const photostudiosRoutes = require('./routes/photostudiosRoutes'); // Импортируем маршруты фотостудий
 
 const app = express();
 app.use(cors({
@@ -43,6 +44,7 @@ const authenticateToken = (req, res, next) => {
 // Подключение маршрутов для пользователей и ролей
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes); // Подключаем маршруты ролей
+app.use('/api/photostudios', photostudiosRoutes); // Подключаем маршруты фотостудий
 
 // Маршрут по умолчанию
 app.get('/', (req, res) => {
@@ -56,6 +58,20 @@ app.post('/users', async (req, res) => {
     res.status(201).json(user);
   } catch (error) {
     console.error('Ошибка создания пользователя:', error.message);
+    res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// Пример маршрута для получения всех фотостудий
+app.get('/api/photostudios', async (req, res) => {
+  try {
+    const studios = await sequelize.query('SELECT * FROM Photostudios', {
+      type: sequelize.QueryTypes.SELECT
+    });
+    console.log('Данные из базы данных:', studios); // Лог данных из базы данных
+    res.json(studios);
+  } catch (error) {
+    console.error('Ошибка при получении данных из базы данных:', error.message);
     res.status(500).json({ error: 'Server error' });
   }
 });

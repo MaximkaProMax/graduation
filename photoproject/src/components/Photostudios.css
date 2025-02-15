@@ -19,7 +19,7 @@
   border: 1px solid #ddd;
   border-radius: 5px;
   width: 490px;
-  margin-bottom: 10px; /* Уменьшаем отступ снизу */
+  margin-bottom: 20px;
 }
 
 .studio-image {
@@ -53,9 +53,9 @@
 }
 
 .studio-info h3 {
-  margin: 10px 0 5px 0; 
-  min-height: 48px;  
-  line-height: 1.2; 
+  margin: 10px 0 5px 0;
+  min-height: 48px;
+  line-height: 1.2;
 }
 
 .studio-info p {
@@ -81,7 +81,7 @@
 .favorite-icon {
   cursor: pointer;
   font-size: 18px;
-  color: red; 
+  color: red;
 }
 
 .action-container {
@@ -99,7 +99,7 @@
   cursor: pointer;
   border-radius: 5px;
   font-size: 14px;
-  margin-right: 10px; 
+  margin-right: 10px;
 }
 
 .favorite-icon {
