@@ -1,16 +1,20 @@
 import React, { useState, useEffect } from 'react';
-import './PrintingFlexBind.css';
+import './PrintingLayFlat.css';
 
-const PrintingFlexBind = () => {
+const PrintingLayFlat = () => {
   const [format, setFormat] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState('');
-  const [spreads, setSpreads] = useState(4);
+  const [base, setBase] = useState([]);
+  const [selectedBase, setSelectedBase] = useState('');
+  const [spreads, setSpreads] = useState('2'); // Устанавливаем значение по умолчанию в 2
   const [lamination, setLamination] = useState([]);
   const [selectedLamination, setSelectedLamination] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState('1');
   const [price, setPrice] = useState(0);
   const [printingOptions, setPrintingOptions] = useState({});
   const [photoClass, setPhotoClass] = useState('');
+  const [albumName, setAlbumName] = useState(''); // Добавляем состояние для названия альбома
+  const [spreadsError, setSpreadsError] = useState(''); // Добавляем состояние для ошибки количества разворотов
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,13 +24,14 @@ const PrintingFlexBind = () => {
         console.log('Полученные данные:', data); // Лог полученных данных
 
         if (Array.isArray(data)) {
-          const flexBindOption = data.find(option => option.id === 2);
-          setPrintingOptions(flexBindOption);
-          setFormat(flexBindOption.format);
-          setSpreads(parseInt(flexBindOption.basis_for_spread.split(', ')[0]));
-          setLamination(flexBindOption.lamination.split('/'));
-          setPhotoClass(flexBindOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
-          setPrice(flexBindOption.price_of_spread * spreads + flexBindOption.copy_price * quantity);
+          const layFlatOption = data.find(option => option.main_album_name === 'LayFlat');
+          setPrintingOptions(layFlatOption);
+          setFormat(layFlatOption.format);
+          setBase(layFlatOption.basis_for_spread.split(', '));
+          setLamination(layFlatOption.lamination.split('/'));
+          setPhotoClass(layFlatOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
+          setPrice(layFlatOption.price_of_spread * spreads + layFlatOption.copy_price * quantity);
+          setAlbumName(layFlatOption.name_on_page); // Устанавливаем название альбома из базы данных
         } else {
           console.error('Полученные данные не являются массивом:', data);
         }
@@ -48,9 +53,18 @@ const PrintingFlexBind = () => {
     setSelectedFormat(event.target.value);
   };
 
+  const handleBaseChange = (event) => {
+    setSelectedBase(event.target.value);
+  };
+
   const handleSpreadsChange = (event) => {
-    const value = parseInt(event.target.value);
-    setSpreads(isNaN(value) ? '' : value);
+    const value = event.target.value;
+    if (value === '' || parseInt(value) >= 2) {
+      setSpreadsError('');
+      setSpreads(value);
+    } else {
+      setSpreadsError('Количество разворотов минимум 2 штуки');
+    }
   };
 
   const handleLaminationChange = (event) => {
@@ -58,8 +72,8 @@ const PrintingFlexBind = () => {
   };
 
   const handleQuantityChange = (event) => {
-    const value = parseInt(event.target.value);
-    setQuantity(isNaN(value) ? '' : value);
+    const value = event.target.value;
+    setQuantity(value === '' ? '' : Math.max(1, parseInt(value)));
   };
 
   const handleKeyPress = (event) => {
@@ -70,9 +84,9 @@ const PrintingFlexBind = () => {
   };
 
   return (
-    <div className="printing-flexbind">
+    <div className="printing-layflat">
       <div className="left-section">
-        <div className={`flexbind-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
+        <div className={`layflat-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
         <div className="product-description">
           <h2>Описание товара</h2>
           <p>{printingOptions.product_description}</p>
@@ -81,7 +95,7 @@ const PrintingFlexBind = () => {
         </div>
       </div>
       <div className="right-section">
-        <h2>Альбом FlexBind в фотообложке</h2> {/* Название альбома */}
+        <h2>{albumName}</h2> {/* Название альбома из базы данных */}
         <div className="options">
           <div className="option">
             <label>Формат</label>
@@ -92,16 +106,25 @@ const PrintingFlexBind = () => {
             </select>
           </div>
           <div className="option">
+            <label>Основа разворота</label>
+            <select value={selectedBase} onChange={handleBaseChange}>
+              {base.map((b, index) => (
+                <option key={index} value={b}>{b}</option>
+              ))}
+            </select>
+          </div>
+          <div className="option">
             <label>Кол-во разворотов</label>
             <input
               type="number"
               value={spreads}
               onChange={handleSpreadsChange}
-              min="4"
-              max="25"
+              min="2"
+              max="15"
               inputMode="numeric"
               onKeyPress={handleKeyPress}
             />
+            {spreadsError && <div className="error">{spreadsError}</div>}
           </div>
           <div className="option">
             <label>Ламинация</label>
@@ -131,4 +154,4 @@ const PrintingFlexBind = () => {
   );
 };
 
-export default PrintingFlexBind;
+export default PrintingLayFlat;

@@ -4,13 +4,15 @@ import './PrintingFlexBind.css';
 const PrintingFlexBind = () => {
   const [format, setFormat] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState('');
-  const [spreads, setSpreads] = useState(4);
+  const [spreads, setSpreads] = useState('2'); // Устанавливаем значение по умолчанию в 2
   const [lamination, setLamination] = useState([]);
   const [selectedLamination, setSelectedLamination] = useState('');
-  const [quantity, setQuantity] = useState(1);
+  const [quantity, setQuantity] = useState('1');
   const [price, setPrice] = useState(0);
   const [printingOptions, setPrintingOptions] = useState({});
   const [photoClass, setPhotoClass] = useState('');
+  const [albumName, setAlbumName] = useState(''); // Добавляем состояние для названия альбома
+  const [spreadsError, setSpreadsError] = useState(''); // Добавляем состояние для ошибки количества разворотов
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,10 +25,11 @@ const PrintingFlexBind = () => {
           const flexBindOption = data.find(option => option.id === 2);
           setPrintingOptions(flexBindOption);
           setFormat(flexBindOption.format);
-          setSpreads(parseInt(flexBindOption.basis_for_spread.split(', ')[0]));
+          setSpreads('2'); // Устанавливаем значение по умолчанию в 2
           setLamination(flexBindOption.lamination.split('/'));
           setPhotoClass(flexBindOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
-          setPrice(flexBindOption.price_of_spread * spreads + flexBindOption.copy_price * quantity);
+          setPrice(flexBindOption.price_of_spread * 2 + flexBindOption.copy_price * 1);
+          setAlbumName(flexBindOption.name_on_page); // Устанавливаем название альбома из базы данных
         } else {
           console.error('Полученные данные не являются массивом:', data);
         }
@@ -49,8 +52,13 @@ const PrintingFlexBind = () => {
   };
 
   const handleSpreadsChange = (event) => {
-    const value = parseInt(event.target.value);
-    setSpreads(isNaN(value) ? '' : value);
+    const value = event.target.value;
+    if (value === '' || parseInt(value) >= 2) {
+      setSpreadsError('');
+      setSpreads(value);
+    } else {
+      setSpreadsError('Количество разворотов минимум 2 штуки');
+    }
   };
 
   const handleLaminationChange = (event) => {
@@ -58,8 +66,8 @@ const PrintingFlexBind = () => {
   };
 
   const handleQuantityChange = (event) => {
-    const value = parseInt(event.target.value);
-    setQuantity(isNaN(value) ? '' : value);
+    const value = event.target.value;
+    setQuantity(value === '' ? '' : Math.max(1, parseInt(value)));
   };
 
   const handleKeyPress = (event) => {
@@ -81,7 +89,7 @@ const PrintingFlexBind = () => {
         </div>
       </div>
       <div className="right-section">
-        <h2>Альбом FlexBind в фотообложке</h2> {/* Название альбома */}
+        <h2>{albumName}</h2> {/* Название альбома из базы данных */}
         <div className="options">
           <div className="option">
             <label>Формат</label>
@@ -97,11 +105,12 @@ const PrintingFlexBind = () => {
               type="number"
               value={spreads}
               onChange={handleSpreadsChange}
-              min="4"
+              min="2"
               max="25"
               inputMode="numeric"
               onKeyPress={handleKeyPress}
             />
+            {spreadsError && <div className="error">{spreadsError}</div>}
           </div>
           <div className="option">
             <label>Ламинация</label>
