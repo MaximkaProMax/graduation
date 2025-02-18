@@ -1,91 +1,134 @@
-import React, { useState } from 'react';
-import './PrintingLayFlat.css';
+import React, { useState, useEffect } from 'react';
+import './PrintingFlexBind.css';
 
-const PrintingLayFlat = () => {
-  const [format, setFormat] = useState('20x30');
-  const [base, setBase] = useState('С основой');
-  const [spreads, setSpreads] = useState(2);
-  const [lamination, setLamination] = useState('Матовый');
+const PrintingFlexBind = () => {
+  const [format, setFormat] = useState([]);
+  const [selectedFormat, setSelectedFormat] = useState('');
+  const [spreads, setSpreads] = useState(4);
+  const [lamination, setLamination] = useState([]);
+  const [selectedLamination, setSelectedLamination] = useState('');
   const [quantity, setQuantity] = useState(1);
-  const [price, setPrice] = useState(2024);
+  const [price, setPrice] = useState(0);
+  const [printingOptions, setPrintingOptions] = useState({});
+  const [photoClass, setPhotoClass] = useState('');
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://localhost:3001/api/printing');
+        const data = await response.json();
+        console.log('Полученные данные:', data); // Лог полученных данных
+
+        if (Array.isArray(data)) {
+          const flexBindOption = data.find(option => option.id === 2);
+          setPrintingOptions(flexBindOption);
+          setFormat(flexBindOption.format);
+          setSpreads(parseInt(flexBindOption.basis_for_spread.split(', ')[0]));
+          setLamination(flexBindOption.lamination.split('/'));
+          setPhotoClass(flexBindOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
+          setPrice(flexBindOption.price_of_spread * spreads + flexBindOption.copy_price * quantity);
+        } else {
+          console.error('Полученные данные не являются массивом:', data);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (printingOptions.price_of_spread && printingOptions.copy_price) {
+      setPrice(printingOptions.price_of_spread * spreads + printingOptions.copy_price * quantity);
+    }
+  }, [spreads, quantity, printingOptions]);
 
   const handleFormatChange = (event) => {
-    setFormat(event.target.value);
-  };
-
-  const handleBaseChange = (event) => {
-    setBase(event.target.value);
+    setSelectedFormat(event.target.value);
   };
 
   const handleSpreadsChange = (event) => {
-    setSpreads(parseInt(event.target.value));
+    const value = parseInt(event.target.value);
+    setSpreads(isNaN(value) ? '' : value);
   };
 
   const handleLaminationChange = (event) => {
-    setLamination(event.target.value);
+    setSelectedLamination(event.target.value);
   };
 
   const handleQuantityChange = (event) => {
-    setQuantity(parseInt(event.target.value));
+    const value = parseInt(event.target.value);
+    setQuantity(isNaN(value) ? '' : value);
+  };
+
+  const handleKeyPress = (event) => {
+    const charCode = event.charCode;
+    if (charCode < 48 || charCode > 57) {
+      event.preventDefault();
+    }
   };
 
   return (
-    <div className="printing-layflat">
+    <div className="printing-flexbind">
       <div className="left-section">
-        <div className="layflat-image"></div> {/* Контейнер для изображения */}
+        <div className={`flexbind-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
         <div className="product-description">
           <h2>Описание товара</h2>
-          <p>Твердая фотообложка на основе укрепленного картона. Доступны форматы: 20x30 / 23x23 / 23x30</p>
+          <p>{printingOptions.product_description}</p>
           <h2>Дополнительная информация</h2>
-          <p>Обложка: крепкий картон толщиной 3 мм;<br />
-            Варианты листов:<br />
-            с основой — от 2 до 10 разворотов. Общая плотность листа 980 г/м², толщина ~1.15мм<br />
-            без основы — от 5 до 15 разворотов. Общая плотность листа 650 г/м², толщина ~0.85мм<br />
-            Цифровая печать Ricoh 9200 (флагман серии)<br />
-            Ламинация снаружи и внутри (мат/глянец)
-          </p>
+          <p>{printingOptions.additional_information}</p>
         </div>
       </div>
       <div className="right-section">
-        <h2>Альбом LayFlat в фотообложке</h2> {/* Название альбома */}
+        <h2>Альбом FlexBind в фотообложке</h2> {/* Название альбома */}
         <div className="options">
           <div className="option">
             <label>Формат</label>
-            <select value={format} onChange={handleFormatChange}>
-              <option value="20x30">20x30</option>
-              <option value="23x23">23x23</option>
-              <option value="23x30">23x30</option>
-            </select>
-          </div>
-          <div className="option">
-            <label>Основа разворота</label>
-            <select value={base} onChange={handleBaseChange}>
-              <option value="С основой">С основой</option>
-              <option value="Без основы">Без основы</option>
+            <select value={selectedFormat} onChange={handleFormatChange}>
+              {format.map((f, index) => (
+                <option key={index} value={f}>{f}</option>
+              ))}
             </select>
           </div>
           <div className="option">
             <label>Кол-во разворотов</label>
-            <input type="number" value={spreads} onChange={handleSpreadsChange} min="2" max="15" />
+            <input
+              type="number"
+              value={spreads}
+              onChange={handleSpreadsChange}
+              min="4"
+              max="25"
+              inputMode="numeric"
+              onKeyPress={handleKeyPress}
+            />
           </div>
           <div className="option">
             <label>Ламинация</label>
-            <select value={lamination} onChange={handleLaminationChange}>
-              <option value="Матовый">Матовый</option>
-              <option value="Глянцевый">Глянцевый</option>
+            <select value={selectedLamination} onChange={handleLaminationChange}>
+              {lamination.map((l, index) => (
+                <option key={index} value={l}>{l}</option>
+              ))}
             </select>
           </div>
           <div className="option">
             <label>Количество экземпляров</label>
-            <input type="number" value={quantity} onChange={handleQuantityChange} min="1" />
+            <input
+              type="number"
+              value={quantity}
+              onChange={handleQuantityChange}
+              min="1"
+              inputMode="numeric"
+              onKeyPress={handleKeyPress}
+            />
           </div>
         </div>
         <div className="total-price">
-          Итоговая цена: {price}р
+          Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
         </div>
       </div>
     </div>
   );
 };
 
-export default PrintingLayFlat;
+export default PrintingFlexBind;
