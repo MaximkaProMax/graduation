@@ -10,14 +10,19 @@
 }
 
 .edit-database-container h3 {
+  text-align: center; /* Центрирование заголовков */
   margin-top: 20px;
   margin-bottom: 10px;
+}
+
+.edit-database-table-container {
+  overflow-x: auto;
+  margin-bottom: 20px;
 }
 
 .edit-database-table {
   width: 100%;
   border-collapse: collapse;
-  margin-bottom: 20px;
 }
 
 .edit-database-table th, .edit-database-table td {
