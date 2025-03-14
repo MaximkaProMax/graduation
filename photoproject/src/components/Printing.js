@@ -9,30 +9,28 @@ const Printing = () => {
   useEffect(() => {
     // В реальном приложении данные будут получены из базы данных
     const fetchData = async () => {
-      const data = [
-        {
-          name: 'LayFlat',
-          description: 'Альбомы со сплошными разворотами. Плотные листы с толстой картонной основой или без нее + ламинация.',
-          formats: ['20х30', '23х23'],
-          imageClass: 'layflat'
-        },
-        {
-          name: 'FlexBind',
-          description: 'Альбомы с гибкими листами с раскрытием на 180° за счет специальной прорези посередине.',
-          formats: ['20х30', '23х23', '30х23', '30х30'],
-          imageClass: 'flexbind'
-        },
-      ];
-      setPrintingOptions(data);
+      try {
+        const response = await fetch('http://localhost:3001/api/printing');
+        const data = await response.json();
+        console.log('Полученные данные:', data); // Лог полученных данных
+
+        if (Array.isArray(data)) {
+          setPrintingOptions(data);
+        } else {
+          console.error('Полученные данные не являются массивом:', data);
+        }
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      }
     };
 
     fetchData();
   }, []);
 
   const handleOrderClick = (option) => {
-    if (option.name === 'LayFlat') {
+    if (option.main_album_name === 'LayFlat') {
       navigate('/printing-layflat');
-    } else if (option.name === 'FlexBind') {
+    } else if (option.main_album_name === 'FlexBind') {
       navigate('/printing-flexbind');
     } else {
       // Другие действия для других типов печати
@@ -45,20 +43,24 @@ const Printing = () => {
         <h2>Типография</h2>
         <p>Заказывайте качественную полиграфию у нас.</p>
         <div className="printing-list">
-          {printingOptions.map((option, index) => (
-            <div className="printing-card" key={index}>
-              <div className={`printing-image ${option.imageClass}`}></div>
-              <div className="printing-info">
-                <h3>{option.name}</h3>
-                <p>{option.description}</p>
-                <p>Форматы: {option.formats.join(' / ')}</p>
-                <div className="action-container">
-                  <button className="order-button" onClick={() => handleOrderClick(option)}>Заказать</button>
-                  <span className="favorite-icon">❤️</span>
+          {printingOptions.length > 0 ? (
+            printingOptions.map((option, index) => (
+              <div className="printing-card" key={index}>
+                <div className={`printing-image ${option.main_card_photo}`}></div>
+                <div className="printing-info">
+                  <h3>{option.main_album_name}</h3>
+                  <p>{option.main_card_description}</p>
+                  <p>Форматы: {option.format ? option.format.join(' / ') : 'Не указано'}</p>
+                  <div className="action-container">
+                    <button className="order-button" onClick={() => handleOrderClick(option)}>Заказать</button>
+                    <span className="favorite-icon">❤️</span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p>Данные не найдены</p>
+          )}
         </div>
       </main>
     </div>

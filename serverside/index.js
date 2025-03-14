@@ -9,9 +9,11 @@ const jwt = require('jsonwebtoken'); // Импортируем jsonwebtoken дл
 const sequelize = require('./config/database');
 const User = require('./models/User');
 const Role = require('./models/Role'); // Импортируем модель Role
+const Printing = require('./models/Printing'); // Импортируем модель Printing
 const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes'); // Импортируем маршруты ролей
 const photostudiosRoutes = require('./routes/photostudiosRoutes'); // Импортируем маршруты фотостудий
+const printingRoutes = require('./routes/printingRoutes'); // Импортируем маршруты печати
 
 const app = express();
 app.use(cors({
@@ -45,6 +47,7 @@ const authenticateToken = (req, res, next) => {
 app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes); // Подключаем маршруты ролей
 app.use('/api/photostudios', photostudiosRoutes); // Подключаем маршруты фотостудий
+app.use('/api/printing', printingRoutes); // Подключаем маршруты печати
 
 // Маршрут по умолчанию
 app.get('/', (req, res) => {

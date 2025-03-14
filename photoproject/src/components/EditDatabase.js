@@ -6,6 +6,10 @@ import { useNavigate } from 'react-router-dom';
 const EditDatabase = () => {
   const [studios, setStudios] = useState([]);
   const [typographies, setTypographies] = useState([]);
+  const [editableStudio, setEditableStudio] = useState({});
+  const [editableTypography, setEditableTypography] = useState({});
+  const [isEditingStudio, setIsEditingStudio] = useState(false);
+  const [isEditingTypography, setIsEditingTypography] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,10 +18,12 @@ const EditDatabase = () => {
   }, []);
 
   const fetchStudios = () => {
-    axios.get('http://localhost:3001/api/studios')
+    console.log('Загрузка данных о фотостудиях...');
+    axios.get('http://localhost:3001/api/photostudios')
       .then(response => {
         if (Array.isArray(response.data)) {
           setStudios(response.data);
+          console.log('Данные о фотостудиях загружены:', response.data);
         }
       })
       .catch(error => {
@@ -26,10 +32,12 @@ const EditDatabase = () => {
   };
 
   const fetchTypographies = () => {
-    axios.get('http://localhost:3001/api/typographies')
+    console.log('Загрузка данных о типографиях...');
+    axios.get('http://localhost:3001/api/printing')
       .then(response => {
         if (Array.isArray(response.data)) {
           setTypographies(response.data);
+          console.log('Данные о типографиях загружены:', response.data);
         }
       })
       .catch(error => {
@@ -37,65 +45,88 @@ const EditDatabase = () => {
       });
   };
 
-  const handleAddStudio = () => {
-    const studioName = prompt('Введите название новой фотостудии:');
-    const studioAddress = prompt('Введите адрес новой фотостудии:');
-    const studioHours = prompt('Введите часы работы новой фотостудии:');
-    const studioPrice = prompt('Введите цену новой фотостудии:');
-    const studioContact = prompt('Введите контактную информацию новой фотостудии:');
-    const studioDescription = prompt('Введите описание новой фотостудии:');
+  const handleInputChange = (e, setEditable) => {
+    const { name, value } = e.target;
+    setEditable(prevState => ({ ...prevState, [name]: value }));
+  };
 
-    if (studioName && studioAddress && studioHours && studioPrice && studioContact && studioDescription) {
-      axios.post('http://localhost:3001/api/studios', {
-        name: studioName,
-        address: studioAddress,
-        hours: studioHours,
-        price: studioPrice,
-        contact: studioContact,
-        description: studioDescription,
-      })
-        .then(() => {
-          console.log('Фотостудия успешно добавлена');
-          fetchStudios();
-        })
-        .catch(error => {
-          console.error('Ошибка при добавлении фотостудии:', error);
-        });
+  const handleSaveStudio = () => {
+    const { studioId, ...updateData } = editableStudio;
+
+    if (Object.values(updateData).every(value => value)) {
+      if (studioId) {
+        axios.put(`http://localhost:3001/api/photostudios/${studioId}`, updateData)
+          .then(() => {
+            fetchStudios();
+            setIsEditingStudio(false);
+            setEditableStudio({});
+          })
+          .catch(error => {
+            console.error('Ошибка при обновлении данных фотостудии:', error);
+          });
+      } else {
+        axios.post('http://localhost:3001/api/photostudios', updateData)
+          .then(() => {
+            fetchStudios();
+            setIsEditingStudio(false);
+            setEditableStudio({});
+          })
+          .catch(error => {
+            console.error('Ошибка при добавлении фотостудии:', error);
+          });
+      }
     }
   };
 
-  const handleEditStudio = (studioId) => {
-    const studioName = prompt('Введите новое название фотостудии:');
-    const studioAddress = prompt('Введите новый адрес фотостудии:');
-    const studioHours = prompt('Введите новые часы работы фотостудии:');
-    const studioPrice = prompt('Введите новую цену фотостудии:');
-    const studioContact = prompt('Введите новую контактную информацию фотостудии:');
-    const studioDescription = prompt('Введите новое описание фотостудии:');
+  const handleSaveTypography = () => {
+    const { typographyId, ...updateData } = editableTypography;
 
-    if (studioName && studioAddress && studioHours && studioPrice && studioContact && studioDescription) {
-      axios.put(`http://localhost:3001/api/studios/${studioId}`, {
-        name: studioName,
-        address: studioAddress,
-        hours: studioHours,
-        price: studioPrice,
-        contact: studioContact,
-        description: studioDescription,
-      })
-        .then(() => {
-          console.log('Фотостудия успешно отредактирована');
-          fetchStudios();
-        })
-        .catch(error => {
-          console.error('Ошибка при редактировании фотостудии:', error);
-        });
+    if (Object.values(updateData).every(value => value)) {
+      if (typographyId) {
+        axios.put(`http://localhost:3001/api/printing/${typographyId}`, updateData)
+          .then(() => {
+            fetchTypographies();
+            setIsEditingTypography(false);
+            setEditableTypography({});
+          })
+          .catch(error => {
+            console.error('Ошибка при обновлении данных типографии:', error);
+          });
+      } else {
+        axios.post('http://localhost:3001/api/printing', updateData)
+          .then(() => {
+            fetchTypographies();
+            setIsEditingTypography(false);
+            setEditableTypography({});
+          })
+          .catch(error => {
+            console.error('Ошибка при добавлении типографии:', error);
+          });
+      }
     }
+  };
+
+  const handleEditStudio = (studio) => {
+    setEditableStudio(studio);
+    setIsEditingStudio(true);
+  };
+
+  const handleEditTypography = (typography) => {
+    setEditableTypography(typography);
+    setIsEditingTypography(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingStudio(false);
+    setIsEditingTypography(false);
+    setEditableStudio({});
+    setEditableTypography({});
   };
 
   const handleDeleteStudio = (studioId) => {
     if (window.confirm('Вы уверены, что хотите удалить эту фотостудию?')) {
-      axios.delete(`http://localhost:3001/api/studios/${studioId}`)
+      axios.delete(`http://localhost:3001/api/photostudios/${studioId}`)
         .then(() => {
-          console.log('Фотостудия успешно удалена');
           fetchStudios();
         })
         .catch(error => {
@@ -104,82 +135,26 @@ const EditDatabase = () => {
     }
   };
 
-  const handleAddTypography = () => {
-    const typographyName = prompt('Введите название новой типографии:');
-    const typographyFormats = prompt('Введите форматы новой типографии:');
-    const typographyBase = prompt('Введите основу разворота новой типографии:');
-    const typographyPages = prompt('Введите количество разворотов новой типографии:');
-    const typographyLamination = prompt('Введите ламинацию новой типографии:');
-    const typographyCopies = prompt('Введите количество экземпляров новой типографии:');
-    const typographyPrice = prompt('Введите цену новой типографии:');
-    const typographyContact = prompt('Введите контактную информацию новой типографии:');
-    const typographyDescription = prompt('Введите описание новой типографии:');
-
-    if (typographyName && typographyFormats && typographyBase && typographyPages && typographyLamination && typographyCopies && typographyPrice && typographyContact && typographyDescription) {
-      axios.post('http://localhost:3001/api/typographies', {
-        name: typographyName,
-        formats: typographyFormats,
-        base: typographyBase,
-        pages: typographyPages,
-        lamination: typographyLamination,
-        copies: typographyCopies,
-        price: typographyPrice,
-        contact: typographyContact,
-        description: typographyDescription,
-      })
-        .then(() => {
-          console.log('Типография успешно добавлена');
-          fetchTypographies();
-        })
-        .catch(error => {
-          console.error('Ошибка при добавлении типографии:', error);
-        });
-    }
-  };
-  const handleEditTypography = (typographyId) => {
-    const typographyName = prompt('Введите новое название типографии:');
-    const typographyFormats = prompt('Введите новые форматы типографии:');
-    const typographyBase = prompt('Введите новую основу разворота типографии:');
-    const typographyPages = prompt('Введите новое количество разворотов типографии:');
-    const typographyLamination = prompt('Введите новую ламинацию типографии:');
-    const typographyCopies = prompt('Введите новое количество экземпляров типографии:');
-    const typographyPrice = prompt('Введите новую цену типографии:');
-    const typographyContact = prompt('Введите новую контактную информацию типографии:');
-    const typographyDescription = prompt('Введите новое описание типографии:');
-
-    if (typographyName && typographyFormats && typographyBase && typographyPages && typographyLamination && typographyCopies && typographyPrice && typographyContact && typographyDescription) {
-      axios.put(`http://localhost:3001/api/typographies/${typographyId}`, {
-        name: typographyName,
-        formats: typographyFormats,
-        base: typographyBase,
-        pages: typographyPages,
-        lamination: typographyLamination,
-        copies: typographyCopies,
-        price: typographyPrice,
-        contact: typographyContact,
-        description: typographyDescription,
-      })
-        .then(() => {
-          console.log('Типография успешно отредактирована');
-          fetchTypographies();
-        })
-        .catch(error => {
-          console.error('Ошибка при редактировании типографии:', error);
-        });
-    }
-  };
-
   const handleDeleteTypography = (typographyId) => {
     if (window.confirm('Вы уверены, что хотите удалить эту типографию?')) {
-      axios.delete(`http://localhost:3001/api/typographies/${typographyId}`)
+      axios.delete(`http://localhost:3001/api/printing/${typographyId}`)
         .then(() => {
-          console.log('Типография успешно удалена');
           fetchTypographies();
         })
         .catch(error => {
           console.error('Ошибка при удалении типографии:', error);
         });
     }
+  };
+
+  const handleAddStudio = () => {
+    setEditableStudio({});
+    setIsEditingStudio(true);
+  };
+
+  const handleAddTypography = () => {
+    setEditableTypography({});
+    setIsEditingTypography(true);
   };
 
   const handleBackClick = () => {
@@ -192,85 +167,99 @@ const EditDatabase = () => {
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
 
       <h3>Фотостудии</h3>
-      <table className="edit-database-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Название</th>
-            <th>Адрес</th>
-            <th>Часы работы</th>
-            <th>Цена</th>
-            <th>Контактная информация</th>
-            <th>Описание</th>
-            <th>Дата создания</th>
-            <th>Дата редактирования</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {studios.map((studio) => (
-            <tr key={studio.studioId}>
-              <td>{studio.studioId}</td>
-              <td>{studio.name}</td>
-              <td>{studio.address}</td>
-              <td>{studio.hours}</td>
-              <td>{studio.price}</td>
-              <td>{studio.contact}</td>
-              <td>{studio.description}</td>
-              <td>{new Date(studio.createdAt).toLocaleDateString()}</td>
-              <td>{new Date(studio.updatedAt).toLocaleDateString()}</td>
-              <td>
-                <button className="edit-database-button" onClick={() => handleEditStudio(studio.studioId)}>Редактировать</button>
-                <button className="edit-database-button" onClick={() => handleDeleteStudio(studio.studioId)}>Удалить</button>
-              </td>
+      <div className="edit-database-table-container">
+        <table className="edit-database-table">
+          <thead>
+            <tr>
+              {studios.length > 0 && Object.keys(studios[0]).map((key) => (
+                <th key={key}>{key}</th>
+              ))}
+              <th>Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {studios.map((studio) => (
+              <tr key={studio.studioId}>
+                {Object.keys(studio).map((key) => (
+                  <td key={`${studio.studioId}-${key}`}>
+                    {isEditingStudio && editableStudio.studioId === studio.studioId ? (
+                      <input
+                        type="text"
+                        name={key}
+                        value={editableStudio[key] || ''}
+                        onChange={(e) => handleInputChange(e, setEditableStudio)}
+                      />
+                    ) : (
+                      studio[key]
+                    )}
+                  </td>
+                ))}
+                <td key={`${studio.studioId}-actions`}>
+                  {isEditingStudio && editableStudio.studioId === studio.studioId ? (
+                    <>
+                      <button className="edit-database-button" onClick={handleSaveStudio}>Сохранить</button>
+                      <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
+                      <button className="edit-database-button" onClick={() => handleDeleteStudio(studio.studioId)}>Удалить</button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <button className="add-studio-button" onClick={handleAddStudio}>Добавить фотостудию</button>
 
       <h3>Типографии</h3>
-      <table className="edit-database-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Название</th>
-            <th>Форматы</th>
-            <th>Основа разворота</th>
-            <th>Количество разворотов</th>
-            <th>Ламинация</th>
-            <th>Количество экземпляров</th>
-            <th>Цена</th>
-            <th>Контактная информация</th>
-            <th>Описание</th>
-            <th>Дата создания</th>
-            <th>Дата редактирования</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {typographies.map((typography) => (
-            <tr key={typography.typographyId}>
-              <td>{typography.typographyId}</td>
-              <td>{typography.name}</td>
-              <td>{typography.formats}</td>
-              <td>{typography.base}</td>
-              <td>{typography.pages}</td>
-              <td>{typography.lamination}</td>
-              <td>{typography.copies}</td>
-              <td>{typography.price}</td>
-              <td>{typography.contact}</td>
-              <td>{typography.description}</td>
-              <td>{new Date(typography.createdAt).toLocaleDateString()}</td>
-              <td>{new Date(typography.updatedAt).toLocaleDateString()}</td>
-              <td>
-                <button className="edit-database-button" onClick={() => handleEditTypography(typography.typographyId)}>Редактировать</button>
-                <button className="edit-database-button" onClick={() => handleDeleteTypography(typography.typographyId)}>Удалить</button>
-              </td>
+      <div className="edit-database-table-container">
+        <table className="edit-database-table">
+          <thead>
+            <tr>
+              {typographies.length > 0 && Object.keys(typographies[0]).map((key) => (
+                <th key={key}>{key}</th>
+              ))}
+              <th>Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {typographies.map((typography) => (
+              <tr key={typography.typographyId}>
+                {Object.keys(typography).map((key) => (
+                  <td key={`${typography.typographyId}-${key}`}>
+                    {isEditingTypography && editableTypography.typographyId === typography.typographyId ? (
+                      <input
+                        type="text"
+                        name={key}
+                        value={editableTypography[key] || ''}
+                        onChange={(e) => handleInputChange(e, setEditableTypography)}
+                      />
+                    ) : (
+                      typography[key]
+                    )}
+                  </td>
+                ))}
+                <td key={`${typography.typographyId}-actions`}>
+                  {isEditingTypography && editableTypography.typographyId === typography.typographyId ? (
+                    <>
+                      <button className="edit-database-button" onClick={handleSaveTypography}>Сохранить</button>
+                      <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
+                    </>
+                  ) : (
+                    <>
+                      <button className="edit-database-button" onClick={() => handleEditTypography(typography)}>Редактировать</button>
+                      <button className="edit-database-button" onClick={() => handleDeleteTypography(typography.typographyId)}>Удалить</button>
+                    </>
+                  )}
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       <button className="add-typography-button" onClick={handleAddTypography}>Добавить типографию</button>
     </div>
   );
