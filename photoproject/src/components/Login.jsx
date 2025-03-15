@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import './Login.css';
 
 function Login() {
   const [email, setEmail] = useState('');
@@ -13,18 +14,20 @@ function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/users/login',
+      console.log('Отправка данных на сервер:', { email, password });
+      const response = await axios.post('http://localhost:3001/api/users/login', 
         { email, password },
-        { withCredentials: true }
+        { withCredentials: true } // Добавляем опцию для отправки cookies
       );
+      console.log('Ответ от сервера:', response.data);
 
       if (response.data.twoFactorRequired) {
         setIsTwoFactorRequired(true);
       } else {
-        navigate('/manager/personal-data');
+        navigate('/manager/personal-data'); // Перенаправление на личные данные
       }
     } catch (error) {
+      console.error('Произошла ошибка при попытке входа:', error);
       if (error.response && error.response.status === 404) {
         setErrorMessage('Пользователь не найден. Пожалуйста, зарегистрируйтесь.');
       } else {
@@ -35,13 +38,12 @@ function Login() {
 
   const handleVerifyTwoFactorCode = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:3001/api/users/verify-2fa-code',
+      const response = await axios.post('http://localhost:3001/api/users/verify-2fa-code', 
         { code: twoFactorCode, email },
-        { withCredentials: true }
+        { withCredentials: true } // Добавляем опцию для отправки cookies
       );
       if (response.data.success) {
-        navigate('/manager/personal-data');
+        navigate('/manager/personal-data'); // Успешный вход
       } else {
         setErrorMessage('Неверный код');
       }
@@ -55,69 +57,45 @@ function Login() {
   };
 
   return (
-    <div className="flex justify-center items-center h-[80vh] bg-gray-100">
-      <div className="w-80 p-5 bg-white border border-gray-300 rounded-md shadow-md">
-        <h2 className="text-2xl font-bold text-center mb-6">Авторизация</h2>
-        <form onSubmit={handleLogin} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Email</label>
+    <div className="login-wrapper">
+      <div className="login-container">
+        <h2>Авторизация</h2>
+        <form onSubmit={handleLogin}>
+          <div className="input-group">
+            <label>Email</label>
             <input
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               required
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
+          <div className="input-group">
+            <label>Пароль</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               required
-              className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
             />
           </div>
-          <button
-            type="submit"
-            className="w-full py-2 bg-yellow-400 text-white rounded hover:bg-yellow-500 transition"
-          >
-            Войти
-          </button>
+          <button type="submit">Войти</button>
           {isTwoFactorRequired && (
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Код 2FA</label>
+            <div className="input-group">
+              <label>Код 2FA</label>
               <input
                 type="text"
                 value={twoFactorCode}
                 onChange={(e) => setTwoFactorCode(e.target.value)}
                 required
-                className="w-full p-2 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
               />
-              <button
-                type="button"
-                onClick={handleVerifyTwoFactorCode}
-                className="w-full mt-2 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-              >
-                Подтвердить
-              </button>
+              <button type="button" onClick={handleVerifyTwoFactorCode}>Подтвердить</button>
             </div>
           )}
-          {errorMessage && <p className="text-red-500 text-center text-sm mt-2">{errorMessage}</p>}
+          {errorMessage && <p className="error">{errorMessage}</p>}
         </form>
-        <button
-          onClick={handleRegisterClick}
-          className="w-full mt-4 py-2 bg-gray-200 text-gray-800 rounded hover:bg-gray-300 transition"
-        >
-          Регистрация
-        </button>
-        <a
-          href="/reset-password"
-          className="block text-center text-sm text-yellow-400 mt-4 hover:underline"
-        >
-          Сброс пароля
-        </a>
+        <button className="register-button" onClick={handleRegisterClick}>Регистрация</button>
+        <a className="forgot-password" href="/reset-password">Сброс пароля</a>
       </div>
     </div>
   );
