@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import './Calendar.css';
 
 const Calendar = () => {
+  const location = useLocation();
+  const { studio, address } = location.state || {};
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [month, setMonth] = useState(currentDate.getMonth());
@@ -22,13 +24,12 @@ const Calendar = () => {
 
   const handleBookingSubmit = (event) => {
     event.preventDefault();
-    const { name, address } = event.target.elements;
     const newBooking = {
-      name: name.value,
+      name: studio,
       date: `${selectedDate}/${month + 1}/${year}`,
       startTime: startTime,
       endTime: endTime,
-      address: address.value
+      address: address
     };
     setBookings([...bookings, newBooking]);
     setSelectedDate(null);
@@ -41,13 +42,11 @@ const Calendar = () => {
   };
 
   const handleMonthChange = (event) => {
-    const selectedMonth = parseInt(event.target.value);
-    setMonth(selectedMonth);
+    setMonth(parseInt(event.target.value));
   };
 
   const handleYearChange = (event) => {
-    const selectedYear = parseInt(event.target.value);
-    setYear(selectedYear);
+    setYear(parseInt(event.target.value));
   };
 
   const handleStartTimeChange = (event) => {
@@ -113,13 +112,17 @@ const Calendar = () => {
             <label>Месяц: </label>
             <select value={month} onChange={handleMonthChange}>
               {Array.from({ length: 12 }, (_, index) => (
-                <option key={index} value={index}>{new Date(0, index).toLocaleString('default', { month: 'long' })}</option>
+                <option key={index} value={index}>
+                  {new Date(0, index).toLocaleString('default', { month: 'long' })}
+                </option>
               ))}
             </select>
             <label>Год: </label>
             <select value={year} onChange={handleYearChange}>
               {Array.from({ length: 5 }, (_, index) => (
-                <option key={index} value={currentDate.getFullYear() + index}>{currentDate.getFullYear() + index}</option>
+                <option key={index} value={currentDate.getFullYear() + index}>
+                  {currentDate.getFullYear() + index}
+                </option>
               ))}
             </select>
           </div>
@@ -135,7 +138,7 @@ const Calendar = () => {
           <form onSubmit={handleBookingSubmit}>
             <div className="input-group">
               <label>Название</label>
-              <input type="text" name="name" required />
+              <input type="text" name="name" value={studio || ''} readOnly />
             </div>
             <div className="input-group">
               <label>Дата</label>
@@ -155,7 +158,7 @@ const Calendar = () => {
             </div>
             <div className="input-group">
               <label>Адрес</label>
-              <input type="text" name="address" required />
+              <input type="text" name="address" value={address || ''} readOnly />
             </div>
             <button type="submit">Забронировать</button>
           </form>

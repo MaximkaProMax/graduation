@@ -12,21 +12,21 @@ function Photostudios() {
     // Загрузка данных из API
     axios.get('http://localhost:3001/api/photostudios')
       .then(response => {
-        console.log('Данные из API:', response.data); // Лог данных из API
+        console.log('Данные из API:', response.data);
         setStudios(response.data);
-        localStorage.setItem('studios', JSON.stringify(response.data)); // Сохранение данных в localStorage
+        localStorage.setItem('studios', JSON.stringify(response.data));
       })
       .catch(error => {
         console.error('Ошибка при загрузке данных:', error);
         const cachedStudios = localStorage.getItem('studios');
         if (cachedStudios) {
-          setStudios(JSON.parse(cachedStudios)); // Загрузка данных из localStorage
+          setStudios(JSON.parse(cachedStudios));
         }
       });
   }, []);
 
-  const handleBookButtonClick = () => {
-    navigate('/calendar');
+  const handleBookButtonClick = (studioName, address) => {
+    navigate('/calendar', { state: { studio: studioName, address } });
   };
 
   const toggleFavorite = (studioName) => {
@@ -55,7 +55,12 @@ function Photostudios() {
                 <p>{studio.opening_hours}</p>
                 <p>{studio.price}</p>
                 <div className="action-container">
-                  <button className="book-button" onClick={handleBookButtonClick}>Забронировать</button>
+                  <button
+                    className="book-button"
+                    onClick={() => handleBookButtonClick(studio.studio, studio.address)}
+                  >
+                    Забронировать
+                  </button>
                   <span
                     className={`favorite-icon ${favorites.includes(studio.studio) ? 'favorite' : ''}`}
                     onClick={() => toggleFavorite(studio.studio)}
