@@ -32,6 +32,11 @@ const PrintingLayFlat = () => {
           setPhotoClass(layFlatOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
           setPrice(layFlatOption.price_of_spread * spreads + layFlatOption.copy_price * quantity);
           setAlbumName(layFlatOption.name_on_page); // Устанавливаем название альбома из базы данных
+
+          // Устанавливаем значения по умолчанию
+          setSelectedFormat(layFlatOption.format[0]);
+          setSelectedBase(layFlatOption.basis_for_spread.split(', ')[0]);
+          setSelectedLamination(layFlatOption.lamination.split('/')[0]);
         } else {
           console.error('Полученные данные не являются массивом:', data);
         }
@@ -81,6 +86,19 @@ const PrintingLayFlat = () => {
     if (charCode < 48 || charCode > 57) {
       event.preventDefault();
     }
+  };
+
+  const handleAddToCart = () => {
+    const cartItem = {
+      format: selectedFormat,
+      base: selectedBase,
+      spreads: spreads,
+      lamination: selectedLamination,
+      quantity: quantity,
+      price: price,
+      albumName: albumName
+    };
+    console.log('Добавлено в корзину:', cartItem);
   };
 
   return (
@@ -149,6 +167,7 @@ const PrintingLayFlat = () => {
         <div className="total-price">
           Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
         </div>
+        <button onClick={handleAddToCart}>Добавить в корзину</button>
       </div>
     </div>
   );

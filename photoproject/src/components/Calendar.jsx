@@ -41,6 +41,17 @@ const Calendar = () => {
     navigate('/payment');
   };
 
+  const handleAddToCart = () => {
+    const cartItem = {
+      name: studio,
+      date: `${selectedDate}/${month + 1}/${year}`,
+      startTime: startTime,
+      endTime: endTime,
+      address: address
+    };
+    console.log('Добавлено в корзину:', cartItem);
+  };
+
   const handleMonthChange = (event) => {
     setMonth(parseInt(event.target.value));
   };
@@ -162,6 +173,7 @@ const Calendar = () => {
             </div>
             <button type="submit">Забронировать</button>
           </form>
+          <button onClick={handleAddToCart}>Добавить в корзину</button>
         </div>
       </div>
     </div>
