@@ -12,16 +12,21 @@ function Photostudios() {
     // Загрузка данных из API
     axios.get('http://localhost:3001/api/photostudios')
       .then(response => {
-        console.log('Данные из API:', response.data);
+        console.log('Данные фотостудий:', response.data);
         setStudios(response.data);
-        localStorage.setItem('studios', JSON.stringify(response.data));
       })
       .catch(error => {
         console.error('Ошибка при загрузке данных:', error);
-        const cachedStudios = localStorage.getItem('studios');
-        if (cachedStudios) {
-          setStudios(JSON.parse(cachedStudios));
-        }
+      });
+
+    // Загрузка избранных фотостудий
+    axios.get('http://localhost:3001/api/favourites')
+      .then(response => {
+        console.log('Избранные фотостудии:', response.data);
+        setFavorites(response.data.map(fav => fav.studio_id));
+      })
+      .catch(error => {
+        console.error('Ошибка при загрузке избранных фотостудий:', error);
       });
   }, []);
 
@@ -29,14 +34,26 @@ function Photostudios() {
     navigate('/calendar', { state: { studio: studioName, address } });
   };
 
-  const toggleFavorite = (studioName) => {
-    setFavorites((prevFavorites) => {
-      if (prevFavorites.includes(studioName)) {
-        return prevFavorites.filter((name) => name !== studioName);
-      } else {
-        return [...prevFavorites, studioName];
-      }
-    });
+  const toggleFavorite = (studioId) => {
+    if (favorites.includes(studioId)) {
+      console.log('Удаление из избранного:', studioId);
+      axios.delete(`http://localhost:3001/api/favourites/${studioId}`)
+        .then(() => {
+          setFavorites(favorites.filter(id => id !== studioId));
+        })
+        .catch(error => {
+          console.error('Ошибка при удалении из избранного:', error);
+        });
+    } else {
+      console.log('Добавление в избранное:', studioId);
+      axios.post('http://localhost:3001/api/favourites', { studio_id: studioId })
+        .then(() => {
+          setFavorites([...favorites, studioId]);
+        })
+        .catch(error => {
+          console.error('Ошибка при добавлении в избранное:', error);
+        });
+    }
   };
 
   return (
@@ -62,8 +79,8 @@ function Photostudios() {
                     Забронировать
                   </button>
                   <span
-                    className={`favorite-icon ${favorites.includes(studio.studio) ? 'favorite' : ''}`}
-                    onClick={() => toggleFavorite(studio.studio)}
+                    className={`favorite-icon ${favorites.includes(studio.id) ? 'favorite' : ''}`}
+                    onClick={() => toggleFavorite(studio.id)}
                   >
                     ❤️
                   </span>

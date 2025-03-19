@@ -22,6 +22,7 @@ import Manager from './components/Manager';
 import Requests from './components/Requests';
 import PersonalData from './components/PersonalData';
 import EditPersonalData from './components/EditPersonalData'; // Импортируем компонент EditPersonalData
+import Favourites from './components/Favourites'; // Импортируем компонент Favourites
 import './App.css';
 import './index.css';
 
@@ -32,10 +33,10 @@ function App() {
         <Header />
         <main className="content">
           <Routes>
+            <Route path="/" element={<Home />} /> {/* Главная страница */}
             <Route path="/photostudios" element={<Photostudios />} />
             <Route path="/printing" element={<Printing />} />
             <Route path="/booking" element={<Booking />} />
-            <Route path="/" element={<Home />} /> {/* Главная страница */}
             <Route path="/login" element={<Login />} /> {/* Страница авторизации */}
             <Route path="/registration" element={<Registration />} /> {/* Страница регистрации */}
             <Route path="/printing-layflat" element={<PrintingLayFlat />} /> {/* Типография LayFlat */}
@@ -52,6 +53,7 @@ function App() {
             <Route path="/manager/requests" element={<Requests />} />
             <Route path="/manager/personal-data" element={<PersonalData />} />
             <Route path="/manager/edit-personal-data" element={<EditPersonalData />} /> {/* Редактирование личных данных */}
+            <Route path="/favourites" element={<Favourites />} /> {/* Избранное */}
           </Routes>
         </main>
         <Footer />

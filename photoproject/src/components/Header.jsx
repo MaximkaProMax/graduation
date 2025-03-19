@@ -24,6 +24,7 @@ function Header() {
             <ul className="dropdown">
               <li><Link to="/admin">Admin</Link></li>
               <li><Link to="/manager">Manager</Link></li>
+              <li><Link to="/favourites">Избранное</Link></li> {/* Добавленная ссылка */}
             </ul>
           </li>
         </ul>
@@ -37,6 +38,7 @@ function Header() {
           <li><Link to="/booking" onClick={toggleMenu}>Бронирования</Link></li>
           <li><Link to="/cart" onClick={toggleMenu}>Корзина</Link></li>
           <li><Link to="/login" onClick={toggleMenu}>Профиль</Link></li>
+          <li><Link to="/favourites" onClick={toggleMenu}>Избранное</Link></li> {/* Добавленная ссылка */}
         </ul>
       </nav>
     </header>

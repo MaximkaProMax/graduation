@@ -14,6 +14,7 @@ const userRoutes = require('./routes/userRoutes');
 const roleRoutes = require('./routes/roleRoutes'); // Импортируем маршруты ролей
 const photostudiosRoutes = require('./routes/photostudiosRoutes'); // Импортируем маршруты фотостудий
 const printingRoutes = require('./routes/printingRoutes'); // Импортируем маршруты печати
+const favouritesRoutes = require('./routes/favouritesRoutes'); // Импортируем маршруты для избранного
 
 const app = express();
 app.use(cors({
@@ -48,6 +49,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/roles', roleRoutes); // Подключаем маршруты ролей
 app.use('/api/photostudios', photostudiosRoutes); // Подключаем маршруты фотостудий
 app.use('/api/printing', printingRoutes); // Подключаем маршруты печати
+app.use('/api/favourites', favouritesRoutes); // Подключаем маршруты для избранного
 
 // Маршрут по умолчанию
 app.get('/', (req, res) => {

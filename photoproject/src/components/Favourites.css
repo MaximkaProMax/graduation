@@ -1,0 +1,160 @@
+.photostudios {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    color: black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+  
+  .studio-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .studio-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 490px;
+    margin-bottom: 20px;
+  }
+  
+  .studio-image {
+    width: 490px;
+    height: 370px;
+    background-position: center;
+    background-size: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  .studio-image.replace {
+    background-image: url('/src/components/assets/images/Photostudios/Replace.jpg');
+  }
+  
+  .studio-image.apart {
+    background-image: url('/src/components/assets/images/Photostudios/APART.jpg');
+  }
+  
+  .studio-image.hot-yellow {
+    background-image: url('/src/components/assets/images/Photostudios/Hot Yellow.png');
+  }
+  
+  .studio-image.white-garden {
+    background-image: url('/src/components/assets/images/Photostudios/White Garden.jpeg');
+  }
+  
+  .studio-info {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .studio-info h3 {
+    margin: 10px 0 5px 0;
+    min-height: 48px;
+    line-height: 1.2;
+  }
+  
+  .studio-info p {
+    margin: 5px 0;
+  }
+  
+  .book-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .book-button {
+    background-color: #ffeb3b;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .favorite-icon {
+    cursor: pointer;
+    font-size: 18px;
+    color: red;
+  }
+  
+  .action-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-top: 10px;
+  }
+  
+  .book-button {
+    background-color: #ffeb3b;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-right: 10px;
+  }
+  
+  .favorite-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+  
+  .favorite-icon.favorite {
+    color: #ff0000;
+  }
+  
+  /* Центрирование и отступы для карточек на десктопе */
+  @media (min-width: 769px) and (max-width: 1199px) {
+    .studio-list {
+      justify-content: center;
+    }
+  
+    .studio-card {
+      margin: 10px; /* Добавляем отступы */
+    }
+  }
+  
+  /* Медиа-запросы для мобильной оптимизации */
+  @media (max-width: 768px) {
+    .studio-list {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .studio-card {
+      width: 100%;
+      max-width: 360px; /* Уменьшаем ширину карточки */
+      margin-bottom: 20px;
+    }
+  
+    .studio-image {
+      width: 100%;
+      height: 270px; /* Пропорционально устанавливаем высоту изображений */
+      background-position: center;
+      background-size: cover;
+    }
+  
+    .studio-info {
+      padding: 15px;
+    }
+  
+    .book-button {
+      width: 100%;
+      margin-right: 0;
+    }
+  
+    .favorite-icon {
+      position: static;
+      margin-left: 10px;
+    }
+  }
