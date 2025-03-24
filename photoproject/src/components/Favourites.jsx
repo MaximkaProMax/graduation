@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Favourites.css';
 
 function Favourites() {
@@ -8,10 +10,10 @@ function Favourites() {
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/favourites')
+    axios.get('http://localhost:3001/api/favourites', { withCredentials: true })
       .then(response => {
         console.log('Избранные фотостудии:', response.data);
-        setFavorites(response.data.map(fav => fav.photostudio));
+        setFavorites(response.data);
       })
       .catch(error => {
         console.error('Ошибка при загрузке избранных фотостудий:', error);
@@ -22,8 +24,21 @@ function Favourites() {
     navigate('/calendar', { state: { studio: studioName, address } });
   };
 
+  const handleRemoveFavorite = (studioId) => {
+    console.log('Удаление из избранного:', studioId);
+    axios.delete(`http://localhost:3001/api/favourites/${studioId}`, { withCredentials: true })
+      .then(() => {
+        setFavorites(favorites.filter(fav => fav.id !== studioId));
+        toast.info(`Фотостудия с ID ${studioId} удалена из избранного`);
+      })
+      .catch(error => {
+        console.error('Ошибка при удалении из избранного:', error);
+      });
+  };
+
   return (
     <div className="photostudios">
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <h2>Избранные фотостудии</h2>
       <div className="studio-list">
         {favorites.length === 0 ? (
@@ -44,6 +59,12 @@ function Favourites() {
                   >
                     Забронировать
                   </button>
+                  <span
+                    className="remove-icon"
+                    onClick={() => handleRemoveFavorite(fav.id)}
+                  >
+                    ❌
+                  </span>
                 </div>
               </div>
             </div>

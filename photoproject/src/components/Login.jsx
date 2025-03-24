@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 
 function Login() {
@@ -24,7 +26,10 @@ function Login() {
       if (response.data.twoFactorRequired) {
         setIsTwoFactorRequired(true);
       } else {
-        navigate('/manager/personal-data'); // Перенаправление на личные данные
+        console.log('Успешная авторизация, установка isAuthenticated в localStorage');
+        localStorage.setItem('isAuthenticated', 'true');
+        console.log('Значение isAuthenticated в localStorage после установки:', localStorage.getItem('isAuthenticated'));
+        navigate('/'); // Перенаправление на главную страницу
       }
     } catch (error) {
       console.error('Произошла ошибка при попытке входа:', error);
@@ -43,7 +48,10 @@ function Login() {
         { withCredentials: true } // Добавляем опцию для отправки cookies
       );
       if (response.data.success) {
-        navigate('/manager/personal-data'); // Успешный вход
+        console.log('Успешная авторизация, установка isAuthenticated в localStorage');
+        localStorage.setItem('isAuthenticated', 'true');
+        console.log('Значение isAuthenticated в localStorage после установки:', localStorage.getItem('isAuthenticated'));
+        navigate('/'); // Успешный вход и перенаправление на главную страницу
       } else {
         setErrorMessage('Неверный код');
       }
@@ -58,6 +66,7 @@ function Login() {
 
   return (
     <div className="login-wrapper">
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <div className="login-container">
         <h2>Авторизация</h2>
         <form onSubmit={handleLogin}>

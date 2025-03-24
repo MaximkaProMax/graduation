@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Photostudios.css';
 
 function Photostudios() {
@@ -20,7 +22,7 @@ function Photostudios() {
       });
 
     // Загрузка избранных фотостудий
-    axios.get('http://localhost:3001/api/favourites')
+    axios.get('http://localhost:3001/api/favourites', { withCredentials: true })
       .then(response => {
         console.log('Избранные фотостудии:', response.data);
         setFavorites(response.data.map(fav => fav.studio_id));
@@ -37,27 +39,34 @@ function Photostudios() {
   const toggleFavorite = (studioId) => {
     if (favorites.includes(studioId)) {
       console.log('Удаление из избранного:', studioId);
-      axios.delete(`http://localhost:3001/api/favourites/${studioId}`)
+      axios.delete(`http://localhost:3001/api/favourites/${studioId}`, { withCredentials: true })
         .then(() => {
           setFavorites(favorites.filter(id => id !== studioId));
+          toast.info(`Фотостудия с ID ${studioId} удалена из избранного`);
         })
         .catch(error => {
           console.error('Ошибка при удалении из избранного:', error);
         });
     } else {
       console.log('Добавление в избранное:', studioId);
-      axios.post('http://localhost:3001/api/favourites', { studio_id: studioId })
+      axios.post('http://localhost:3001/api/favourites', { studio_id: studioId }, { withCredentials: true })
         .then(() => {
           setFavorites([...favorites, studioId]);
+          toast.success(`Фотостудия с ID ${studioId} добавлена в избранное`);
         })
         .catch(error => {
-          console.error('Ошибка при добавлении в избранное:', error);
+          if (error.response && error.response.status === 400) {
+            toast.warning(`Фотостудия с ID ${studioId} уже в избранном`);
+          } else {
+            console.error('Ошибка при добавлении в избранное:', error);
+          }
         });
     }
   };
 
   return (
     <div className="photostudios">
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <h2>Фотостудии</h2>
       <div className="studio-list">
         {studios.length === 0 ? (

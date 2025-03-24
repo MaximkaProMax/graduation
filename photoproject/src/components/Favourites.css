@@ -86,7 +86,7 @@
   
   .action-container {
     display: flex;
-    justify-content: center;
+    justify-content: space-between;
     align-items: center;
     position: relative;
     margin-top: 10px;
@@ -111,6 +111,17 @@
   
   .favorite-icon.favorite {
     color: #ff0000;
+  }
+  
+  .remove-icon {
+    cursor: pointer;
+    font-size: 24px;
+    color: red;
+    margin-left: 10px;
+  }
+  
+  .remove-icon:hover {
+    color: darkred;
   }
   
   /* Центрирование и отступы для карточек на десктопе */

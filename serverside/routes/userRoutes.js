@@ -262,8 +262,8 @@ router.post('/verify-2fa-code', async (req, res) => {
   const { code, email } = req.body;
 
   if (verifyTwoFactorCode(code)) {
-    const user = { email };
-    const accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+    const user = await User.findOne({ where: { email } });
+    const accessToken = jwt.sign({ userId: user.userId, email: user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
     res.cookie('token', accessToken, { httpOnly: true });
     res.json({ success: true, message: 'Код подтвержден' });
   } else {

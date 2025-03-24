@@ -2,12 +2,24 @@ const express = require('express');
 const router = express.Router();
 const Favourites = require('../models/Favourites');
 const Photostudios = require('../models/Photostudios');
-const { Op } = require('sequelize');
+const jwt = require('jsonwebtoken');
+
+// Middleware для проверки JWT токенов
+const authenticateToken = (req, res, next) => {
+  const token = req.cookies.token;
+  if (!token) return res.sendStatus(401);
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
+    req.user = user;
+    next();
+  });
+};
 
 // Получение избранных фотостудий для пользователя
-router.get('/', async (req, res) => {
+router.get('/', authenticateToken, async (req, res) => {
   try {
-    const userId = 17; // Используем фиксированный userId для тестирования
+    const userId = req.user.userId;
     console.log('Получение избранных фотостудий для пользователя с ID:', userId);
     const favourites = await Favourites.findAll({
       where: { user_id: userId },
@@ -22,10 +34,20 @@ router.get('/', async (req, res) => {
 });
 
 // Добавление фотостудии в избранное
-router.post('/', async (req, res) => {
+router.post('/', authenticateToken, async (req, res) => {
   try {
-    const userId = 17; // Используем фиксированный userId для тестирования
+    const userId = req.user.userId;
     const { studio_id } = req.body;
+
+    // Проверка на наличие фотостудии в избранном
+    const existingFavourite = await Favourites.findOne({
+      where: { user_id: userId, studio_id }
+    });
+
+    if (existingFavourite) {
+      return res.status(400).json({ message: 'Фотостудия уже в избранном' });
+    }
+
     console.log('Добавление фотостудии в избранное:', { user_id: userId, studio_id });
     await Favourites.create({ user_id: userId, studio_id });
     res.status(201).json({ message: 'Added to favourites' });
@@ -36,9 +58,9 @@ router.post('/', async (req, res) => {
 });
 
 // Удаление фотостудии из избранного
-router.delete('/:studio_id', async (req, res) => {
+router.delete('/:studio_id', authenticateToken, async (req, res) => {
   try {
-    const userId = 17; // Используем фиксированный userId для тестирования
+    const userId = req.user.userId;
     const { studio_id } = req.params;
     console.log('Удаление фотостудии из избранного:', { user_id: userId, studio_id });
     await Favourites.destroy({
