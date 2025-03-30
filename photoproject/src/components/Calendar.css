@@ -36,9 +36,61 @@
 
 .month-selection {
   display: flex;
+  align-items: center;
   justify-content: center;
+  gap: 20px; /* Увеличиваем расстояние между элементами */
+  margin-bottom: 20px; /* Добавляем отступ снизу */
+}
+
+.month-selection label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.month-button {
+  background-color: #ffc107;
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.month-button:hover {
+  background-color: #e0a800;
+}
+
+.month-year-container {
+  display: flex;
+  align-items: center;
   gap: 10px;
-  margin-bottom: 20px;
+}
+
+.month-select,
+.year-select {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ffc107;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.month-select:hover,
+.year-select:hover {
+  border-color: #e0a800;
+}
+
+.month-select:focus,
+.year-select:focus {
+  outline: none;
+  border-color: #e0a800;
+  box-shadow: 0 0 5px rgba(224, 168, 0, 0.5);
 }
 
 .calendar {
@@ -48,26 +100,39 @@
   justify-content: center;
 }
 
-.day,
-.empty-day {
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 40px;
   height: 40px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background-color: #f0f0f0;
+  margin: 5px;
   border-radius: 5px;
   cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.day.today {
+  border: 2px solid #ffc107;
+  background-color: #fff8e1;
+  color: #000;
+  font-weight: bold;
+}
+
+.day.selected {
+  background-color: #ffc107;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+.day:hover {
+  background-color: #ffe082;
 }
 
 .empty-day {
   background-color: transparent;
   cursor: default;
-}
-
-.day.selected {
-  background-color: #C17900;
-  color: white;
 }
 
 .day-of-week {

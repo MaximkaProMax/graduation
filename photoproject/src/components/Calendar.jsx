@@ -1,82 +1,166 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Calendar.css';
 
 const Calendar = () => {
   const location = useLocation();
-  const { studio, address, price = 0 } = location.state || {}; // Устанавливаем значение по умолчанию для price
-  const numericPrice = typeof price === 'string' ? parseFloat(price.replace(/[^\d.-]/g, '')) : price; // Преобразуем строку в число
-  const [selectedDate, setSelectedDate] = useState(null);
-  const [currentDate, setCurrentDate] = useState(new Date());
-  const [month, setMonth] = useState(currentDate.getMonth());
-  const [year, setYear] = useState(currentDate.getFullYear());
+  const { studio, address, price = 0 } = location.state || {};
+  const numericPrice = typeof price === 'string' ? parseFloat(price.replace(/[^\d.-]/g, '')) : price;
+
+  const today = new Date(); // Сегодняшняя дата
+  const [selectedDate, setSelectedDate] = useState(today.getDate()); // Устанавливаем сегодняшнюю дату
+  const [currentDate, setCurrentDate] = useState(today);
+  const [month, setMonth] = useState(today.getMonth());
+  const [year, setYear] = useState(today.getFullYear());
   const [bookings, setBookings] = useState([]);
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
-  const [totalCost, setTotalCost] = useState(0); // Новое состояние для итоговой стоимости
+  const [totalCost, setTotalCost] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     calculateTotalCost();
-  }, [startTime, endTime, numericPrice]); // Пересчитываем стоимость при изменении времени или цены
+  }, [startTime, endTime, numericPrice]);
 
   const calculateTotalCost = () => {
     const [startHour] = startTime.split(':').map(Number);
     const [endHour] = endTime.split(':').map(Number);
     const hours = endHour - startHour;
-    const cost = hours > 0 ? hours * numericPrice : 0; // Используем числовую цену
+    const cost = hours > 0 ? hours * numericPrice : 0;
     setTotalCost(cost);
   };
 
   const handleDateClick = (date) => {
+    const selectedFullDate = new Date(year, month, date);
+    today.setHours(0, 0, 0, 0); // Убираем время для сравнения только дат
+
+    if (selectedFullDate < today) {
+      toast.error('Нельзя выбрать прошедшую дату!');
+      return;
+    }
+
     setSelectedDate(date);
+  };
+
+  const handlePreviousMonth = () => {
+    if (month === 0) {
+      setMonth(11);
+      setYear(year - 1);
+    } else {
+      setMonth(month - 1);
+    }
+
+    if (month - 1 === today.getMonth() && year === today.getFullYear()) {
+      setSelectedDate(today.getDate());
+    } else {
+      setSelectedDate(null);
+    }
+  };
+
+  const handleNextMonth = () => {
+    if (month === 11) {
+      setMonth(0);
+      setYear(year + 1);
+    } else {
+      setMonth(month + 1);
+    }
+
+    if (month + 1 === today.getMonth() && year === today.getFullYear()) {
+      setSelectedDate(today.getDate());
+    } else {
+      setSelectedDate(null);
+    }
   };
 
   const handleBookingSubmit = (event) => {
     event.preventDefault();
+    if (!selectedDate) {
+      toast.error('Пожалуйста, выберите дату!');
+      return;
+    }
+
     const newBooking = {
       name: studio,
       date: `${selectedDate}/${month + 1}/${year}`,
       startTime: startTime,
       endTime: endTime,
       address: address,
-      totalCost: totalCost, // Добавляем итоговую стоимость в бронирование
+      totalCost: totalCost,
     };
     setBookings([...bookings, newBooking]);
-    setSelectedDate(null);
+    setSelectedDate(today.getDate()); // Сбрасываем на сегодняшнюю дату
     setStartTime('09:00');
     setEndTime('10:00');
     event.target.reset();
 
-    // Переход на страницу оплаты
     navigate('/payment');
   };
 
   const handleAddToCart = () => {
+    if (!selectedDate) {
+      toast.error('Пожалуйста, выберите дату перед добавлением в корзину!');
+      return;
+    }
+
     const cartItem = {
       name: studio,
       date: `${selectedDate}/${month + 1}/${year}`,
       startTime: startTime,
       endTime: endTime,
       address: address,
-      totalCost: totalCost, // Добавляем итоговую стоимость в корзину
+      totalCost: totalCost,
     };
+    console.log('Добавлено в корзину:', cartItem);
   };
 
   const handleMonthChange = (event) => {
-    setMonth(parseInt(event.target.value));
+    const newMonth = parseInt(event.target.value);
+    setMonth(newMonth);
+
+    // Проверяем, если выбран текущий месяц и год, выделяем текущую дату
+    if (newMonth === today.getMonth() && year === today.getFullYear()) {
+      setSelectedDate(today.getDate());
+    } else {
+      setSelectedDate(null); // Сбрасываем выделение
+    }
   };
 
   const handleYearChange = (event) => {
-    setYear(parseInt(event.target.value));
+    const newYear = parseInt(event.target.value);
+    setYear(newYear);
+
+    // Проверяем, если выбран текущий месяц и год, выделяем текущую дату
+    if (month === today.getMonth() && newYear === today.getFullYear()) {
+      setSelectedDate(today.getDate());
+    } else {
+      setSelectedDate(null); // Сбрасываем выделение
+    }
   };
 
   const handleStartTimeChange = (event) => {
-    setStartTime(event.target.value);
+    const newStartTime = event.target.value;
+    const [startHour] = newStartTime.split(':').map(Number);
+
+    const newEndTime = `${String(startHour + 1).padStart(2, '0')}:00`;
+
+    setStartTime(newStartTime);
+    setEndTime(newEndTime);
   };
 
   const handleEndTimeChange = (event) => {
-    setEndTime(event.target.value);
+    const newEndTime = event.target.value;
+    const [startHour] = startTime.split(':').map(Number);
+    const [endHour] = newEndTime.split(':').map(Number);
+
+    if (endHour <= startHour) {
+      const correctedEndTime = `${String(startHour + 1).padStart(2, '0')}:00`;
+      toast.error('Время окончания не может быть раньше или равно времени начала. Исправлено автоматически.');
+      setEndTime(correctedEndTime);
+    } else {
+      setEndTime(newEndTime);
+    }
   };
 
   const getFirstDayOfMonth = () => {
@@ -103,10 +187,14 @@ const Calendar = () => {
     }
 
     for (let i = 1; i <= daysInMonth; i++) {
+      const isToday =
+        i === today.getDate() && month === today.getMonth() && year === today.getFullYear();
+      const isSelected = selectedDate === i;
+
       days.push(
         <div
           key={i}
-          className={`day ${selectedDate === i ? 'selected' : ''}`}
+          className={`day ${isSelected ? 'selected' : ''} ${isToday && !isSelected ? 'today' : ''}`}
           onClick={() => handleDateClick(i)}
         >
           {i}
@@ -127,26 +215,29 @@ const Calendar = () => {
 
   return (
     <div className="calendar-page">
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <div className="left-section">
         <h2 className="aligned-header">Бронирование дат</h2>
         <div className="calendar-container">
           <div className="month-selection">
-            <label>Месяц: </label>
-            <select value={month} onChange={handleMonthChange}>
+            <button className="month-button" onClick={handlePreviousMonth}>&lt;</button>
+            <label>Месяц:</label>
+            <select className="month-select" value={month} onChange={handleMonthChange}>
               {Array.from({ length: 12 }, (_, index) => (
                 <option key={index} value={index}>
                   {new Date(0, index).toLocaleString('default', { month: 'long' })}
                 </option>
               ))}
             </select>
-            <label>Год: </label>
-            <select value={year} onChange={handleYearChange}>
+            <label>Год:</label>
+            <select className="year-select" value={year} onChange={handleYearChange}>
               {Array.from({ length: 5 }, (_, index) => (
                 <option key={index} value={currentDate.getFullYear() + index}>
                   {currentDate.getFullYear() + index}
                 </option>
               ))}
             </select>
+            <button className="month-button" onClick={handleNextMonth}>&gt;</button>
           </div>
           <div className="calendar">
             {renderDaysOfWeek()}
