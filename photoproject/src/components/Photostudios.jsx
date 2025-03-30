@@ -32,8 +32,8 @@ function Photostudios() {
       });
   }, []);
 
-  const handleBookButtonClick = (studioName, address) => {
-    navigate('/calendar', { state: { studio: studioName, address } });
+  const handleBookButtonClick = (studioName, address, price) => {
+    navigate('/calendar', { state: { studio: studioName, address, price } });
   };
 
   const toggleFavorite = (studioId) => {
@@ -83,7 +83,7 @@ function Photostudios() {
                 <div className="action-container">
                   <button
                     className="book-button"
-                    onClick={() => handleBookButtonClick(studio.studio, studio.address)}
+                    onClick={() => handleBookButtonClick(studio.studio, studio.address, studio.price)}
                   >
                     Забронировать
                   </button>

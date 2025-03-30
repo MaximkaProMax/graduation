@@ -4,7 +4,8 @@ import './Calendar.css';
 
 const Calendar = () => {
   const location = useLocation();
-  const { studio, address } = location.state || {};
+  const { studio, address, price = 0 } = location.state || {}; // Устанавливаем значение по умолчанию для price
+  const numericPrice = typeof price === 'string' ? parseFloat(price.replace(/[^\d.-]/g, '')) : price; // Преобразуем строку в число
   const [selectedDate, setSelectedDate] = useState(null);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [month, setMonth] = useState(currentDate.getMonth());
@@ -12,11 +13,20 @@ const Calendar = () => {
   const [bookings, setBookings] = useState([]);
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
+  const [totalCost, setTotalCost] = useState(0); // Новое состояние для итоговой стоимости
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCurrentDate(new Date());
-  }, []);
+    calculateTotalCost();
+  }, [startTime, endTime, numericPrice]); // Пересчитываем стоимость при изменении времени или цены
+
+  const calculateTotalCost = () => {
+    const [startHour] = startTime.split(':').map(Number);
+    const [endHour] = endTime.split(':').map(Number);
+    const hours = endHour - startHour;
+    const cost = hours > 0 ? hours * numericPrice : 0; // Используем числовую цену
+    setTotalCost(cost);
+  };
 
   const handleDateClick = (date) => {
     setSelectedDate(date);
@@ -29,7 +39,8 @@ const Calendar = () => {
       date: `${selectedDate}/${month + 1}/${year}`,
       startTime: startTime,
       endTime: endTime,
-      address: address
+      address: address,
+      totalCost: totalCost, // Добавляем итоговую стоимость в бронирование
     };
     setBookings([...bookings, newBooking]);
     setSelectedDate(null);
@@ -47,9 +58,9 @@ const Calendar = () => {
       date: `${selectedDate}/${month + 1}/${year}`,
       startTime: startTime,
       endTime: endTime,
-      address: address
+      address: address,
+      totalCost: totalCost, // Добавляем итоговую стоимость в корзину
     };
-    console.log('Добавлено в корзину:', cartItem);
   };
 
   const handleMonthChange = (event) => {
@@ -170,6 +181,10 @@ const Calendar = () => {
             <div className="input-group">
               <label>Адрес</label>
               <input type="text" name="address" value={address || ''} readOnly />
+            </div>
+            <div className="input-group">
+              <label>Итоговая стоимость</label>
+              <input type="text" value={`${totalCost} ₽`} readOnly />
             </div>
             <button type="submit">Забронировать</button>
           </form>
