@@ -33,7 +33,8 @@
 }
 
 .desktop-menu li a:hover {
-  color: #ffeb3b;
+  color: #e6b800; /* Новый цвет текста при наведении */
+  text-decoration: underline; /* Добавляем нижнее подчеркивание */
 }
 
 .profile-menu .dropdown {
@@ -66,7 +67,8 @@
 }
 
 .dropdown li a:hover {
-  color: #ffeb3b;
+  color: #e6b800; /* Новый цвет текста при наведении */
+  text-decoration: underline; /* Добавляем нижнее подчеркивание */
 }
 
 .menu-toggle {
@@ -105,7 +107,8 @@
 }
 
 .mobile-menu li a:hover {
-  color: #ffeb3b; /* Цвет текста при наведении */
+  color: #e6b800; /* Новый цвет текста при наведении */
+  text-decoration: underline; /* Добавляем нижнее подчеркивание */
 }
 
 @media (max-width: 768px) {
