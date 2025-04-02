@@ -100,11 +100,11 @@ const Calendar = () => {
 
   const handleAddToCart = () => {
     if (!selectedDate) {
-      toast.error('Пожалуйста, выберите дату перед добавлением в корзину!');
+      toast.error('Пожалуйста, выберите дату перед бронированием!');
       return;
     }
 
-    const cartItem = {
+    const bookingDetails = {
       name: studio,
       date: `${selectedDate}/${month + 1}/${year}`,
       startTime: startTime,
@@ -112,7 +112,9 @@ const Calendar = () => {
       address: address,
       totalCost: totalCost,
     };
-    console.log('Добавлено в корзину:', cartItem);
+
+    // Отладочное сообщение
+    console.log('Данные для бронирования:', bookingDetails);
   };
 
   const handleMonthChange = (event) => {
@@ -277,9 +279,9 @@ const Calendar = () => {
               <label>Итоговая стоимость</label>
               <input type="text" value={`${totalCost} ₽`} readOnly />
             </div>
-            <button type="submit">Забронировать</button>
+            <button type="submit">Оплатить</button>
           </form>
-          <button onClick={handleAddToCart}>Добавить в корзину</button>
+          <button onClick={handleAddToCart}>Забронировать</button>
         </div>
       </div>
     </div>

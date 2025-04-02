@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './PrintingLayFlat.css';
+import axios from 'axios'; // Импортируем axios
 
 const PrintingLayFlat = () => {
   const [format, setFormat] = useState([]);
@@ -101,18 +102,34 @@ const PrintingLayFlat = () => {
     console.log('Добавлено в корзину:', cartItem);
   };
 
-  const handleBooking = () => {
-    const bookingDetails = {
-      format: selectedFormat,
-      base: selectedBase,
-      spreads: spreads,
-      lamination: selectedLamination,
-      quantity: quantity,
-      price: price,
-      albumName: albumName
-    };
-    console.log('Бронирование:', bookingDetails);
-    alert('Ваше бронирование успешно создано!');
+  const handleBooking = async () => {
+    try {
+      const bookingDetails = {
+        format: selectedFormat,
+        base: selectedBase,
+        spreads: spreads,
+        lamination: selectedLamination,
+        quantity: quantity,
+        price: price,
+        albumName: albumName,
+      };
+
+      // Отладочное сообщение
+      console.log('Отправляемые данные для бронирования:', bookingDetails);
+
+      const response = await axios.post('http://localhost:3001/api/bookings/add', bookingDetails, {
+        withCredentials: true, // Отправляем cookies
+      });
+
+      if (response.data.success) {
+        alert('Бронирование успешно создано!');
+      } else {
+        alert('Ошибка при создании бронирования');
+      }
+    } catch (error) {
+      console.error('Ошибка при бронировании:', error);
+      alert('Ошибка при бронировании');
+    }
   };
 
   return (
