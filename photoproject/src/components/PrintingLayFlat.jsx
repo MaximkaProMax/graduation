@@ -101,6 +101,20 @@ const PrintingLayFlat = () => {
     console.log('Добавлено в корзину:', cartItem);
   };
 
+  const handleBooking = () => {
+    const bookingDetails = {
+      format: selectedFormat,
+      base: selectedBase,
+      spreads: spreads,
+      lamination: selectedLamination,
+      quantity: quantity,
+      price: price,
+      albumName: albumName
+    };
+    console.log('Бронирование:', bookingDetails);
+    alert('Ваше бронирование успешно создано!');
+  };
+
   return (
     <div className="printing-layflat">
       <div className="left-section">
@@ -168,6 +182,7 @@ const PrintingLayFlat = () => {
           Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
         </div>
         <button onClick={handleAddToCart}>Добавить в корзину</button>
+        <button onClick={handleBooking} className="booking-button">Забронировать</button> {/* Новая кнопка */}
       </div>
     </div>
   );

@@ -93,6 +93,19 @@ const PrintingFlexBind = () => {
     console.log('Добавлено в корзину:', cartItem);
   };
 
+  const handleBooking = () => {
+    const bookingDetails = {
+      format: selectedFormat,
+      spreads: spreads,
+      lamination: selectedLamination,
+      quantity: quantity,
+      price: price,
+      albumName: albumName
+    };
+    console.log('Бронирование:', bookingDetails);
+    alert('Ваше бронирование успешно создано!');
+  };
+
   return (
     <div className="printing-flexbind">
       <div className="left-section">
@@ -152,6 +165,7 @@ const PrintingFlexBind = () => {
           Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
         </div>
         <button onClick={handleAddToCart}>Добавить в корзину</button>
+        <button onClick={handleBooking} className="booking-button">Забронировать</button> {/* Новая кнопка */}
       </div>
     </div>
   );
