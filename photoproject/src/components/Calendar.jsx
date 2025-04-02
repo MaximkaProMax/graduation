@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
+import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
 import './Calendar.css';
 
@@ -98,7 +99,7 @@ const Calendar = () => {
     navigate('/payment');
   };
 
-  const handleAddToCart = () => {
+  const handleAddToCart = async () => {
     if (!selectedDate) {
       toast.error('Пожалуйста, выберите дату перед бронированием!');
       return;
@@ -108,13 +109,27 @@ const Calendar = () => {
       name: studio,
       date: `${selectedDate}/${month + 1}/${year}`,
       startTime: startTime,
-      endTime: endTime,
       address: address,
       totalCost: totalCost,
     };
 
     // Отладочное сообщение
     console.log('Данные для бронирования:', bookingDetails);
+
+    try {
+      const response = await axios.post('http://localhost:3001/api/bookings/studios/add', bookingDetails, {
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        toast.success('Бронирование успешно добавлено!');
+      } else {
+        toast.error('Ошибка при добавлении бронирования');
+      }
+    } catch (error) {
+      console.error('Ошибка при бронировании:', error);
+      toast.error('Ошибка при бронировании');
+    }
   };
 
   const handleMonthChange = (event) => {

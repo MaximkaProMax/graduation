@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { BookingTypographie } = require('../models/BookingTypographie');
+const { BookingStudio } = require('../models/BookingStudio');
 const jwt = require('jsonwebtoken');
 
 // Middleware для проверки JWT токенов
@@ -15,7 +16,7 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Добавление нового бронирования
+// Добавление нового бронирования типографии
 router.post('/add', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId; // Получаем ID пользователя из токена
@@ -46,7 +47,7 @@ router.post('/add', authenticateToken, async (req, res) => {
   }
 });
 
-// Получение всех бронирований авторизованного пользователя
+// Получение всех бронирований типографии авторизованного пользователя
 router.get('/user', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId; // Получаем ID пользователя из токена
@@ -62,8 +63,8 @@ router.get('/user', authenticateToken, async (req, res) => {
   }
 });
 
-// Удаление бронирования
-router.delete('/:id', authenticateToken, async (req, res) => {
+// Удаление бронирования типографии
+router.delete('/typography/:id', authenticateToken, async (req, res) => {
   try {
     const bookingId = req.params.id;
 
@@ -77,7 +78,70 @@ router.delete('/:id', authenticateToken, async (req, res) => {
       res.status(404).json({ success: false, message: 'Заявка не найдена' });
     }
   } catch (error) {
-    console.error('Ошибка при удалении заявки:', error);
+    console.error('Ошибка при удалении заявки на типографию:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при удалении заявки' });
+  }
+});
+
+// Добавление нового бронирования фотостудии
+router.post('/studios/add', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId; // Получаем ID пользователя из токена
+    const { name, date, startTime, address, totalCost } = req.body;
+
+    if (!name || !date || !startTime || !address || !totalCost) {
+      return res.status(400).json({ success: false, message: 'Все поля должны быть заполнены' });
+    }
+
+    const newBooking = await BookingStudio.create({
+      studio_name: name,
+      user: userId,
+      status: 'В обработке',
+      date,
+      time: startTime,
+      address,
+      final_price: totalCost,
+    });
+
+    res.status(201).json({ success: true, booking: newBooking });
+  } catch (error) {
+    console.error('Ошибка при добавлении бронирования фотостудии:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при добавлении бронирования' });
+  }
+});
+
+// Получение всех бронирований фотостудий авторизованного пользователя
+router.get('/studios/user', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+
+    const bookings = await BookingStudio.findAll({
+      where: { user: userId },
+    });
+
+    res.status(200).json({ success: true, bookings });
+  } catch (error) {
+    console.error('Ошибка при получении бронирований фотостудий:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при получении бронирований' });
+  }
+});
+
+// Удаление бронирования фотостудии
+router.delete('/studios/:id', authenticateToken, async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+
+    const deleted = await BookingStudio.destroy({
+      where: { booking_studio_id: bookingId, user: req.user.userId },
+    });
+
+    if (deleted) {
+      res.status(200).json({ success: true, message: 'Заявка успешно удалена' });
+    } else {
+      res.status(404).json({ success: false, message: 'Заявка не найдена' });
+    }
+  } catch (error) {
+    console.error('Ошибка при удалении заявки на фотостудию:', error);
     res.status(500).json({ success: false, message: 'Ошибка при удалении заявки' });
   }
 });
