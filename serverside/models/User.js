@@ -12,10 +12,10 @@ const User = sequelize.define('User', {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: 'Roles',
-      key: 'roleId',
+      model: 'Roles', // Указывает на таблицу Roles
+      key: 'roleId',  // Указывает на поле roleId в таблице Roles
     },
-    defaultValue: 2 // Устанавливаем значение по умолчанию для roleId, например, для роли 'User'
+    defaultValue: 2, // Значение по умолчанию
   },
   login: {
     type: DataTypes.STRING,

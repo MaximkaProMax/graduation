@@ -55,7 +55,7 @@ const EditUsers = () => {
         login,
         telephone,
         email,
-        roleId,
+        roleId: parseInt(roleId, 10), // Преобразуем roleId в число
         currentPassword,
         newPassword,
       };

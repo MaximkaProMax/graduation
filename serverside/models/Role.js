@@ -10,11 +10,10 @@ const Role = sequelize.define('Role', {
   roleName: {
     type: DataTypes.STRING,
     allowNull: false,
-    unique: true,
-  }
+  },
 }, {
-  tableName: 'Roles',
-  timestamps: true,
+  tableName: 'Roles', // Указываем имя таблицы
+  timestamps: false, // Отключаем автоматическое добавление полей createdAt и updatedAt
 });
 
 module.exports = Role;

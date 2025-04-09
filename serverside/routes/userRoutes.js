@@ -4,6 +4,7 @@ const jwt = require('jsonwebtoken');
 const { sendEmail } = require('../services/emailService');
 const { generateTwoFactorCode, verifyTwoFactorCode } = require('../services/twoFactorAuth');
 const User = require('../models/User');
+const Role = require('../models/Role'); // Импорт модели Role
 const router = express.Router();
 
 // Middleware для проверки JWT токенов
@@ -186,9 +187,15 @@ router.put('/update-password', authenticateToken, async (req, res) => {
 // Маршрут для обновления существующего пользователя
 router.put('/:userId', async (req, res) => {
   const { userId } = req.params;
-  const { name, login, telephone, email, currentPassword, newPassword } = req.body;
+  const { name, login, telephone, email, currentPassword, newPassword, roleId } = req.body;
 
   try {
+    // Проверяем, существует ли roleId в таблице Roles
+    const roleExists = await Role.findByPk(roleId);
+    if (!roleExists) {
+      return res.status(400).json({ message: 'Указанная роль не существует' });
+    }
+
     const user = await User.findByPk(userId);
 
     if (!user) {
@@ -207,6 +214,7 @@ router.put('/:userId', async (req, res) => {
     user.login = login;
     user.telephone = telephone;
     user.email = email;
+    user.roleId = roleId; // Обновляем роль
 
     await user.save();
 
