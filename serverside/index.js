@@ -16,6 +16,7 @@ const photostudiosRoutes = require('./routes/photostudiosRoutes'); // Импор
 const printingRoutes = require('./routes/printingRoutes'); // Импортируем маршруты печати
 const favouritesRoutes = require('./routes/favouritesRoutes'); // Импортируем маршруты для избранного
 const bookingRoutes = require('./routes/bookingRoutes'); // Импортируем маршруты для бронирования
+const requestsRoutes = require('./routes/requestsRoutes'); // Импорт нового маршрута
 
 const app = express();
 app.use(cors({
@@ -52,6 +53,7 @@ app.use('/api/photostudios', photostudiosRoutes); // Подключаем мар
 app.use('/api/printing', printingRoutes); // Подключаем маршруты печати
 app.use('/api/favourites', favouritesRoutes); // Подключаем маршруты для избранного
 app.use('/api/bookings', bookingRoutes); // Подключаем маршруты для бронирования
+app.use('/api/requests', requestsRoutes); // Подключение маршрута для запросов
 
 // Маршрут по умолчанию
 app.get('/', (req, res) => {

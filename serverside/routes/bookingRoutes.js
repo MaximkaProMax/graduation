@@ -83,6 +83,17 @@ router.delete('/typography/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Получение всех заявок на типографию (для администраторов)
+router.get('/typography/all', authenticateToken, async (req, res) => {
+  try {
+    const bookings = await BookingTypographie.findAll(); // Убираем фильтрацию по userId
+    res.status(200).json({ success: true, bookings });
+  } catch (error) {
+    console.error('Ошибка при получении всех заявок на типографию:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при получении заявок' });
+  }
+});
+
 // Добавление нового бронирования фотостудии
 router.post('/studios/add', authenticateToken, async (req, res) => {
   try {
@@ -143,6 +154,17 @@ router.delete('/studios/:id', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Ошибка при удалении заявки на фотостудию:', error);
     res.status(500).json({ success: false, message: 'Ошибка при удалении заявки' });
+  }
+});
+
+// Получение всех заявок на фотостудии (для администраторов)
+router.get('/studios/all', authenticateToken, async (req, res) => {
+  try {
+    const bookings = await BookingStudio.findAll(); // Убираем фильтрацию по userId
+    res.status(200).json({ success: true, bookings });
+  } catch (error) {
+    console.error('Ошибка при получении всех заявок на фотостудии:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при получении заявок' });
   }
 });
 
