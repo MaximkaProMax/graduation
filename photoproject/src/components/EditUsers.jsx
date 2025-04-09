@@ -47,14 +47,15 @@ const EditUsers = () => {
   };
 
   const handleSaveUser = () => {
-    const { userId, name, login, telephone, email } = editableUser;
+    const { userId, name, login, telephone, email, roleId } = editableUser;
 
-    if (name && login && telephone && email) {
+    if (name && login && telephone && email && roleId) {
       const updateData = {
         name,
         login,
         telephone,
         email,
+        roleId,
         currentPassword,
         newPassword,
       };
@@ -129,7 +130,7 @@ const EditUsers = () => {
   };
 
   const handleAddUser = () => {
-    setEditableUser({ userId: null, name: '', login: '', telephone: '', email: '', password: '' });
+    setEditableUser({ userId: null, name: '', login: '', telephone: '', email: '', password: '', roleId: '' });
     setIsEditing(true);
   };
 
@@ -151,6 +152,7 @@ const EditUsers = () => {
             <th>Логин</th>
             <th>Телефон</th>
             <th>Email</th>
+            <th>Роль</th>
             <th>Действия</th>
           </tr>
         </thead>
@@ -208,6 +210,18 @@ const EditUsers = () => {
               </td>
               <td>
                 {isEditing && editableUser.userId === user.userId ? (
+                  <input
+                    type="number"
+                    name="roleId"
+                    value={editableUser.roleId || ''}
+                    onChange={handleInputChange}
+                  />
+                ) : (
+                  user.roleId
+                )}
+              </td>
+              <td>
+                {isEditing && editableUser.userId === user.userId ? (
                   <>
                     <button className="edit-users-button" onClick={handleSaveUser}>Сохранить</button>
                     <button className="edit-users-button" onClick={handleCancelEdit}>Отмена</button>
@@ -259,6 +273,15 @@ const EditUsers = () => {
               type="email"
               name="email"
               value={editableUser.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input-group">
+            <label>Роль</label>
+            <input
+              type="number"
+              name="roleId"
+              value={editableUser.roleId}
               onChange={handleInputChange}
             />
           </div>
