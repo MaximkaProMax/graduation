@@ -82,74 +82,78 @@ const Booking = () => {
   return (
     <div className="booking-container">
       <h1>Мои заявки на типографию</h1>
-      <table className="booking-table">
-        <thead>
-          <tr>
-            <th>Название альбома</th>
-            <th>Статус</th>
-            <th>Формат</th>
-            <th>Основа разворота</th>
-            <th>Количество разворотов</th>
-            <th>Ламинация</th>
-            <th>Количество копий</th>
-            <th>Адрес доставки</th>
-            <th>Итоговая цена</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {typographyBookings.map((booking, index) => (
-            <tr key={index}>
-              <td>{booking.album_name || '-'}</td>
-              <td>{booking.status || '-'}</td>
-              <td>{booking.format || '-'}</td>
-              <td>{booking.the_basis_of_the_spread || '-'}</td>
-              <td>{booking.number_of_spreads || '-'}</td>
-              <td>{booking.lamination || '-'}</td>
-              <td>{booking.number_of_copies || '-'}</td>
-              <td>{booking.address_delivery || '-'}</td>
-              <td>{booking.final_price || '-'}</td>
-              <td>
-                <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
-                  Удалить
-                </button>
-              </td>
+      <div className="table-container">
+        <table className="booking-table">
+          <thead>
+            <tr>
+              <th>Название альбома</th>
+              <th>Статус</th>
+              <th>Формат</th>
+              <th>Основа разворота</th>
+              <th>Количество разворотов</th>
+              <th>Ламинация</th>
+              <th>Количество копий</th>
+              <th>Адрес доставки</th>
+              <th>Итоговая цена</th>
+              <th>Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {typographyBookings.map((booking, index) => (
+              <tr key={index}>
+                <td>{booking.album_name || '-'}</td>
+                <td>{booking.status || '-'}</td>
+                <td>{booking.format || '-'}</td>
+                <td>{booking.the_basis_of_the_spread || '-'}</td>
+                <td>{booking.number_of_spreads || '-'}</td>
+                <td>{booking.lamination || '-'}</td>
+                <td>{booking.number_of_copies || '-'}</td>
+                <td>{booking.address_delivery || '-'}</td>
+                <td>{booking.final_price || '-'}</td>
+                <td>
+                  <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
+                    Удалить
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       <h1>Мои заявки на фотостудию</h1>
-      <table className="booking-table">
-        <thead>
-          <tr>
-            <th>Название студии</th>
-            <th>Статус</th>
-            <th>Дата</th>
-            <th>Время</th>
-            <th>Адрес</th>
-            <th>Итоговая цена</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {studioBookings.map((booking, index) => (
-            <tr key={index}>
-              <td>{booking.studio_name || '-'}</td>
-              <td>{booking.status || '-'}</td>
-              <td>{booking.date || '-'}</td>
-              <td>{booking.time || '-'}</td>
-              <td>{booking.address || '-'}</td>
-              <td>{booking.final_price || '-'}</td>
-              <td>
-                <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
-                  Удалить
-                </button>
-              </td>
+      <div className="table-container">
+        <table className="booking-table">
+          <thead>
+            <tr>
+              <th>Название студии</th>
+              <th>Статус</th>
+              <th>Дата</th>
+              <th>Время</th>
+              <th>Адрес</th>
+              <th>Итоговая цена</th>
+              <th>Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {studioBookings.map((booking, index) => (
+              <tr key={index}>
+                <td>{booking.studio_name || '-'}</td>
+                <td>{booking.status || '-'}</td>
+                <td>{booking.date || '-'}</td>
+                <td>{booking.time || '-'}</td>
+                <td>{booking.address || '-'}</td>
+                <td>{booking.final_price || '-'}</td>
+                <td>
+                  <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
+                    Удалить
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
