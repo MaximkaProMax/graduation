@@ -9,6 +9,7 @@ function Photostudios() {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState([]);
   const [studios, setStudios] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); // Состояние для строки поиска
 
   useEffect(() => {
     // Загрузка данных из API
@@ -64,15 +65,32 @@ function Photostudios() {
     }
   };
 
+  // Фильтрация студий на основе строки поиска
+  const filteredStudios = studios.filter((studio) =>
+    studio.studio.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="photostudios">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <h2>Фотостудии</h2>
+
+      {/* Строка поиска */}
+      <div className="search-container">
+        <input
+          type="text"
+          placeholder="Поиск по названию..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="search-input"
+        />
+      </div>
+
       <div className="studio-list">
-        {studios.length === 0 ? (
+        {filteredStudios.length === 0 ? (
           <p>Нет доступных фотостудий</p>
         ) : (
-          studios.map((studio) => (
+          filteredStudios.map((studio) => (
             <div key={studio.id} className="studio-card">
               <div className={`studio-image ${studio.photo}`}></div>
               <div className="studio-info">
