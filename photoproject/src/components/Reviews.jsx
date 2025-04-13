@@ -81,6 +81,21 @@ const Reviews = () => {
     }
   };
 
+  const handleDelete = async (reviewId) => {
+    try {
+      const response = await axios.delete(`http://localhost:3001/api/reviews/${reviewId}`, {
+        withCredentials: true,
+      });
+      if (response.status === 200) {
+        toast.success('Отзыв успешно удален!');
+        setReviews((prevReviews) => prevReviews.filter((review) => review.review_id !== reviewId)); // Обновляем состояние
+      }
+    } catch (error) {
+      console.error('Ошибка при удалении отзыва:', error);
+      toast.error('Не удалось удалить отзыв. Попробуйте позже.');
+    }
+  };
+
   return (
     <div className="reviews-container">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
@@ -94,6 +109,7 @@ const Reviews = () => {
             <th>Отзыв</th>
             <th>Студия</th>
             <th>Типография</th>
+            <th>Действие</th>
           </tr>
         </thead>
         <tbody>
@@ -104,6 +120,14 @@ const Reviews = () => {
               <td>{review.comment || 'Не указано'}</td>
               <td>{review.photostudio || 'Не указано'}</td>
               <td>{review.printing || 'Не указано'}</td>
+              <td>
+                <button
+                  onClick={() => handleDelete(review.review_id)}
+                  className="delete-button"
+                >
+                  Удалить
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>

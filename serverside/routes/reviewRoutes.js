@@ -78,4 +78,27 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
+// Удаление отзыва (только для авторизованных пользователей)
+router.delete('/:id', authenticateToken, async (req, res) => {
+  try {
+    const reviewId = req.params.id;
+    const userId = req.user.userId; // Получаем ID текущего пользователя из токена
+
+    // Проверяем, принадлежит ли отзыв текущему пользователю
+    const review = await Review.findOne({ where: { review_id: reviewId, user_id: userId } });
+
+    if (!review) {
+      return res.status(403).json({ message: 'Вы не можете удалить этот отзыв' });
+    }
+
+    // Удаляем отзыв
+    await Review.destroy({ where: { review_id: reviewId } });
+
+    res.status(200).json({ success: true, message: 'Отзыв успешно удален' });
+  } catch (error) {
+    console.error('Ошибка при удалении отзыва:', error);
+    res.status(500).json({ error: 'Ошибка сервера' });
+  }
+});
+
 module.exports = router;
