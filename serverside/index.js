@@ -17,6 +17,7 @@ const printingRoutes = require('./routes/printingRoutes'); // Импортиру
 const favouritesRoutes = require('./routes/favouritesRoutes'); // Импортируем маршруты для избранного
 const bookingRoutes = require('./routes/bookingRoutes'); // Импортируем маршруты для бронирования
 const requestsRoutes = require('./routes/requestsRoutes'); // Импорт нового маршрута
+const reviewRoutes = require('./routes/reviewRoutes'); // Импорт маршрутов для отзывов
 
 const app = express();
 app.use(cors({
@@ -54,6 +55,7 @@ app.use('/api/printing', printingRoutes); // Подключаем маршрут
 app.use('/api/favourites', favouritesRoutes); // Подключаем маршруты для избранного
 app.use('/api/bookings', bookingRoutes); // Подключаем маршруты для бронирования
 app.use('/api/requests', requestsRoutes); // Подключение маршрута для запросов
+app.use('/api/reviews', reviewRoutes); // Подключение маршрутов для отзывов
 
 // Маршрут по умолчанию
 app.get('/', (req, res) => {

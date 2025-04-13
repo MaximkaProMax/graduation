@@ -279,4 +279,27 @@ router.post('/verify-2fa-code', async (req, res) => {
   }
 });
 
+router.get('/user/reviews', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findOne({
+      where: { userId: req.user.userId },
+      include: [
+        {
+          model: Review,
+          as: 'Reviews',
+        },
+      ],
+    });
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+    }
+
+    res.json(user.Reviews);
+  } catch (error) {
+    console.error('Ошибка при получении отзывов пользователя:', error);
+    res.status(500).json({ success: false, message: 'Ошибка сервера' });
+  }
+});
+
 module.exports = router;
