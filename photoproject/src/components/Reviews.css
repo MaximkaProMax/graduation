@@ -1,10 +1,11 @@
 .reviews-container {
-  max-width: 800px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+    max-width: 800px;
+    margin: 0 auto; /* Центрирование контейнера */
+    padding: 20px;
+    background-color: white;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+    overflow-x: auto; /* Добавляем горизонтальную прокрутку */
 }
 
 .reviews-container h2 {
@@ -16,12 +17,14 @@ table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
+  table-layout: fixed; /* Устанавливаем фиксированную ширину столбцов */
 }
 
 table th, table td {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 10px 15px; /* Увеличен горизонтальный отступ для кнопки */
   text-align: left;
+  word-wrap: break-word; /* Перенос слов для предотвращения выезда текста */
 }
 
 table th {
@@ -32,14 +35,30 @@ table tr:nth-child(even) {
   background-color: #f9f9f9;
 }
 
+.delete-button {
+    white-space: nowrap;
+    text-align: center;
+    display: flex;
+    justify-content: center; /* Центрирование текста по горизонтали */
+    align-items: center; /* Центрирование текста по вертикали */
+    margin: 0 auto;
+  }
+
 /* Медиа-запросы для мобильной оптимизации */
 @media (max-width: 768px) {
   .reviews-container {
     overflow-x: auto; /* Добавляем горизонтальную прокрутку для мобильной версии */
+    padding: 10px;
   }
 
   table {
     width: 100%;
     display: block; /* Устанавливаем таблицу как блочный элемент для прокрутки */
+    overflow-x: auto;
+    white-space: nowrap; /* Предотвращение переноса строк */
+  }
+
+  th, td {
+    white-space: nowrap; /* Предотвращение расширения столбцов */
   }
 }
