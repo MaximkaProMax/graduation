@@ -4,6 +4,7 @@ import './Printing.css';
 
 const Printing = () => {
   const [printingOptions, setPrintingOptions] = useState([]);
+  const [searchQuery, setSearchQuery] = useState(''); // Состояние для строки поиска
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -37,14 +38,30 @@ const Printing = () => {
     }
   };
 
+  // Фильтрация типографий на основе строки поиска
+  const filteredPrintingOptions = printingOptions.filter((option) =>
+    option.main_album_name.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="printing">
       <main className="main-content">
         <h2>Типография</h2>
-        <p>Заказывайте качественную полиграфию у нас.</p>
+
+        {/* Строка поиска */}
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Поиск по названию..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </div>
+
         <div className="printing-list">
-          {printingOptions.length > 0 ? (
-            printingOptions.map((option, index) => (
+          {filteredPrintingOptions.length > 0 ? (
+            filteredPrintingOptions.map((option, index) => (
               <div className="printing-card" key={index}>
                 <div className={`printing-image ${option.main_card_photo}`}></div>
                 <div className="printing-info">
