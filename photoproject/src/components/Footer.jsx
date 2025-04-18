@@ -9,7 +9,7 @@ function Footer() {
         <a href="#">Политика конфиденциальности</a>
         <div>PhotoProject 2025©</div>
         <a href="#">О компании</a>
-        <a href="#">Контакты</a>
+        <Link to="/contacts">Контакты</Link>
         <Link to="/reviews">Отзывы</Link> {/* Используем Link для перехода на страницу отзывов */}
       </footer>
     </div>

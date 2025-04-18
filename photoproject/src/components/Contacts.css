@@ -1,0 +1,26 @@
+.contacts-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white; /* Установлен белый фон для карточки */
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+
+  .contacts-container h1 {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+
+  .contacts-container ul {
+    list-style-type: none;
+    padding: 0;
+  }
+
+  .contacts-container ul li {
+    margin-bottom: 10px;
+  }
+
+  .contacts-container p {
+    line-height: 1.6;
+  }

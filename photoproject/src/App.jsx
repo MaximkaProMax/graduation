@@ -23,6 +23,7 @@ import Requests from './components/Requests';
 import PersonalData from './components/PersonalData';
 import EditPersonalData from './components/EditPersonalData'; // Импортируем компонент EditPersonalData
 import Favourites from './components/Favourites'; // Импортируем компонент Favourites
+import Contacts from './components/Contacts'; // Импортируем компонент Contacts
 import './App.css';
 import './index.css';
 
@@ -54,6 +55,7 @@ function App() {
             <Route path="/manager/personal-data" element={<PersonalData />} />
             <Route path="/manager/edit-personal-data" element={<EditPersonalData />} /> {/* Редактирование личных данных */}
             <Route path="/favourites" element={<Favourites />} /> {/* Избранное */}
+            <Route path="/contacts" element={<Contacts />} /> {/* Страница контактов */}
           </Routes>
         </main>
         <Footer />
