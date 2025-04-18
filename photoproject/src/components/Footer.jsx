@@ -6,7 +6,7 @@ function Footer() {
   return (
     <div className="footer-container">
       <footer className="footer">
-        <a href="#">Политика конфиденциальности</a>
+        <Link to="/privacy-policy">Политика конфиденциальности</Link>
         <div>PhotoProject 2025©</div>
         <Link to="/contacts">Контакты</Link>
         <Link to="/reviews">Отзывы</Link>
