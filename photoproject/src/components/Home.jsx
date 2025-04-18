@@ -1,9 +1,21 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import Modal from 'react-modal';
+import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Home.css';
 
 function Home() {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    phoneNumber: '',
+    photostudio: '',
+    printing: ''
+  });
+  const [photostudios, setPhotostudios] = useState([]);
+  const [printings, setPrintings] = useState([]);
+
   useEffect(() => {
     const isAuthenticated = localStorage.getItem('isAuthenticated');
     console.log('Проверка isAuthenticated в localStorage при загрузке Home:', isAuthenticated);
@@ -11,7 +23,33 @@ function Home() {
       toast.success('Успешная авторизация! Добро пожаловать на главную страницу!');
       console.log('Значение isAuthenticated в localStorage после проверки:', localStorage.getItem('isAuthenticated'));
     }
+
+    // Загрузка списка фотостудий и типографий
+    const fetchData = async () => {
+      try {
+        const photostudiosResponse = await axios.get('http://localhost:3001/api/photostudios');
+        setPhotostudios(photostudiosResponse.data);
+
+        const printingsResponse = await axios.get('http://localhost:3001/api/printing');
+        setPrintings(printingsResponse.data);
+      } catch (error) {
+        console.error('Ошибка при загрузке данных:', error);
+      }
+    };
+
+    fetchData();
   }, []);
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Данные формы:', formData);
+    setIsModalOpen(false);
+  };
 
   return (
     <div className="home">
@@ -31,8 +69,78 @@ function Home() {
             <div className="service-box">Выберем удобные даты для бронирования</div>
           </div>
         </div>
-        <button className="cta-button">Создать заявку</button>
+        <button className="cta-button" onClick={() => setIsModalOpen(true)}>Создать заявку</button>
       </main>
+
+      <Modal
+        isOpen={isModalOpen}
+        onRequestClose={() => setIsModalOpen(false)}
+        className="modal"
+        overlayClassName="overlay"
+      >
+        <h2>Создать заявку</h2>
+        <form onSubmit={handleSubmit}>
+          <div className="form-group">
+            <label>ФИО</label>
+            <input
+              type="text"
+              name="fullName"
+              value={formData.fullName}
+              onChange={(e) => {
+                const value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ\s]/g, ''); // Удаляем все символы, кроме букв и пробелов
+                setFormData({ ...formData, fullName: value });
+              }}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Номер телефона</label>
+            <input
+              type="tel"
+              name="phoneNumber"
+              value={formData.phoneNumber}
+              onChange={(e) => {
+                const value = e.target.value.replace(/\D/g, ''); // Удаляем все символы, кроме цифр
+                setFormData({ ...formData, phoneNumber: value });
+              }}
+              required
+            />
+          </div>
+          <div className="form-group">
+            <label>Фотостудия</label>
+            <select
+              name="photostudio"
+              value={formData.photostudio}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Выберите фотостудию</option>
+              {photostudios.map((studio) => (
+                <option key={studio.id} value={studio.studio}>
+                  {studio.studio}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Типография</label>
+            <select
+              name="printing"
+              value={formData.printing}
+              onChange={handleInputChange}
+              required
+            >
+              <option value="">Выберите типографию</option>
+              {printings.map((printing) => (
+                <option key={printing.id} value={printing.main_album_name}>
+                  {printing.main_album_name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <button type="submit" className="submit-button">Отправить</button>
+        </form>
+      </Modal>
     </div>
   );
 }
