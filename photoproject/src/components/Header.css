@@ -41,7 +41,7 @@
   display: none; /* Скрываем выпадающий список по умолчанию */
   position: absolute; /* Добавляем абсолютное позиционирование */
   top: 100%; /* Позиционирование под пунктом меню "Профиль" */
-  left: -20px; /* Сдвигаем левее от пункта "Профиль" */
+  left: 0; /* Привязываем к левому краю */
   background-color: white; /* Цвет фона выпадающего меню */
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Тень для выпадающего меню */
   border-radius: 5px; /* Закругленные углы для выпадающего меню */
@@ -49,10 +49,20 @@
   max-width: 200px; /* Устанавливаем максимальную ширину для выпадающего меню */
   padding: 10px; /* Добавляем отступы для выпадающего меню */
   list-style-type: none; /* Убираем маркировку (точки) для списка */
+  right: auto; /* Убираем привязку к правому краю */
+  min-width: 150px; /* Минимальная ширина для предотвращения сжатия */
+  white-space: nowrap; /* Запрет переноса текста */
+  overflow: hidden; /* Скрытие переполнения */
+  text-overflow: ellipsis; /* Добавление многоточия для длинного текста */
+  transform-origin: top left; /* Добавлено для автоматического смещения */
 }
 
 .profile-menu:hover .dropdown {
   display: block; /* Показываем выпадающий список при наведении */
+}
+
+.profile-menu {
+  position: relative; /* Добавлено для родительского элемента */
 }
 
 .dropdown li {
@@ -134,4 +144,25 @@
     flex-direction: column;
     gap: 10px;
   }
+
+  .profile-menu .dropdown {
+    left: auto; /* Добавлено для автоматического смещения */
+    right: 0; /* Добавлено для автоматического смещения */
+  }
+}
+
+/* Добавляем проверку на выход за границы экрана */
+.profile-menu .dropdown::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: translateX(-100%);
+  visibility: hidden;
+}
+
+.profile-menu:hover .dropdown {
+  display: block;
+  left: auto;
+  right: 0;
 }
