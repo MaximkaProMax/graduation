@@ -1,12 +1,42 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css';
+import axios from 'axios';
 
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [userLogin, setUserLogin] = useState(null);
+
+  useEffect(() => {
+    const fetchUser = () => {
+      axios.get('http://localhost:3001/api/users/user', { withCredentials: true })
+        .then(response => setUserLogin(response.data.login))
+        .catch(() => setUserLogin(null));
+    };
+
+    fetchUser();
+
+    const handleAuthChange = () => {
+      fetchUser(); // Обновляем данные пользователя при изменении авторизации
+    };
+
+    window.addEventListener('authChange', handleAuthChange);
+    return () => {
+      window.removeEventListener('authChange', handleAuthChange);
+    };
+  }, []);
 
   const toggleMenu = () => {
     setMenuOpen(!menuOpen);
+  };
+
+  const handleLogout = () => {
+    axios.post('http://localhost:3001/api/users/logout', {}, { withCredentials: true })
+      .then(() => {
+        setUserLogin(null);
+        window.location.href = '/login';
+      })
+      .catch(() => alert('Ошибка при выходе.'));
   };
 
   return (
@@ -20,11 +50,12 @@ function Header() {
           <li><Link to="/booking">Бронирования</Link></li>
           <li><Link to="/cart">Корзина</Link></li>
           <li className="profile-menu">
-            <Link to="/login">Профиль</Link>
+            <Link to="/login">{userLogin || 'Профиль'}</Link>
             <ul className="dropdown">
               <li><Link to="/admin">Admin</Link></li>
               <li><Link to="/manager">Manager</Link></li>
-              <li><Link to="/favourites">Избранное</Link></li> {/* Добавленная ссылка */}
+              <li><Link to="/favourites">Избранное</Link></li>
+              <li><button onClick={handleLogout}>Выйти</button></li>
             </ul>
           </li>
         </ul>
@@ -37,8 +68,9 @@ function Header() {
           <li><Link to="/printing" onClick={toggleMenu}>Типография</Link></li>
           <li><Link to="/booking" onClick={toggleMenu}>Бронирования</Link></li>
           <li><Link to="/cart" onClick={toggleMenu}>Корзина</Link></li>
-          <li><Link to="/login" onClick={toggleMenu}>Профиль</Link></li>
-          <li><Link to="/favourites" onClick={toggleMenu}>Избранное</Link></li> {/* Добавленная ссылка */}
+          <li><Link to="/login" onClick={toggleMenu}>{userLogin || 'Профиль'}</Link></li>
+          <li><Link to="/favourites" onClick={toggleMenu}>Избранное</Link></li>
+          <li><button onClick={handleLogout}>Выйти</button></li>
         </ul>
       </nav>
     </header>

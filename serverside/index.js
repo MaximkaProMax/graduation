@@ -57,9 +57,24 @@ app.use('/api/bookings', bookingRoutes); // Подключаем маршрут�
 app.use('/api/requests', requestsRoutes); // Подключение маршрута для запросов
 app.use('/api/reviews', reviewRoutes); // Подключение маршрутов для отзывов
 
-// Маршрут по умолчанию
+// Маршрут по умолчанию авторизации через cookies
 app.get('/', (req, res) => {
-  res.send('Hello from PhotoProject API!');
+  res.send('Сервер работает!');
+});
+
+// Маршрут для проверки авторизации через cookies
+app.get('/api/auth/check', (req, res) => {
+  const token = req.cookies.token;
+  if (!token) {
+    return res.status(404).json({ isAuthenticated: false });
+  }
+
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err) => {
+    if (err) {
+      return res.status(403).json({ isAuthenticated: false });
+    }
+    res.json({ isAuthenticated: true });
+  });
 });
 
 // Пример маршрута для создания пользователя (остается на всякий случай)
@@ -85,6 +100,12 @@ app.get('/api/photostudios', async (req, res) => {
     console.error('Ошибка при получении данных из базы данных:', error.message);
     res.status(500).json({ error: 'Server error' });
   }
+});
+
+// Маршрут для выхода
+app.post('/api/users/logout', (req, res) => {
+  res.clearCookie('token');
+  res.json({ success: true });
 });
 
 // Запуск сервера после синхронизации с базой данных

@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import axios from 'axios';
 import Header from './components/Header';
 import Photostudios from './components/Photostudios';
 import Printing from './components/Printing';
@@ -29,17 +30,36 @@ import './App.css';
 import './index.css';
 
 function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
+      .then(response => {
+        setIsAuthenticated(response.data.isAuthenticated);
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+      });
+  }, []);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>; // Показываем индикатор загрузки
+  }
+
   return (
     <Router>
       <div className="wrapper">
         <Header />
         <main className="content">
           <Routes>
-            <Route path="/" element={<Home />} /> {/* Главная страница */}
+            <Route path="/" element={<Home />} /> {/* Главная страница доступна без авторизации */}
             <Route path="/photostudios" element={<Photostudios />} />
             <Route path="/printing" element={<Printing />} />
             <Route path="/booking" element={<Booking />} />
-            <Route path="/login" element={<Login />} /> {/* Страница авторизации */}
+            <Route path="/login" element={<Login setIsAuthenticated={setIsAuthenticated} />} /> {/* Страница авторизации */}
             <Route path="/registration" element={<Registration />} /> {/* Страница регистрации */}
             <Route path="/printing-layflat" element={<PrintingLayFlat />} /> {/* Типография LayFlat */}
             <Route path="/printing-flexbind" element={<PrintingFlexBind />} /> {/* Типография FlexBind */}

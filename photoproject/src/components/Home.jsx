@@ -17,12 +17,13 @@ function Home() {
   const [printings, setPrintings] = useState([]);
 
   useEffect(() => {
-    const isAuthenticated = localStorage.getItem('isAuthenticated');
-    console.log('Проверка isAuthenticated в localStorage при загрузке Home:', isAuthenticated);
-    if (isAuthenticated === 'true') {
-      toast.success('Успешная авторизация! Добро пожаловать на главную страницу!');
-      console.log('Значение isAuthenticated в localStorage после проверки:', localStorage.getItem('isAuthenticated'));
-    }
+    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
+      .then(response => {
+        if (response.data.isAuthenticated) {
+          toast.success('Добро пожаловать на главную страницу!');
+        }
+      })
+      .catch(() => toast.error('Ошибка проверки авторизации.'));
 
     // Загрузка списка фотостудий и типографий
     const fetchData = async () => {

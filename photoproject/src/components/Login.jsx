@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Login.css';
 
-function Login() {
+function Login({ setIsAuthenticated }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [twoFactorCode, setTwoFactorCode] = useState('');
@@ -19,17 +19,16 @@ function Login() {
       console.log('Отправка данных на сервер:', { email, password });
       const response = await axios.post('http://localhost:3001/api/users/login', 
         { email, password },
-        { withCredentials: true } // Добавляем опцию для отправки cookies
+        { withCredentials: true }
       );
       console.log('Ответ от сервера:', response.data);
 
       if (response.data.twoFactorRequired) {
         setIsTwoFactorRequired(true);
       } else {
-        console.log('Успешная авторизация, установка isAuthenticated в localStorage');
-        localStorage.setItem('isAuthenticated', 'true');
-        console.log('Значение isAuthenticated в localStorage после установки:', localStorage.getItem('isAuthenticated'));
+        setIsAuthenticated(true);
         navigate('/'); // Перенаправление на главную страницу
+        window.dispatchEvent(new Event('authChange')); // Обновление шапки
       }
     } catch (error) {
       console.error('Произошла ошибка при попытке входа:', error);
@@ -45,13 +44,12 @@ function Login() {
     try {
       const response = await axios.post('http://localhost:3001/api/users/verify-2fa-code', 
         { code: twoFactorCode, email },
-        { withCredentials: true } // Добавляем опцию для отправки cookies
+        { withCredentials: true }
       );
       if (response.data.success) {
-        console.log('Успешная авторизация, установка isAuthenticated в localStorage');
-        localStorage.setItem('isAuthenticated', 'true');
-        console.log('Значение isAuthenticated в localStorage после установки:', localStorage.getItem('isAuthenticated'));
-        navigate('/'); // Успешный вход и перенаправление на главную страницу
+        setIsAuthenticated(true);
+        navigate('/'); // Перенаправление на главную страницу
+        window.dispatchEvent(new Event('authChange')); // Обновление шапки
       } else {
         setErrorMessage('Неверный код');
       }
