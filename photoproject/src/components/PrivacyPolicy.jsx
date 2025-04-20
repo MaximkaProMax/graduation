@@ -34,8 +34,8 @@ function PrivacyPolicy() {
       <p>
         Если у вас есть вопросы о нашей политике конфиденциальности, свяжитесь с нами:
         <ul>
-          <li>Email: info@photoproject.com</li>
-          <li>Телефон: +7 (123) 456-78-90</li>
+          <li>Email: photoproject@yandex.ru</li>
+          <li>Телефон: +79037368181</li>
         </ul>
       </p>
     </div>
