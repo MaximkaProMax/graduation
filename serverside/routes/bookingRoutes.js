@@ -94,6 +94,56 @@ router.get('/typography/all', authenticateToken, async (req, res) => {
   }
 });
 
+// Обновление бронирования типографии
+router.put('/typography/:id', authenticateToken, async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+     const userId = req.user.userId;
+    const {
+      status,
+      format,
+      the_basis_of_the_spread,
+      number_of_spreads,
+      lamination,
+      number_of_copies,
+      address_delivery,
+      final_price,
+      album_name
+    } = req.body;
+
+    // Проверка наличия обязательных полей (можно скорректировать по вашей модели)
+    if (!status || !format || !number_of_spreads || !lamination || !number_of_copies || !final_price || !album_name) {
+      return res.status(400).json({ success: false, message: 'Не все обязательные поля заполнены' });
+    }
+
+    const [updated] = await BookingTypographie.update(
+      {
+        status,
+        format,
+        the_basis_of_the_spread,
+        number_of_spreads,
+        lamination,
+        number_of_copies,
+        address_delivery,
+        final_price,
+        album_name
+      },
+      {
+        where: { booking_typographie_id: bookingId, user: userId }
+      }
+    );
+
+    if (updated) {
+      res.status(200).json({ success: true, message: 'Заявка успешно обновлена' });
+    } else {
+      res.status(404).json({ success: false, message: 'Заявка не найдена или нет прав' });
+    }
+  } catch (error) {
+    console.error('Ошибка при обновлении заявки на типографию:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при обновлении заявки' });
+  }
+});
+
 // Добавление нового бронирования фотостудии
 router.post('/studios/add', authenticateToken, async (req, res) => {
   try {
@@ -166,6 +216,57 @@ router.get('/studios/all', authenticateToken, async (req, res) => {
   } catch (error) {
     console.error('Ошибка при получении всех заявок на фотостудии:', error);
     res.status(500).json({ success: false, message: 'Ошибка при получении заявок' });
+  }
+});
+
+// Обновление бронирования фотостудии
+router.put('/studios/:id', authenticateToken, async (req, res) => {
+  try {
+    const bookingId = req.params.id;
+    const userId = req.user.userId;
+    const {
+      studio_name,
+      status,
+      date,
+      time,
+      end_time,
+      address,
+      final_price
+    } = req.body;
+
+    // Логируем входящие данные для отладки
+    console.log('PUT /studios/:id', {
+      studio_name, status, date, time, end_time, address, final_price
+    });
+
+    // Проверка наличия обязательных полей (делаем status и end_time не обязательными)
+    if (!studio_name || !date || !time || !address || !final_price) {
+      return res.status(400).json({ success: false, message: 'Не все обязательные поля заполнены (studio_name, date, time, address, final_price)' });
+    }
+
+    const [updated] = await BookingStudio.update(
+      {
+        studio_name,
+        status: status || 'В обработке',
+        date,
+        time,
+        end_time: end_time || null,
+        address,
+        final_price
+      },
+      {
+        where: { booking_studio_id: bookingId, user: userId }
+      }
+    );
+
+    if (updated) {
+      res.status(200).json({ success: true, message: 'Заявка успешно обновлена' });
+    } else {
+      res.status(404).json({ success: false, message: 'Заявка не найдена или нет прав' });
+    }
+  } catch (error) {
+    console.error('Ошибка при обновлении заявки на фотостудию:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при обновлении заявки' });
   }
 });
 

@@ -1,68 +1,244 @@
 .requests-container {
-  max-width: 1000px;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 20px;
+  padding: 32px 0;
+  background: #fafafa;
 }
 
-.requests-container h2 {
-  margin-bottom: 20px;
+h2, h3 {
   text-align: center;
+  color: #222;
+  margin-bottom: 18px;
 }
 
-.back-button {
-  margin-bottom: 20px;
-  padding: 10px;
-  background-color: #6c757d;
-  color: white;
+.add-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+  justify-content: center;
+  align-items: center;
+}
+
+.add-form input {
+  padding: 10px 12px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  font-size: 15px;
+  margin-bottom: 8px;
+  min-width: 180px;
+  background: #fff;
+  transition: border 0.2s;
+}
+
+.add-form input:focus {
+  border: 1.5px solid #f5b91e;
+  outline: none;
+}
+
+.add-form button {
+  flex: 1 1 100%;
+  padding: 12px 0;
+  background: #f5b91e;
+  color: #222;
+  font-weight: 600;
+  font-size: 18px;
   border: none;
-  border-radius: 5px;
+  border-radius: 6px;
+  margin-top: 8px;
   cursor: pointer;
+  transition: background 0.2s;
 }
 
-.back-button:hover {
-  background-color: #5a6268;
+.add-form button:hover {
+  background: #e0a800;
 }
 
 .table-container {
   overflow-x: auto;
+  margin-bottom: 40px;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  padding: 8px 0;
 }
 
 .requests-table {
-  width: 100%;
+  min-width: 1100px;
   border-collapse: collapse;
+  width: 100%;
+  background: #fff;
 }
 
 .requests-table th, .requests-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
+  padding: 10px 14px;
+  border-bottom: 1px solid #ececec;
   text-align: left;
+  font-size: 15px;
+  vertical-align: middle;
 }
 
 .requests-table th {
-  background-color: #f2f2f2;
+  background: #f5b91e;
+  color: #222;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .requests-table tr:nth-child(even) {
-  background-color: #f9f9f9;
+  background: #f9f9f9;
 }
 
-.buttons-container {
+.requests-table tr:hover {
+  background: #f6e7c1;
+}
+
+.requests-table input {
+  width: 100%;
+  padding: 7px 8px;
+  border: 1px solid #d1d5db;
+  border-radius: 4px;
+  font-size: 15px;
+  background: #fff;
+}
+
+.requests-table td:last-child, .requests-table th:last-child {
+  min-width: 120px;
+  text-align: center;
+}
+
+.requests-table .action-buttons {
   display: flex;
-  justify-content: space-around;
-  margin-top: 20px;
+  flex-direction: row;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
 }
 
-.request-button {
-  padding: 10px 20px;
-  background-color: #F0BB29;
+.requests-table button {
+  background: #f5b91e;
+  color: #222;
   border: none;
   border-radius: 5px;
-  color: white;
-  font-weight: bold;
+  padding: 7px 16px;
+  margin: 0;
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  margin: 5px;
+  transition: background 0.2s;
+  width: auto;
+  min-width: 90px;
+  white-space: nowrap;
+  display: inline-block;
 }
 
-.request-button:hover {
-  background-color: #e0aa1e;
+.requests-table button:hover {
+  background: #e0a800;
+}
+
+.selected-row {
+  background: #fff7e0 !important;
+  outline: 2px solid #f5b91e;
+}
+
+.action-buttons {
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  justify-content: center;
+  align-items: center;
+  margin: 18px 0 10px 0;
+}
+
+.action-buttons button {
+  background: #f5b91e;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 22px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  min-width: 120px;
+  box-shadow: 0 1px 4px rgba(245,185,30,0.08);
+}
+
+.action-buttons button:hover {
+  background: #e0a800;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.18);
+}
+
+@media (max-width: 900px) {
+  .add-form input {
+    min-width: 120px;
+    font-size: 13px;
+  }
+  .requests-table th, .requests-table td {
+    font-size: 13px;
+    padding: 7px 6px;
+  }
+}
+
+@media (max-width: 600px) {
+  .requests-container {
+    padding: 10px 0;
+    max-width: 100vw;
+  }
+
+  h2, h3 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .add-form {
+    flex-direction: column;
+    gap: 6px;
+    padding: 0 4px;
+  }
+
+  .add-form input, .add-form button {
+    min-width: 0;
+    width: 100%;
+    font-size: 14px;
+    box-sizing: border-box;
+  }
+
+  .add-form button {
+    font-size: 16px;
+    padding: 10px 0;
+    margin-top: 4px;
+  }
+
+  .table-container {
+    padding: 0;
+    margin-bottom: 24px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+
+  .requests-table {
+    min-width: 600px;
+    font-size: 12px;
+  }
+
+  .requests-table th, .requests-table td {
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+
+  .action-buttons {
+    flex-direction: column;
+    gap: 8px;
+    margin: 10px 0 6px 0;
+  }
+
+  .action-buttons button {
+    min-width: 0;
+    width: 100%;
+    font-size: 15px;
+    padding: 10px 0;
+  }
 }
