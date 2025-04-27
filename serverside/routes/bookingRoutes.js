@@ -98,9 +98,9 @@ router.get('/typography/all', authenticateToken, async (req, res) => {
 router.post('/studios/add', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId; // Получаем ID пользователя из токена
-    const { name, date, startTime, address, totalCost } = req.body;
+    const { name, date, startTime, endTime, address, totalCost } = req.body;
 
-    if (!name || !date || !startTime || !address || !totalCost) {
+    if (!name || !date || !startTime || !endTime || !address || !totalCost) {
       return res.status(400).json({ success: false, message: 'Все поля должны быть заполнены' });
     }
 
@@ -110,6 +110,7 @@ router.post('/studios/add', authenticateToken, async (req, res) => {
       status: 'В обработке',
       date,
       time: startTime,
+      end_time: endTime, // сохраняем endTime, если есть такое поле в модели
       address,
       final_price: totalCost,
     });

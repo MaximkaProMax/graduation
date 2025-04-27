@@ -33,6 +33,13 @@ const Calendar = () => {
     setTotalCost(cost);
   };
 
+  // Вспомогательная функция для форматирования даты в YYYY-MM-DD
+  const formatDateForDb = (day, month, year) => {
+    const mm = String(month + 1).padStart(2, '0');
+    const dd = String(day).padStart(2, '0');
+    return `${year}-${mm}-${dd}`;
+  };
+
   const handleDateClick = (date) => {
     const selectedFullDate = new Date(year, month, date);
     today.setHours(0, 0, 0, 0); // Убираем время для сравнения только дат
@@ -84,7 +91,7 @@ const Calendar = () => {
 
     const newBooking = {
       name: studio,
-      date: `${selectedDate}/${month + 1}/${year}`,
+      date: formatDateForDb(selectedDate, month, year), // исправлено
       startTime: startTime,
       endTime: endTime,
       address: address,
@@ -107,8 +114,9 @@ const Calendar = () => {
 
     const bookingDetails = {
       name: studio,
-      date: `${selectedDate}/${month + 1}/${year}`,
+      date: formatDateForDb(selectedDate, month, year), // исправлено
       startTime: startTime,
+      endTime: endTime,
       address: address,
       totalCost: totalCost,
     };
