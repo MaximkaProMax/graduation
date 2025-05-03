@@ -12,7 +12,6 @@ const Booking = () => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   useEffect(() => {
-    // Проверка авторизации
     axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
       .then(response => {
         setIsAuthenticated(response.data.isAuthenticated);
@@ -30,7 +29,7 @@ const Booking = () => {
     const fetchTypographyBookings = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/bookings/user', {
-          withCredentials: true, // Отправляем cookies
+          withCredentials: true,
         });
 
         if (response.data.success) {
@@ -46,7 +45,7 @@ const Booking = () => {
     const fetchStudioBookings = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/bookings/studios/user', {
-          withCredentials: true, // Отправляем cookies
+          withCredentials: true,
         });
 
         if (response.data.success) {
@@ -164,28 +163,19 @@ const Booking = () => {
       <div className="cart-content">
         <div className="cart-items">
           {typographyBookings.map((booking, index) => {
-            // Сопоставление фото для типографии по названию альбома
-            let printingImage = '/src/components/assets/images/Printing/FlexBind_1.jpg'; // fallback
+            let printingImageClass = '';
+            const albumName = booking.album_name ? booking.album_name.toLowerCase() : '';
 
-            if (
-              booking.album_name &&
-              booking.album_name.toLowerCase().includes('layflat')
-            ) {
-              printingImage = '/src/components/assets/images/Printing/LayFlat_1.jpg';
-            } else if (
-              booking.album_name &&
-              booking.album_name.toLowerCase().includes('flexbind')
-            ) {
-              printingImage = '/src/components/assets/images/Printing/FlexBind_1.jpg';
+            if (albumName.includes('layflat')) {
+              printingImageClass = 'layflat';
+            } else if (albumName.includes('flexbind')) {
+              printingImageClass = 'flexbind';
             }
 
             return (
               <div key={index} className="cart-item">
                 <div
-                  className="cart-image"
-                  style={{
-                    backgroundImage: `url(${printingImage})`
-                  }}
+                  className={`cart-image ${printingImageClass}`}
                 ></div>
                 <div className="cart-details">
                   <h3>{booking.album_name || '-'}</h3>
@@ -205,44 +195,35 @@ const Booking = () => {
             );
           })}
           {studioBookings.map((booking, index) => {
-            // Сопоставление фото для фотостудий по названию зала и студии
-            let studioImage = '/src/components/assets/images/Photostudios/Hot Yellow.png'; // fallback
+            let studioImageClass = '';
+            const studioName = booking.studio_name ? booking.studio_name.toLowerCase() : '';
+            const address = booking.address ? booking.address.toLowerCase() : '';
 
             if (
-              booking.studio_name &&
-              booking.studio_name.toLowerCase().includes('cozy') &&
-              booking.address &&
-              booking.address.toLowerCase().includes('replace')
+              studioName.includes('cozy') &&
+              (studioName.includes('replace') || address.includes('replace'))
             ) {
-              studioImage = '/src/components/assets/images/Photostudios/Replace.jpg';
+              studioImageClass = 'replace';
             } else if (
-              booking.studio_name &&
-              booking.studio_name.toLowerCase().includes('apart') &&
-              booking.address &&
-              booking.address.toLowerCase().includes('photo zall')
+              studioName.includes('apart') &&
+              (studioName.includes('photo zall') || address.includes('photo zall'))
             ) {
-              studioImage = '/src/components/assets/images/Photostudios/APART.jpg';
+              studioImageClass = 'apart';
             } else if (
-              booking.studio_name &&
-              booking.studio_name.toLowerCase().includes('hot yellow')
+              studioName.includes('hot yellow')
             ) {
-              studioImage = '/src/components/assets/images/Photostudios/Hot Yellow.png';
+              studioImageClass = 'hot-yellow';
             } else if (
-              booking.studio_name &&
-              booking.studio_name.toLowerCase().includes('white garden') &&
-              booking.address &&
-              booking.address.toLowerCase().includes('unicorn')
+              studioName.includes('white garden') &&
+              (studioName.includes('unicorn') || address.includes('unicorn'))
             ) {
-              studioImage = '/src/components/assets/images/Photostudios/White Garden.jpeg';
+              studioImageClass = 'white-garden';
             }
 
             return (
               <div key={index} className="cart-item">
                 <div
-                  className="cart-image"
-                  style={{
-                    backgroundImage: `url(${studioImage})`
-                  }}
+                  className={`cart-image ${studioImageClass}`}
                 ></div>
                 <div className="cart-details">
                   <h3>{booking.studio_name || '-'}</h3>

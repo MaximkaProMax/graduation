@@ -187,6 +187,26 @@
   background-position: center;
 }
 
+.cart-image.replace {
+  background-image: url('/src/components/assets/images/Photostudios/Replace.jpg');
+}
+.cart-image.apart {
+  background-image: url('/src/components/assets/images/Photostudios/APART.jpg');
+}
+.cart-image.hot-yellow {
+  background-image: url('/src/components/assets/images/Photostudios/Hot Yellow.png');
+}
+.cart-image.white-garden {
+  background-image: url('/src/components/assets/images/Photostudios/White Garden.jpeg');
+}
+
+.cart-image.layflat {
+  background-image: url('/src/components/assets/images/Printing/LayFlat.jpg');
+}
+.cart-image.flexbind {
+  background-image: url('/src/components/assets/images/Printing/FlexBind.jpg');
+}
+
 .flex-bind {
   background-image: url('/src/components/assets/images/Printing/FlexBind_1.jpg');
 }
