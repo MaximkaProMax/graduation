@@ -8,6 +8,8 @@ const Booking = () => {
   const [userInfo, setUserInfo] = useState(null);
   const [authChecked, setAuthChecked] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [editAddress, setEditAddress] = useState('');
+  const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   useEffect(() => {
     // Проверка авторизации
@@ -64,6 +66,7 @@ const Booking = () => {
         });
         if (response.data && response.data.success) {
           setUserInfo(response.data.user);
+          setEditAddress(response.data.user.address || '');
         }
       } catch (error) {
         console.error('Ошибка при получении данных пользователя:', error);
@@ -73,6 +76,13 @@ const Booking = () => {
     fetchTypographyBookings();
     fetchStudioBookings();
     fetchUserInfo();
+
+    axios.get('http://localhost:3001/api/photostudios').then(res => {
+      window.studios = res.data;
+    });
+    axios.get('http://localhost:3001/api/printing').then(res => {
+      window.printingOptions = res.data;
+    });
   }, [isAuthenticated]);
 
   const handleDeleteTypographyBooking = async (bookingId) => {
@@ -111,6 +121,28 @@ const Booking = () => {
     }
   };
 
+  const handleEditAddressClick = () => {
+    setIsEditingAddress(true);
+  };
+
+  const handleAddressChange = (e) => {
+    setEditAddress(e.target.value);
+  };
+
+  const handleSaveAddress = async () => {
+    try {
+      await axios.put(
+        'http://localhost:3001/api/users/user',
+        { address: editAddress },
+        { withCredentials: true }
+      );
+      setUserInfo((prev) => ({ ...prev, address: editAddress }));
+      setIsEditingAddress(false);
+    } catch (error) {
+      alert('Ошибка при сохранении адреса');
+    }
+  };
+
   if (!authChecked) {
     return <div>Загрузка...</div>;
   }
@@ -128,44 +160,104 @@ const Booking = () => {
 
   return (
     <div className="cart">
-      <h2>Мои заявки на типографию</h2>
+      <h2>Мои заявки</h2>
       <div className="cart-content">
         <div className="cart-items">
-          {typographyBookings.map((booking, index) => (
-            <div key={index} className="cart-item">
-              <div className="cart-image flex-bind"></div>
-              <div className="cart-details">
-                <h3>{booking.album_name || '-'}</h3>
-                <p>Формат: {booking.format || '-'}</p>
-                <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
-                <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
-                <p>Ламинация: {booking.lamination || '-'}</p>
-                <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
-                <p>Адрес доставки: {booking.address_delivery || '-'}</p>
-                <p>Статус: {booking.status || '-'}</p>
-                <p>Итоговая цена: {booking.final_price || '-'}</p>
-                <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
-                  Удалить
-                </button>
+          {typographyBookings.map((booking, index) => {
+            // Сопоставление фото для типографии по названию альбома
+            let printingImage = '/src/components/assets/images/Printing/FlexBind_1.jpg'; // fallback
+
+            if (
+              booking.album_name &&
+              booking.album_name.toLowerCase().includes('layflat')
+            ) {
+              printingImage = '/src/components/assets/images/Printing/LayFlat_1.jpg';
+            } else if (
+              booking.album_name &&
+              booking.album_name.toLowerCase().includes('flexbind')
+            ) {
+              printingImage = '/src/components/assets/images/Printing/FlexBind_1.jpg';
+            }
+
+            return (
+              <div key={index} className="cart-item">
+                <div
+                  className="cart-image"
+                  style={{
+                    backgroundImage: `url(${printingImage})`
+                  }}
+                ></div>
+                <div className="cart-details">
+                  <h3>{booking.album_name || '-'}</h3>
+                  <p>Формат: {booking.format || '-'}</p>
+                  <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
+                  <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
+                  <p>Ламинация: {booking.lamination || '-'}</p>
+                  <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
+                  <p>Адрес доставки: {booking.address_delivery || '-'}</p>
+                  <p>Статус: {booking.status || '-'}</p>
+                  <p>Итоговая цена: {booking.final_price || '-'}</p>
+                  <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
+                    Удалить
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
-          {studioBookings.map((booking, index) => (
-            <div key={index} className="cart-item">
-              <div className="cart-image studio"></div>
-              <div className="cart-details">
-                <h3>{booking.studio_name || '-'}</h3>
-                <p>Адрес: {booking.address || '-'}</p>
-                <p>Дата: {booking.date || '-'}</p>
-                <p>Время: {booking.time || '-'}</p>
-                <p>Статус: {booking.status || '-'}</p>
-                <p>Итоговая цена: {booking.final_price || '-'}</p>
-                <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
-                  Удалить
-                </button>
+            );
+          })}
+          {studioBookings.map((booking, index) => {
+            // Сопоставление фото для фотостудий по названию зала и студии
+            let studioImage = '/src/components/assets/images/Photostudios/Hot Yellow.png'; // fallback
+
+            if (
+              booking.studio_name &&
+              booking.studio_name.toLowerCase().includes('cozy') &&
+              booking.address &&
+              booking.address.toLowerCase().includes('replace')
+            ) {
+              studioImage = '/src/components/assets/images/Photostudios/Replace.jpg';
+            } else if (
+              booking.studio_name &&
+              booking.studio_name.toLowerCase().includes('apart') &&
+              booking.address &&
+              booking.address.toLowerCase().includes('photo zall')
+            ) {
+              studioImage = '/src/components/assets/images/Photostudios/APART.jpg';
+            } else if (
+              booking.studio_name &&
+              booking.studio_name.toLowerCase().includes('hot yellow')
+            ) {
+              studioImage = '/src/components/assets/images/Photostudios/Hot Yellow.png';
+            } else if (
+              booking.studio_name &&
+              booking.studio_name.toLowerCase().includes('white garden') &&
+              booking.address &&
+              booking.address.toLowerCase().includes('unicorn')
+            ) {
+              studioImage = '/src/components/assets/images/Photostudios/White Garden.jpeg';
+            }
+
+            return (
+              <div key={index} className="cart-item">
+                <div
+                  className="cart-image"
+                  style={{
+                    backgroundImage: `url(${studioImage})`
+                  }}
+                ></div>
+                <div className="cart-details">
+                  <h3>{booking.studio_name || '-'}</h3>
+                  <p>Адрес: {booking.address || '-'}</p>
+                  <p>Дата: {booking.date || '-'}</p>
+                  <p>Время: {booking.time || '-'}</p>
+                  <p>Статус: {booking.status || '-'}</p>
+                  <p>Итоговая цена: {booking.final_price || '-'}</p>
+                  <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
+                    Удалить
+                  </button>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <div className="contact-section">
           <div className="contact-details">
@@ -175,7 +267,26 @@ const Booking = () => {
                 <p>ФИО: {userInfo.fullName || '-'}</p>
                 <p>Почта: {userInfo.email || '-'}</p>
                 <p>Телефон: {userInfo.phone || '-'}</p>
-                <p>Адрес доставки: {userInfo.address || '-'}</p>
+                <p>
+                  Адрес доставки:&nbsp;
+                  {isEditingAddress ? (
+                    <>
+                      <input
+                        type="text"
+                        value={editAddress}
+                        onChange={handleAddressChange}
+                        style={{ width: '70%' }}
+                      />
+                      <button onClick={handleSaveAddress} style={{ marginLeft: 8 }}>Сохранить</button>
+                      <button onClick={() => { setIsEditingAddress(false); setEditAddress(userInfo.address || ''); }} style={{ marginLeft: 4 }}>Отмена</button>
+                    </>
+                  ) : (
+                    <>
+                      {userInfo.address || '-'}
+                      <button onClick={handleEditAddressClick} style={{ marginLeft: 8 }}>Изменить</button>
+                    </>
+                  )}
+                </p>
               </div>
             ) : (
               <p>Загрузка...</p>
