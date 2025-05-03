@@ -12,6 +12,7 @@ const Booking = () => {
   const [isEditingAddress, setIsEditingAddress] = useState(false);
 
   useEffect(() => {
+    // Проверка авторизации
     axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
       .then(response => {
         setIsAuthenticated(response.data.isAuthenticated);
@@ -28,6 +29,7 @@ const Booking = () => {
 
     const fetchTypographyBookings = async () => {
       try {
+        // Отправляем cookies
         const response = await axios.get('http://localhost:3001/api/bookings/user', {
           withCredentials: true,
         });
@@ -44,6 +46,7 @@ const Booking = () => {
 
     const fetchStudioBookings = async () => {
       try {
+        // Отправляем cookies
         const response = await axios.get('http://localhost:3001/api/bookings/studios/user', {
           withCredentials: true,
         });
@@ -60,6 +63,7 @@ const Booking = () => {
 
     const fetchUserInfo = async () => {
       try {
+        // Отправляем cookies
         const response = await axios.get('http://localhost:3001/api/user/profile', {
           withCredentials: true,
         });
@@ -147,6 +151,7 @@ const Booking = () => {
   }
 
   if (!isAuthenticated) {
+    // Проверка авторизации
     return (
       <div className="cart">
         <h2>Мои заявки</h2>
@@ -163,6 +168,7 @@ const Booking = () => {
       <div className="cart-content">
         <div className="cart-items">
           {typographyBookings.map((booking, index) => {
+            // Загрузка фотографий для типографий из CSS по классу
             let printingImageClass = '';
             const albumName = booking.album_name ? booking.album_name.toLowerCase() : '';
 
@@ -195,6 +201,7 @@ const Booking = () => {
             );
           })}
           {studioBookings.map((booking, index) => {
+            // Загрузка фотографий для фотостудий из CSS по классу
             let studioImageClass = '';
             const studioName = booking.studio_name ? booking.studio_name.toLowerCase() : '';
             const address = booking.address ? booking.address.toLowerCase() : '';
