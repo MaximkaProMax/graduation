@@ -49,6 +49,8 @@ const authenticateToken = (req, res, next) => {
 
 // Подключение маршрутов для пользователей и ролей
 app.use('/api/users', userRoutes);
+// Добавьте этот маршрут для совместимости с Booking.jsx
+app.use('/api/user', userRoutes);
 app.use('/api/roles', roleRoutes); // Подключаем маршруты ролей
 app.use('/api/photostudios', photostudiosRoutes); // Подключаем маршруты фотостудий
 app.use('/api/printing', printingRoutes); // Подключаем маршруты печати

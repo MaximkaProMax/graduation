@@ -44,3 +44,194 @@
     width: 1000px; /* Устанавливаем фиксированную ширину для таблицы */
   }
 }
+
+.booking-cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 28px;
+  justify-content: flex-start;
+  margin-bottom: 40px;
+}
+
+.booking-card {
+  width: 370px;
+  min-width: 270px;
+  border: 1px solid #ececec;
+  border-radius: 8px;
+  padding: 22px 22px 16px 22px;
+  background-color: #fafafa;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+.booking-card:hover {
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+  border: 1.5px solid #f5b91e;
+}
+
+.booking-card h3 {
+  margin: 0 0 10px 0;
+  font-size: 1.25rem;
+  color: #f5b91e;
+  font-weight: 600;
+}
+
+.booking-card-row {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  margin: 3px 0;
+  font-size: 1rem;
+  color: #333;
+}
+
+.booking-card-row span {
+  color: #888;
+}
+
+.booking-card .delete-button {
+  margin-top: 14px;
+  padding: 10px 0;
+  width: 100%;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.booking-card .delete-button:hover {
+  background-color: #ff1a1a;
+}
+
+@media (max-width: 900px) {
+  .booking-cards {
+    gap: 16px;
+    justify-content: center;
+  }
+  .booking-card {
+    width: 95vw;
+    min-width: 0;
+    padding: 16px 8px 12px 8px;
+  }
+}
+
+@media (max-width: 600px) {
+  .booking-container {
+    padding: 8px 2px;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .booking-cards {
+    flex-direction: column;
+    gap: 12px;
+    align-items: center;
+  }
+  .booking-card {
+    width: 98vw;
+    padding: 12px 4px 10px 4px;
+    font-size: 0.95rem;
+  }
+  .booking-card h3 {
+    font-size: 1.08rem;
+  }
+}
+
+.cart {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  color: black;
+}
+
+.cart h2 {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.cart-content {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+
+.cart-items {
+  flex: 2;
+}
+
+.cart-item {
+  display: flex;
+  align-items: flex-start;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-bottom: 20px;
+  padding: 20px;
+  background: #fafafa;
+}
+
+.cart-image {
+  width: 300px;
+  height: 300px;
+  margin-right: 20px;
+  border-radius: 5px;
+  background-size: cover;
+  background-position: center;
+}
+
+.flex-bind {
+  background-image: url('/src/components/assets/images/Printing/FlexBind_1.jpg');
+}
+
+.studio {
+  background-image: url('/src/components/assets/images/Photostudios/Hot Yellow.png');
+}
+
+.cart-details {
+  flex: 1;
+}
+
+.delete-button {
+  margin-top: 18px;
+  padding: 10px 0;
+  width: 100%;
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.delete-button:hover {
+  background-color: #ff1a1a;
+}
+
+/* Медиа-запросы для мобильной оптимизации */
+@media (max-width: 768px) {
+  .cart-content {
+    display: block;
+  }
+
+  .cart-item {
+    display: block;
+    margin-bottom: 20px;
+  }
+
+  .cart-image {
+    width: 150px;
+    height: 150px;
+    margin-right: 0;
+    margin-bottom: 10px;
+  }
+}

@@ -302,4 +302,28 @@ router.get('/user/reviews', authenticateToken, async (req, res) => {
   }
 });
 
+// Получить профиль пользователя для блока контактных данных (Booking)
+router.get('/profile', authenticateToken, async (req, res) => {
+  try {
+    // Получаем пользователя по userId из токена
+    const user = await User.findOne({ where: { userId: req.user.userId } });
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+    }
+    // Формируем объект профиля для фронта
+    res.json({
+      success: true,
+      user: {
+        fullName: user.name || '',
+        email: user.email || '',
+        phone: user.telephone || '',
+        address: user.address || '', // если поле address есть в модели, иначе ''
+      }
+    });
+  } catch (error) {
+    console.error('Ошибка при получении профиля пользователя:', error);
+    res.status(500).json({ success: false, message: 'Ошибка сервера' });
+  }
+});
+
 module.exports = router;

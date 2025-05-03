@@ -5,8 +5,26 @@ import './Booking.css';
 const Booking = () => {
   const [typographyBookings, setTypographyBookings] = useState([]);
   const [studioBookings, setStudioBookings] = useState([]);
+  const [userInfo, setUserInfo] = useState(null);
+  const [authChecked, setAuthChecked] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
 
   useEffect(() => {
+    // Проверка авторизации
+    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
+      .then(response => {
+        setIsAuthenticated(response.data.isAuthenticated);
+        setAuthChecked(true);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setAuthChecked(true);
+      });
+  }, []);
+
+  useEffect(() => {
+    if (!isAuthenticated) return;
+
     const fetchTypographyBookings = async () => {
       try {
         const response = await axios.get('http://localhost:3001/api/bookings/user', {
@@ -39,9 +57,23 @@ const Booking = () => {
       }
     };
 
+    const fetchUserInfo = async () => {
+      try {
+        const response = await axios.get('http://localhost:3001/api/user/profile', {
+          withCredentials: true,
+        });
+        if (response.data && response.data.success) {
+          setUserInfo(response.data.user);
+        }
+      } catch (error) {
+        console.error('Ошибка при получении данных пользователя:', error);
+      }
+    };
+
     fetchTypographyBookings();
     fetchStudioBookings();
-  }, []);
+    fetchUserInfo();
+  }, [isAuthenticated]);
 
   const handleDeleteTypographyBooking = async (bookingId) => {
     try {
@@ -79,80 +111,89 @@ const Booking = () => {
     }
   };
 
-  return (
-    <div className="booking-container">
-      <h1>Мои заявки на типографию</h1>
-      <div className="table-container">
-        <table className="booking-table">
-          <thead>
-            <tr>
-              <th>Название альбома</th>
-              <th>Статус</th>
-              <th>Формат</th>
-              <th>Основа разворота</th>
-              <th>Количество разворотов</th>
-              <th>Ламинация</th>
-              <th>Количество копий</th>
-              <th>Адрес доставки</th>
-              <th>Итоговая цена</th>
-              <th>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {typographyBookings.map((booking, index) => (
-              <tr key={index}>
-                <td>{booking.album_name || '-'}</td>
-                <td>{booking.status || '-'}</td>
-                <td>{booking.format || '-'}</td>
-                <td>{booking.the_basis_of_the_spread || '-'}</td>
-                <td>{booking.number_of_spreads || '-'}</td>
-                <td>{booking.lamination || '-'}</td>
-                <td>{booking.number_of_copies || '-'}</td>
-                <td>{booking.address_delivery || '-'}</td>
-                <td>{booking.final_price || '-'}</td>
-                <td>
-                  <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
-                    Удалить
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  if (!authChecked) {
+    return <div>Загрузка...</div>;
+  }
 
-      <h1>Мои заявки на фотостудию</h1>
-      <div className="table-container">
-        <table className="booking-table">
-          <thead>
-            <tr>
-              <th>Название студии</th>
-              <th>Статус</th>
-              <th>Дата</th>
-              <th>Время</th>
-              <th>Адрес</th>
-              <th>Итоговая цена</th>
-              <th>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {studioBookings.map((booking, index) => (
-              <tr key={index}>
-                <td>{booking.studio_name || '-'}</td>
-                <td>{booking.status || '-'}</td>
-                <td>{booking.date || '-'}</td>
-                <td>{booking.time || '-'}</td>
-                <td>{booking.address || '-'}</td>
-                <td>{booking.final_price || '-'}</td>
-                <td>
-                  <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
-                    Удалить
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+  if (!isAuthenticated) {
+    return (
+      <div className="cart">
+        <h2>Мои заявки</h2>
+        <div style={{ color: 'red', fontWeight: 600, textAlign: 'center', margin: '40px 0' }}>
+          Для просмотра заявок необходимо авторизоваться в системе.
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="cart">
+      <h2>Мои заявки на типографию</h2>
+      <div className="cart-content">
+        <div className="cart-items">
+          {typographyBookings.map((booking, index) => (
+            <div key={index} className="cart-item">
+              <div className="cart-image flex-bind"></div>
+              <div className="cart-details">
+                <h3>{booking.album_name || '-'}</h3>
+                <p>Формат: {booking.format || '-'}</p>
+                <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
+                <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
+                <p>Ламинация: {booking.lamination || '-'}</p>
+                <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
+                <p>Адрес доставки: {booking.address_delivery || '-'}</p>
+                <p>Статус: {booking.status || '-'}</p>
+                <p>Итоговая цена: {booking.final_price || '-'}</p>
+                <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
+                  Удалить
+                </button>
+              </div>
+            </div>
+          ))}
+          {studioBookings.map((booking, index) => (
+            <div key={index} className="cart-item">
+              <div className="cart-image studio"></div>
+              <div className="cart-details">
+                <h3>{booking.studio_name || '-'}</h3>
+                <p>Адрес: {booking.address || '-'}</p>
+                <p>Дата: {booking.date || '-'}</p>
+                <p>Время: {booking.time || '-'}</p>
+                <p>Статус: {booking.status || '-'}</p>
+                <p>Итоговая цена: {booking.final_price || '-'}</p>
+                <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
+                  Удалить
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+        <div className="contact-section">
+          <div className="contact-details">
+            <h3>Контактные данные</h3>
+            {userInfo ? (
+              <div>
+                <p>ФИО: {userInfo.fullName || '-'}</p>
+                <p>Почта: {userInfo.email || '-'}</p>
+                <p>Телефон: {userInfo.phone || '-'}</p>
+                <p>Адрес доставки: {userInfo.address || '-'}</p>
+              </div>
+            ) : (
+              <p>Загрузка...</p>
+            )}
+          </div>
+          <div className="price-details">
+            <h3>Итоговая цена</h3>
+            <div>
+              {(() => {
+                const total =
+                  [...typographyBookings, ...studioBookings]
+                    .map(b => Number(b.final_price) || 0)
+                    .reduce((a, b) => a + b, 0);
+                return <p>{total ? `${total}₽` : '-'}</p>;
+              })()}
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );
