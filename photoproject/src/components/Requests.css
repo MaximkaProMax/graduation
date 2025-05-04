@@ -1,14 +1,21 @@
 .requests-container {
   max-width: 1200px;
   margin: 0 auto;
-  padding: 32px 0;
-  background: #fafafa;
+  padding: 20px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 h2, h3 {
   text-align: center;
   color: #222;
   margin-bottom: 18px;
+}
+
+.requests-container h2 {
+  text-align: center;
+  margin-bottom: 20px;
 }
 
 .add-form {
@@ -20,13 +27,13 @@ h2, h3 {
   align-items: center;
 }
 
-.add-form input {
-  padding: 10px 12px;
-  border: 1px solid #d1d5db;
-  border-radius: 6px;
+.add-form input,
+.add-form select {
+  margin: 0 8px 8px 0;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
   font-size: 15px;
-  margin-bottom: 8px;
-  min-width: 180px;
   background: #fff;
   transition: border 0.2s;
 }
@@ -38,25 +45,26 @@ h2, h3 {
 
 .add-form button {
   flex: 1 1 100%;
-  padding: 12px 0;
-  background: #f5b91e;
-  color: #222;
-  font-weight: 600;
+  padding: 8px 16px;
+  background-color: #F0BB29;
+  color: black;
+  font-weight: bold;
   font-size: 18px;
   border: none;
-  border-radius: 6px;
+  border-radius: 5px;
   margin-top: 8px;
   cursor: pointer;
   transition: background 0.2s;
 }
 
 .add-form button:hover {
-  background: #e0a800;
+  background-color: #e0aa1e;
 }
 
 .table-container {
+  width: 100%;
   overflow-x: auto;
-  margin-bottom: 40px;
+  margin-bottom: 24px;
   border-radius: 8px;
   background: #fff;
   box-shadow: 0 2px 8px rgba(0,0,0,0.04);
@@ -64,35 +72,39 @@ h2, h3 {
 }
 
 .requests-table {
-  min-width: 1100px;
-  border-collapse: collapse;
   width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
   background: #fff;
 }
 
-.requests-table th, .requests-table td {
-  padding: 10px 14px;
-  border-bottom: 1px solid #ececec;
+.requests-table th,
+.requests-table td {
+  border: 1px solid #ddd;
+  padding: 10px;
   text-align: left;
   font-size: 15px;
   vertical-align: middle;
 }
 
 .requests-table th {
-  background: #f5b91e;
-  color: #222;
-  font-weight: 700;
+  background-color: #f2f2f2;
+  font-weight: bold;
   position: sticky;
   top: 0;
   z-index: 1;
 }
 
 .requests-table tr:nth-child(even) {
-  background: #f9f9f9;
+  background-color: #f9f9f9;
+}
+
+.requests-table tr.selected-row {
+  background-color: #ffe9b3;
 }
 
 .requests-table tr:hover {
-  background: #f6e7c1;
+  background-color: #f5f5f5;
 }
 
 .requests-table input {
@@ -144,22 +156,20 @@ h2, h3 {
 }
 
 .action-buttons {
+  margin: 10px 0 20px 0;
   display: flex;
-  flex-direction: row;
-  gap: 16px;
+  gap: 10px;
   justify-content: center;
   align-items: center;
-  margin: 18px 0 10px 0;
 }
 
 .action-buttons button {
-  background: #f5b91e;
-  color: #222;
+  padding: 8px 12px;
+  background-color: #F0BB29;
   border: none;
-  border-radius: 6px;
-  padding: 10px 22px;
-  font-size: 16px;
-  font-weight: 600;
+  border-radius: 5px;
+  color: black;
+  font-weight: bold;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   min-width: 120px;
@@ -167,7 +177,7 @@ h2, h3 {
 }
 
 .action-buttons button:hover {
-  background: #e0a800;
+  background-color: #e0aa1e;
   box-shadow: 0 2px 8px rgba(245,185,30,0.18);
 }
 
