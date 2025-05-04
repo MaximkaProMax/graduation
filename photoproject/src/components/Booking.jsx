@@ -151,12 +151,18 @@ const Booking = () => {
   }
 
   if (!isAuthenticated) {
-    // Проверка авторизации
     return (
       <div className="cart">
         <h2>Мои заявки</h2>
         <div style={{ color: 'red', fontWeight: 600, textAlign: 'center', margin: '40px 0' }}>
           Для просмотра заявок необходимо авторизоваться в системе.
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 20 }}>
+          <a href="/login">
+            <button style={{ padding: '10px 24px', background: '#ffcc00', border: 'none', borderRadius: 5, fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>
+              Войти
+            </button>
+          </a>
         </div>
       </div>
     );

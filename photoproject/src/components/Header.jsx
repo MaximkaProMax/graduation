@@ -55,7 +55,16 @@ function Header() {
               <li><Link to="/admin">Admin</Link></li>
               <li><Link to="/manager">Manager</Link></li>
               <li><Link to="/favourites">Избранное</Link></li>
-              <li><button onClick={handleLogout}>Выйти</button></li>
+              {/* Показываем "Выйти" только если пользователь авторизован, иначе "Войти" */}
+              {userLogin ? (
+                <li><button onClick={handleLogout}>Выйти</button></li>
+              ) : (
+                <li>
+                  <Link to="/login">
+                    <button>Войти</button>
+                  </Link>
+                </li>
+              )}
             </ul>
           </li>
         </ul>
