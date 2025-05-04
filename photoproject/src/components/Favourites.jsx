@@ -8,17 +8,32 @@ import './Favourites.css';
 function Favourites() {
   const navigate = useNavigate();
   const [favorites, setFavorites] = useState([]);
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/favourites', { withCredentials: true })
+    // Проверка авторизации
+    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
       .then(response => {
-        console.log('Избранные фотостудии:', response.data);
-        setFavorites(response.data);
+        setIsAuthenticated(response.data.isAuthenticated);
+        setAuthChecked(true);
       })
-      .catch(error => {
-        console.error('Ошибка при загрузке избранных фотостудий:', error);
+      .catch(() => {
+        setIsAuthenticated(false);
+        setAuthChecked(true);
       });
-  }, []);
+
+    if (isAuthenticated) {
+      axios.get('http://localhost:3001/api/favourites', { withCredentials: true })
+        .then(response => {
+          console.log('Избранные фотостудии:', response.data);
+          setFavorites(response.data);
+        })
+        .catch(error => {
+          console.error('Ошибка при загрузке избранных фотостудий:', error);
+        });
+    }
+  }, [isAuthenticated]);
 
   const handleBookButtonClick = (studioName, address) => {
     navigate('/calendar', { state: { studio: studioName, address } });
@@ -36,8 +51,30 @@ function Favourites() {
       });
   };
 
+  if (!authChecked) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div className="favourites">
+        <h2>Избранное</h2>
+        <div style={{ color: 'red', fontWeight: 600, textAlign: 'center', margin: '40px 0' }}>
+          Для просмотра избранного необходимо авторизоваться в системе.
+        </div>
+        <div style={{ textAlign: 'center', marginTop: 20 }}>
+          <a href="/login">
+            <button style={{ padding: '10px 24px', background: '#ffcc00', border: 'none', borderRadius: 5, fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>
+              Войти
+            </button>
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="photostudios">
+    <div className="favourites">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <h2>Избранные фотостудии</h2>
       <div className="studio-list">

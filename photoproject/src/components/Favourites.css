@@ -86,9 +86,8 @@
   
   .action-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
-    position: relative;
     margin-top: 10px;
   }
   
@@ -115,13 +114,23 @@
   
   .remove-icon {
     cursor: pointer;
-    font-size: 24px;
+    font-size: 18px;
     color: red;
     margin-left: 10px;
   }
   
   .remove-icon:hover {
     color: darkred;
+  }
+  
+  .favourites {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white; /* Белый фон */
+    color: black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
   }
   
   /* Центрирование и отступы для карточек на десктопе */
