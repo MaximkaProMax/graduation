@@ -223,13 +223,13 @@ const EditUsers = () => {
               <td>
                 {isEditing && editableUser.userId === user.userId ? (
                   <>
-                    <button className="edit-users-button" onClick={handleSaveUser}>Сохранить</button>
+                    <button className="edit-users-button edit" onClick={handleSaveUser}>Сохранить</button>
                     <button className="edit-users-button" onClick={handleCancelEdit}>Отмена</button>
                   </>
                 ) : (
                   <>
-                    <button className="edit-users-button" onClick={() => handleEditUser(user)}>Редактировать</button>
-                    <button className="edit-users-button" onClick={() => handleDeleteUser(user.userId)}>Удалить</button>
+                    <button className="edit-users-button edit" onClick={() => handleEditUser(user)}>Редактировать</button>
+                    <button className="edit-users-button delete" onClick={() => handleDeleteUser(user.userId)}>Удалить</button>
                   </>
                 )}
               </td>
