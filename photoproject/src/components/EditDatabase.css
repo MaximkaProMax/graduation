@@ -2,6 +2,9 @@
   max-width: 1000px;
   margin: 0 auto;
   padding: 20px;
+  background: #fff; /* Белый фон для всей карточки */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .edit-database-container h2 {
@@ -23,6 +26,7 @@
 .edit-database-table {
   width: 100%;
   border-collapse: collapse;
+  background: #fff; /* Белый фон для таблицы */
 }
 
 .edit-database-table th, .edit-database-table td {
@@ -41,23 +45,42 @@
 
 .edit-database-button {
   padding: 8px 12px;
-  background-color: #F0BB29;
   border: none;
   border-radius: 5px;
-  color: black;
   font-weight: bold;
   cursor: pointer;
   margin-right: 5px;
+  background-color: #e0e0e0; /* Светло-серый для "Редактировать" и "Сохранить" */
+  color: #222;
+  transition: background 0.2s;
 }
 
-.edit-database-button:hover {
-  background-color: #e0aa1e;
+.edit-database-button.edit:hover,
+.edit-database-button:hover:not(.delete) {
+  background-color: #ededed; /* Еще светлее при наведении */
+  color: #222;
+}
+
+.edit-database-button.delete {
+  background-color: #e74c3c; /* Красный для "Удалить" */
+  color: #fff;
+}
+
+.edit-database-button.delete:hover {
+  background-color: #ff5c5c;
+  color: #fff;
 }
 
 .add-studio-button, .add-typography-button {
   margin-top: 10px;
   width: 100%;
   padding: 10px;
+  color: #fff;
+  background-color: #F0BB29;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .back-button {

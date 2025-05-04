@@ -40,11 +40,18 @@
   font-weight: bold;
   cursor: pointer;
   margin-right: 5px;
+  transition: background 0.2s;
 }
 
 /* Кнопка "Редактировать" */
 .edit-users-button.edit {
   background-color: #e0e0e0; /* Светло-серый */
+  color: #222;
+}
+
+.edit-users-button.edit:hover,
+.edit-users-button:hover:not(.delete) {
+  background-color: #ededed; /* Светлее при наведении */
   color: #222;
 }
 
@@ -54,8 +61,9 @@
   color: #fff;
 }
 
-.edit-users-button:hover {
-  opacity: 0.9;
+.edit-users-button.delete:hover {
+  background-color: #ff5c5c;
+  color: #fff;
 }
 
 .add-user-button {

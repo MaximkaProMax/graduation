@@ -229,7 +229,7 @@ const EditDatabase = () => {
                   ) : (
                     <>
                       <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
-                      <button className="edit-database-button" onClick={() => handleDeleteStudio(studio.studioId)}>Удалить</button>
+                      <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.studioId)}>Удалить</button>
                     </>
                   )}
                 </td>
@@ -332,7 +332,7 @@ const EditDatabase = () => {
                   ) : (
                     <>
                       <button className="edit-database-button" onClick={() => handleEditTypography(typography)}>Редактировать</button>
-                      <button className="edit-database-button" onClick={() => handleDeleteTypography(typography.typographyId)}>Удалить</button>
+                      <button className="edit-database-button delete" onClick={() => handleDeleteTypography(typography.typographyId)}>Удалить</button>
                     </>
                   )}
                 </td>
