@@ -198,7 +198,24 @@ const Booking = () => {
                   <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
                   <p>Адрес доставки: {booking.address_delivery || '-'}</p>
                   <p>Статус: {booking.status || '-'}</p>
-                  <p>Итоговая цена: {booking.final_price || '-'}</p>
+                  <p>
+                    <span style={{
+                      background: '#fff',
+                      padding: '10px 24px',
+                      borderRadius: '10px',
+                      fontWeight: 600,
+                      display: 'inline-block',
+                      border: '2px solid #e0e0e0',
+                      fontSize: '18px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+                    }}>
+                      Итоговая цена: {
+                        booking.final_price
+                          ? `${parseInt(booking.final_price, 10)}₽`
+                          : '-'
+                      }
+                    </span>
+                  </p>
                   <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
                     Удалить
                   </button>
@@ -244,7 +261,24 @@ const Booking = () => {
                   <p>Дата: {booking.date || '-'}</p>
                   <p>Время: {booking.time || '-'}</p>
                   <p>Статус: {booking.status || '-'}</p>
-                  <p>Итоговая цена: {booking.final_price || '-'}</p>
+                  <p>
+                    <span style={{
+                      background: '#fff',
+                      padding: '10px 24px',
+                      borderRadius: '10px',
+                      fontWeight: 600,
+                      display: 'inline-block',
+                      border: '2px solid #e0e0e0',
+                      fontSize: '18px',
+                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
+                    }}>
+                      Итоговая цена: {
+                        booking.final_price
+                          ? `${parseInt(booking.final_price, 10)}₽`
+                          : '-'
+                      }
+                    </span>
+                  </p>
                   <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
                     Удалить
                   </button>
@@ -285,18 +319,6 @@ const Booking = () => {
             ) : (
               <p>Загрузка...</p>
             )}
-          </div>
-          <div className="price-details">
-            <h3>Итоговая цена</h3>
-            <div>
-              {(() => {
-                const total =
-                  [...typographyBookings, ...studioBookings]
-                    .map(b => Number(b.final_price) || 0)
-                    .reduce((a, b) => a + b, 0);
-                return <p>{total ? `${total}₽` : '-'}</p>;
-              })()}
-            </div>
           </div>
         </div>
       </div>
