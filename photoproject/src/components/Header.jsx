@@ -48,14 +48,12 @@ function Header() {
           <li><Link to="/photostudios">Фотостудии</Link></li>
           <li><Link to="/printing">Типография</Link></li>
           <li><Link to="/booking">Бронирования</Link></li>
-          <li><Link to="/cart">Корзина</Link></li>
           <li className="profile-menu">
             <Link to="/login">{userLogin || 'Профиль'}</Link>
             <ul className="dropdown">
               <li><Link to="/admin">Admin</Link></li>
               <li><Link to="/manager">Manager</Link></li>
               <li><Link to="/favourites">Избранное</Link></li>
-              {/* Показываем "Выйти" только если пользователь авторизован, иначе "Войти" */}
               {userLogin ? (
                 <li><button onClick={handleLogout}>Выйти</button></li>
               ) : (
@@ -76,7 +74,6 @@ function Header() {
           <li><Link to="/photostudios" onClick={toggleMenu}>Фотостудии</Link></li>
           <li><Link to="/printing" onClick={toggleMenu}>Типография</Link></li>
           <li><Link to="/booking" onClick={toggleMenu}>Бронирования</Link></li>
-          <li><Link to="/cart" onClick={toggleMenu}>Корзина</Link></li>
           <li><Link to="/login" onClick={toggleMenu}>{userLogin || 'Профиль'}</Link></li>
           <li><Link to="/favourites" onClick={toggleMenu}>Избранное</Link></li>
           <li><button onClick={handleLogout}>Выйти</button></li>
