@@ -10,6 +10,7 @@ const EditDatabase = () => {
   const [editableTypography, setEditableTypography] = useState({});
   const [isEditingStudio, setIsEditingStudio] = useState(false);
   const [isEditingTypography, setIsEditingTypography] = useState(false);
+  const [showAddStudioForm, setShowAddStudioForm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -76,6 +77,28 @@ const EditDatabase = () => {
           });
       }
     }
+  };
+
+  const handleSaveNewStudio = () => {
+    const { studio, address, opening_hours, price } = editableStudio;
+    if (!studio || !address || !opening_hours || !price) {
+      alert('Все поля должны быть заполнены');
+      return;
+    }
+    axios.post('http://localhost:3001/api/photostudios', {
+      studio,
+      address,
+      opening_hours,
+      price
+    })
+      .then(() => {
+        fetchStudios();
+        setShowAddStudioForm(false);
+        setEditableStudio({});
+      })
+      .catch(error => {
+        console.error('Ошибка при добавлении фотостудии:', error);
+      });
   };
 
   const handleSaveTypography = () => {
@@ -148,8 +171,14 @@ const EditDatabase = () => {
   };
 
   const handleAddStudio = () => {
-    setEditableStudio({});
-    setIsEditingStudio(true);
+    setEditableStudio({
+      studio: '',
+      address: '',
+      opening_hours: '',
+      price: ''
+    });
+    setShowAddStudioForm(true);
+    setIsEditingStudio(false);
   };
 
   const handleAddTypography = () => {
@@ -238,7 +267,77 @@ const EditDatabase = () => {
           </tbody>
         </table>
       </div>
-      <button className="add-studio-button" onClick={handleAddStudio}>Добавить фотостудию</button>
+      {!showAddStudioForm && (
+        <button className="add-studio-button" onClick={handleAddStudio}>Добавить фотостудию</button>
+      )}
+      {showAddStudioForm && (
+        <form
+          style={{
+            background: '#fafafa',
+            border: '1px solid #ececec',
+            borderRadius: 8,
+            padding: 22,
+            margin: '20px 0',
+            maxWidth: 500
+          }}
+          onSubmit={e => { e.preventDefault(); handleSaveNewStudio(); }}
+        >
+          <h4 style={{ marginTop: 0 }}>Добавление фотостудии</h4>
+          <div style={{ marginBottom: 10 }}>
+            <label>Название студии</label>
+            <input
+              type="text"
+              name="studio"
+              value={editableStudio.studio || ''}
+              onChange={e => handleInputChange(e, setEditableStudio)}
+              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <label>Адрес</label>
+            <input
+              type="text"
+              name="address"
+              value={editableStudio.address || ''}
+              onChange={e => handleInputChange(e, setEditableStudio)}
+              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <label>Время работы</label>
+            <input
+              type="text"
+              name="opening_hours"
+              value={editableStudio.opening_hours || ''}
+              onChange={e => handleInputChange(e, setEditableStudio)}
+              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              required
+            />
+          </div>
+          <div style={{ marginBottom: 10 }}>
+            <label>Цена</label>
+            <input
+              type="text"
+              name="price"
+              value={editableStudio.price || ''}
+              onChange={e => handleInputChange(e, setEditableStudio)}
+              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              required
+            />
+          </div>
+          <button className="edit-database-button" type="submit">Сохранить</button>
+          <button
+            className="edit-database-button"
+            type="button"
+            style={{ marginLeft: 8 }}
+            onClick={() => { setShowAddStudioForm(false); setEditableStudio({}); }}
+          >
+            Отмена
+          </button>
+        </form>
+      )}
 
       <h3>Типографии</h3>
       <div className="edit-database-table-container" style={{ overflowX: 'auto', width: '100%' }}>
