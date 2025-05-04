@@ -2,6 +2,9 @@
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
+  background: #fff; /* Белый фон для всей карточки */
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .edit-user-groups-container h2 {
@@ -13,6 +16,7 @@
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
+  background: #fff; /* Белый фон для таблицы */
 }
 
 .edit-user-groups-table th, .edit-user-groups-table td {
@@ -31,23 +35,39 @@
 
 .edit-user-groups-button {
   padding: 8px 12px;
-  background-color: #F0BB29;
   border: none;
   border-radius: 5px;
-  color: black;
   font-weight: bold;
   cursor: pointer;
   margin-right: 5px;
 }
 
+/* Кнопка "Редактировать" */
+.edit-user-groups-button.edit {
+  background-color: #e0e0e0; /* Светло-серый */
+  color: #222;
+}
+
+/* Кнопка "Удалить" */
+.edit-user-groups-button.delete {
+  background-color: #e74c3c; /* Красный */
+  color: #fff;
+}
+
 .edit-user-groups-button:hover {
-  background-color: #e0aa1e;
+  opacity: 0.9;
 }
 
 .add-role-button {
   margin-top: 10px;
   width: 100%;
   padding: 10px;
+  color: #fff; /* Белый цвет шрифта */
+  background-color: #F0BB29;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 .back-button {

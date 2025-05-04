@@ -5,71 +5,75 @@ import { useNavigate } from 'react-router-dom';
 
 const EditUserGroups = () => {
   const [roles, setRoles] = useState([]);
+  const [editingRoleId, setEditingRoleId] = useState(null);
+  const [editingRoleName, setEditingRoleName] = useState('');
+  const [newRoleName, setNewRoleName] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchRoles();
   }, []);
 
-  const fetchRoles = () => {
-    axios.get('http://localhost:3001/api/roles')
-      .then(response => {
-        if (Array.isArray(response.data)) {
-          setRoles(response.data);
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при получении данных о ролях:', error);
-      });
-  };
-
-  const handleAddRole = () => {
-    const roleName = prompt('Введите название новой группы:');
-    if (roleName) {
-      axios.post('http://localhost:3001/api/roles', { roleName })
-        .then(() => {
-          console.log('Группа успешно добавлена');
-          fetchRoles();
-        })
-        .catch(error => {
-          console.error('Ошибка при добавлении группы:', error);
-        });
+  const fetchRoles = async () => {
+    try {
+      const response = await axios.get('http://localhost:3001/api/roles');
+      setRoles(response.data);
+    } catch (error) {
+      console.error('Ошибка при загрузке ролей:', error);
     }
   };
 
-  const handleEditRole = (roleId) => {
-    const newRoleName = prompt('Введите новое название группы:');
-    if (newRoleName) {
-      axios.put(`http://localhost:3001/api/roles/${roleId}`, { roleName: newRoleName })
-        .then(() => {
-          console.log('Группа успешно отредактирована');
-          fetchRoles();
-        })
-        .catch(error => {
-          console.error('Ошибка при редактировании группы:', error);
-        });
+  const handleAddRole = async (e) => {
+    e.preventDefault();
+    if (!newRoleName.trim()) return;
+    try {
+      await axios.post('http://localhost:3001/api/roles', { roleName: newRoleName });
+      setNewRoleName('');
+      fetchRoles();
+    } catch (error) {
+      console.error('Ошибка при добавлении группы:', error);
     }
   };
 
-  const handleDeleteRole = (roleId) => {
+  const handleEditRole = (roleId, roleName) => {
+    setEditingRoleId(roleId);
+    setEditingRoleName(roleName);
+  };
+
+  const handleRoleNameChange = (e) => {
+    setEditingRoleName(e.target.value);
+  };
+
+  const handleSaveRole = async (roleId) => {
+    try {
+      await axios.put(`http://localhost:3001/api/roles/${roleId}`, { roleName: editingRoleName });
+      setRoles(roles.map(role =>
+        role.roleId === roleId ? { ...role, roleName: editingRoleName } : role
+      ));
+      setEditingRoleId(null);
+      setEditingRoleName('');
+    } catch (error) {
+      console.error('Ошибка при сохранении роли:', error);
+    }
+  };
+
+  const handleDeleteRole = async (roleId) => {
     if (window.confirm('Вы уверены, что хотите удалить эту группу?')) {
-      axios.delete(`http://localhost:3001/api/roles/${roleId}`)
-        .then(() => {
-          console.log('Группа успешно удалена');
-          fetchRoles();
-        })
-        .catch(error => {
-          if (error.response && error.response.status === 400) {
-            alert('Невозможно удалить роль, так как она используется пользователями.');
-          } else {
-            console.error('Ошибка при удалении группы:', error);
-          }
-        });
+      try {
+        await axios.delete(`http://localhost:3001/api/roles/${roleId}`);
+        setRoles(roles.filter(role => role.roleId !== roleId));
+      } catch (error) {
+        if (error.response && error.response.status === 400) {
+          alert('Невозможно удалить роль, так как она используется пользователями.');
+        } else {
+          console.error('Ошибка при удалении группы:', error);
+        }
+      }
     }
   };
 
   const handleBackClick = () => {
-    navigate('/admin'); // Переход на страницу Admin.js
+    navigate('/admin');
   };
 
   return (
@@ -88,16 +92,79 @@ const EditUserGroups = () => {
           {roles.map((role) => (
             <tr key={role.roleId}>
               <td>{role.roleId}</td>
-              <td>{role.roleName}</td>
               <td>
-                <button className="edit-user-groups-button" onClick={() => handleEditRole(role.roleId)}>Редактировать</button>
-                <button className="edit-user-groups-button" onClick={() => handleDeleteRole(role.roleId)}>Удалить</button>
+                {editingRoleId === role.roleId ? (
+                  <input
+                    type="text"
+                    value={editingRoleName}
+                    onChange={handleRoleNameChange}
+                    autoFocus
+                  />
+                ) : (
+                  role.roleName
+                )}
+              </td>
+              <td>
+                {editingRoleId === role.roleId ? (
+                  <>
+                    <button
+                      className="edit-user-groups-button edit"
+                      onClick={() => handleSaveRole(role.roleId)}
+                    >
+                      Сохранить
+                    </button>
+                    <button
+                      className="edit-user-groups-button"
+                      onClick={() => {
+                        setEditingRoleId(null);
+                        setEditingRoleName('');
+                      }}
+                    >
+                      Отмена
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <button
+                      className="edit-user-groups-button edit"
+                      onClick={() => handleEditRole(role.roleId, role.roleName)}
+                    >
+                      Редактировать
+                    </button>
+                    <button
+                      className="edit-user-groups-button delete"
+                      onClick={() => handleDeleteRole(role.roleId)}
+                    >
+                      Удалить
+                    </button>
+                  </>
+                )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
-      <button className="add-role-button" onClick={handleAddRole}>Добавить группу</button>
+      <form
+        onSubmit={handleAddRole}
+        style={{ marginBottom: 20 }}
+      >
+        <input
+          type="text"
+          value={newRoleName}
+          onChange={e => setNewRoleName(e.target.value)}
+          placeholder="Введите название новой группы"
+          style={{
+            width: '100%',
+            padding: 8,
+            borderRadius: 5,
+            border: '1px solid #ddd',
+            marginBottom: 8
+          }}
+        />
+        <button type="submit" className="add-role-button" style={{ width: '100%' }}>
+          Добавить группу
+        </button>
+      </form>
     </div>
   );
 };
