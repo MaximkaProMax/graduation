@@ -22,7 +22,9 @@ const EditUsers = () => {
     axios.get('http://localhost:3001/api/users')
       .then(response => {
         if (Array.isArray(response.data)) {
-          setUsers(response.data);
+          // Сортировка по userId от меньшего к большему
+          const sorted = [...response.data].sort((a, b) => a.userId - b.userId);
+          setUsers(sorted);
         }
       })
       .catch(error => {
@@ -47,8 +49,44 @@ const EditUsers = () => {
   };
 
   const handleSaveUser = () => {
-    const { userId, name, login, telephone, email, roleId } = editableUser;
+    const { userId, name, login, telephone, email, roleId, password } = editableUser;
 
+    if (userId === null) {
+      // Добавление нового пользователя
+      if (!name || !login || !telephone || !email || !password || !roleId) {
+        setErrorMessage('Все поля должны быть заполнены');
+        setSuccessMessage('');
+        return;
+      }
+      axios.post('http://localhost:3001/api/users', {
+        name,
+        login,
+        telephone,
+        email,
+        password,
+        roleId: parseInt(roleId, 10)
+      })
+        .then(response => {
+          if (response.data.success) {
+            fetchUsers();
+            setIsEditing(false);
+            setEditableUser({});
+            setErrorMessage('');
+            setSuccessMessage('Пользователь успешно добавлен');
+          } else {
+            setErrorMessage(response.data.message || 'Ошибка при добавлении пользователя');
+            setSuccessMessage('');
+          }
+        })
+        .catch(error => {
+          setErrorMessage('Ошибка при добавлении пользователя');
+          setSuccessMessage('');
+          console.error('Ошибка при добавлении пользователя:', error);
+        });
+      return;
+    }
+
+    // Редактирование существующего пользователя
     if (name && login && telephone && email && roleId) {
       const updateData = {
         name,
@@ -294,11 +332,13 @@ const EditUsers = () => {
               onChange={handleInputChange}
             />
           </div>
-          <button className="edit-users-button" onClick={handleSaveUser}>Сохранить</button>
+          <button className="edit-users-button edit" onClick={handleSaveUser}>Сохранить</button>
           <button className="edit-users-button" onClick={handleCancelEdit}>Отмена</button>
         </div>
       )}
-      <button className="add-user-button" onClick={handleAddUser}>Добавить пользователя</button>
+      {!(isEditing && editableUser.userId === null) && (
+        <button className="add-user-button" onClick={handleAddUser}>Добавить пользователя</button>
+      )}
     </div>
   );
 };
