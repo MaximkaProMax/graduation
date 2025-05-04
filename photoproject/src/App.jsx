@@ -12,7 +12,6 @@ import Footer from './components/Footer'; // Импортируем компон
 import PrintingLayFlat from './components/PrintingLayFlat'; // Импортируем компонент PrintingLayFlat
 import PrintingFlexBind from './components/PrintingFlexBind';
 import Calendar from './components/Calendar'; // Импортируем компонент Calendar
-import Cart from './components/Cart'; // Импорт компонента Cart
 import Payment from './components/Payment'; // Импорт компонента Payment
 import Reviews from './components/Reviews'; // Импорт компонента Reviews
 import Admin from './components/Admin'; // Импорт компонента Admin
@@ -64,7 +63,6 @@ function App() {
             <Route path="/printing-layflat" element={<PrintingLayFlat />} /> {/* Типография LayFlat */}
             <Route path="/printing-flexbind" element={<PrintingFlexBind />} /> {/* Типография FlexBind */}
             <Route path="/calendar" element={<Calendar />} /> {/* Календарь */}
-            <Route path="/cart" element={<Cart />} /> {/* Корзина */}
             <Route path="/payment" element={<Payment />} /> {/* Оплата */}
             <Route path="/reviews" element={<Reviews />} /> {/* Отзывы */}
             <Route path="/admin" element={<Admin />} /> {/* Админ */}
