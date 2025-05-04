@@ -140,67 +140,71 @@ const Reviews = () => {
         </tbody>
       </table>
 
-      <h3>Добавить отзыв</h3>
-      <form onSubmit={handleSubmit} className="review-form">
-        <div className="input-group">
-          <label>Фотостудия</label>
-          <select
-            name="photostudio"
-            value={newReview.photostudio}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Выберите студию</option>
-            {photostudios.map((studio) => (
-              <option key={studio.id} value={studio.studio}>
-                {studio.studio}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="input-group">
-          <label>Типография</label>
-          <select
-            name="printing"
-            value={newReview.printing}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Выберите типографию</option>
-            {printings.map((printing) => (
-              <option key={printing.id} value={printing.main_album_name}>
-                {printing.main_album_name}
-              </option>
-            ))}
-          </select>
-        </div>
-        <div className="input-group">
-          <label>Оценка:</label>
-          <select
-            name="rating"
-            value={newReview.rating}
-            onChange={handleInputChange}
-            required
-          >
-            <option value="">Выберите оценку</option>
-            <option value="плохо">1 - Плохо</option>
-            <option value="нормально">2 - Нормально</option>
-            <option value="хорошо">3 - Хорошо</option>
-            <option value="очень хорошо">4 - Очень хорошо</option>
-            <option value="отлично">5 - Отлично</option>
-          </select>
-        </div>
-        <div className="input-group">
-          <label>Комментарий</label>
-          <textarea
-            name="comment"
-            value={newReview.comment}
-            onChange={handleInputChange}
-            required
-          ></textarea>
-        </div>
-        <button type="submit">Добавить отзыв</button>
-      </form>
+      {isAuthenticated && (
+        <>
+          <h3>Добавить отзыв</h3>
+          <form onSubmit={handleSubmit} className="review-form">
+            <div className="input-group">
+              <label>Фотостудия</label>
+              <select
+                name="photostudio"
+                value={newReview.photostudio}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Выберите студию</option>
+                {photostudios.map((studio) => (
+                  <option key={studio.id} value={studio.studio}>
+                    {studio.studio}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Типография</label>
+              <select
+                name="printing"
+                value={newReview.printing}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Выберите типографию</option>
+                {printings.map((printing) => (
+                  <option key={printing.id} value={printing.main_album_name}>
+                    {printing.main_album_name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Оценка:</label>
+              <select
+                name="rating"
+                value={newReview.rating}
+                onChange={handleInputChange}
+                required
+              >
+                <option value="">Выберите оценку</option>
+                <option value="плохо">1 - Плохо</option>
+                <option value="нормально">2 - Нормально</option>
+                <option value="хорошо">3 - Хорошо</option>
+                <option value="очень хорошо">4 - Очень хорошо</option>
+                <option value="отлично">5 - Отлично</option>
+              </select>
+            </div>
+            <div className="input-group">
+              <label>Комментарий</label>
+              <textarea
+                name="comment"
+                value={newReview.comment}
+                onChange={handleInputChange}
+                required
+              ></textarea>
+            </div>
+            <button type="submit">Добавить отзыв</button>
+          </form>
+        </>
+      )}
     </div>
   );
 };
