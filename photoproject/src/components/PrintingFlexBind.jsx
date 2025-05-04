@@ -27,14 +27,28 @@ const PrintingFlexBind = () => {
           setPrintingOptions(flexBindOption);
           setFormat(flexBindOption.format);
           setSpreads('2'); // Устанавливаем значение по умолчанию в 2
-          setLamination(flexBindOption.lamination.split('/'));
+          // Исправлено: lamination теперь всегда массив уникальных значений, разделённых по /
+          let laminationArr = [];
+          if (Array.isArray(flexBindOption.lamination)) {
+            laminationArr = flexBindOption.lamination
+              .flatMap(l => l.split('/').map(x => x.trim()))
+              .filter(Boolean);
+          } else if (typeof flexBindOption.lamination === 'string') {
+            laminationArr = flexBindOption.lamination
+              .split('/')
+              .map(l => l.trim())
+              .filter(Boolean);
+          }
+          // Удаляем дубликаты
+          laminationArr = [...new Set(laminationArr)];
+          setLamination(laminationArr);
           setPhotoClass(flexBindOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
           setPrice(flexBindOption.price_of_spread * 2 + flexBindOption.copy_price * 1);
           setAlbumName(flexBindOption.name_on_page); // Устанавливаем название альбома из базы данных
 
           // Устанавливаем значения по умолчанию
           setSelectedFormat(flexBindOption.format[0]);
-          setSelectedLamination(flexBindOption.lamination.split('/')[0]);
+          setSelectedLamination(laminationArr[0]);
         } else {
           console.error('Полученные данные не являются массивом:', data);
         }

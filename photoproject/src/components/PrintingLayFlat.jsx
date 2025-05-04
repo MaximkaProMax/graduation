@@ -29,7 +29,21 @@ const PrintingLayFlat = () => {
           setPrintingOptions(layFlatOption);
           setFormat(layFlatOption.format);
           setBase(layFlatOption.basis_for_spread.split(', '));
-          setLamination(layFlatOption.lamination.split('/'));
+          // Исправлено: lamination теперь всегда массив уникальных значений, разделённых по /
+          let laminationArr = [];
+          if (Array.isArray(layFlatOption.lamination)) {
+            laminationArr = layFlatOption.lamination
+              .flatMap(l => l.split('/').map(x => x.trim()))
+              .filter(Boolean);
+          } else if (typeof layFlatOption.lamination === 'string') {
+            laminationArr = layFlatOption.lamination
+              .split('/')
+              .map(l => l.trim())
+              .filter(Boolean);
+          }
+          // Удаляем дубликаты
+          laminationArr = [...new Set(laminationArr)];
+          setLamination(laminationArr);
           setPhotoClass(layFlatOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
           setPrice(layFlatOption.price_of_spread * spreads + layFlatOption.copy_price * quantity);
           setAlbumName(layFlatOption.name_on_page); // Устанавливаем название альбома из базы данных
@@ -37,7 +51,7 @@ const PrintingLayFlat = () => {
           // Устанавливаем значения по умолчанию
           setSelectedFormat(layFlatOption.format[0]);
           setSelectedBase(layFlatOption.basis_for_spread.split(', ')[0]);
-          setSelectedLamination(layFlatOption.lamination.split('/')[0]);
+          setSelectedLamination(laminationArr[0]);
         } else {
           console.error('Полученные данные не являются массивом:', data);
         }
