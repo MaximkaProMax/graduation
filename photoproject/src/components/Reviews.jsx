@@ -11,6 +11,7 @@ const Reviews = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [photostudios, setPhotostudios] = useState([]); // Состояние для списка фотостудий
   const [printings, setPrintings] = useState([]); // Состояние для списка типографий
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -52,6 +53,10 @@ const Reviews = () => {
     fetchReviews();
     fetchPhotostudios();
     fetchPrintings();
+
+    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
+      .then(response => setIsAuthenticated(response.data.isAuthenticated))
+      .catch(() => setIsAuthenticated(false));
   }, []); // Убрано navigate из зависимостей, так как он не используется напрямую
 
   const handleInputChange = (e) => {
@@ -109,7 +114,7 @@ const Reviews = () => {
             <th>Отзыв</th>
             <th>Студия</th>
             <th>Типография</th>
-            <th>Действие</th>
+            {isAuthenticated && <th>Действие</th>}
           </tr>
         </thead>
         <tbody>
@@ -120,14 +125,16 @@ const Reviews = () => {
               <td>{review.comment || 'Не указано'}</td>
               <td>{review.photostudio || 'Не указано'}</td>
               <td>{review.printing || 'Не указано'}</td>
-              <td>
-                <button
-                  onClick={() => handleDelete(review.review_id)}
-                  className="delete-button"
-                >
-                  Удалить
-                </button>
-              </td>
+              {isAuthenticated && (
+                <td>
+                  <button
+                    onClick={() => handleDelete(review.review_id)}
+                    className="delete-button"
+                  >
+                    Удалить
+                  </button>
+                </td>
+              )}
             </tr>
           ))}
         </tbody>
