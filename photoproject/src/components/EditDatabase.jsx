@@ -11,6 +11,7 @@ const EditDatabase = () => {
   const [isEditingStudio, setIsEditingStudio] = useState(false);
   const [isEditingTypography, setIsEditingTypography] = useState(false);
   const [showAddStudioForm, setShowAddStudioForm] = useState(false);
+  const [showAddTypographyForm, setShowAddTypographyForm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -104,6 +105,14 @@ const EditDatabase = () => {
   const handleSaveTypography = () => {
     const { typographyId, ...updateData } = editableTypography;
 
+    // Преобразуем format и lamination в массивы, если это строки
+    if (updateData.format && !Array.isArray(updateData.format)) {
+      updateData.format = updateData.format.split(',').map(f => f.trim());
+    }
+    if (updateData.lamination && !Array.isArray(updateData.lamination)) {
+      updateData.lamination = updateData.lamination.split('/').map(l => l.trim());
+    }
+
     if (Object.values(updateData).every(value => value)) {
       if (typographyId) {
         axios.put(`http://localhost:3001/api/printing/${typographyId}`, updateData)
@@ -127,6 +136,44 @@ const EditDatabase = () => {
           });
       }
     }
+  };
+
+  const handleSaveNewTypography = () => {
+    let { format, the_basis_of_the_spread, number_of_spreads, lamination, number_of_copies, address_delivery, final_price, album_name } = editableTypography;
+    if (!format || !number_of_spreads || !lamination || !number_of_copies || !final_price || !album_name) {
+      alert('Все поля должны быть заполнены');
+      return;
+    }
+
+    // Преобразуем format и lamination в массивы, если пользователь ввёл строку с разделителями
+    if (typeof format === 'string') {
+      format = format.includes(',') ? format.split(',').map(f => f.trim()) : [format.trim()];
+    }
+    if (typeof lamination === 'string') {
+      lamination = lamination.includes('/') ? lamination.split('/').map(l => l.trim()) : [lamination.trim()];
+    }
+
+    axios.post('http://localhost:3001/api/printing', {
+      format,
+      the_basis_of_the_spread: the_basis_of_the_spread || 'Не указано',
+      number_of_spreads,
+      lamination,
+      number_of_copies,
+      address_delivery: address_delivery || 'Не указано',
+      final_price,
+      album_name,
+      main_card_photo: 'default_photo.jpg', // Укажите значение по умолчанию
+      main_album_name: album_name, // Используем название альбома
+      main_card_description: 'Описание отсутствует' // Укажите значение по умолчанию
+    })
+      .then(() => {
+        fetchTypographies();
+        setShowAddTypographyForm(false);
+        setEditableTypography({});
+      })
+      .catch(error => {
+        console.error('Ошибка при добавлении типографии:', error);
+      });
   };
 
   const handleEditStudio = (studio) => {
@@ -182,8 +229,18 @@ const EditDatabase = () => {
   };
 
   const handleAddTypography = () => {
-    setEditableTypography({});
-    setIsEditingTypography(true);
+    setEditableTypography({
+      format: '',
+      the_basis_of_the_spread: '',
+      number_of_spreads: '',
+      lamination: '',
+      number_of_copies: '',
+      address_delivery: '',
+      final_price: '',
+      album_name: ''
+    });
+    setShowAddTypographyForm(true);
+    setIsEditingTypography(false);
   };
 
   const handleBackClick = () => {
@@ -440,7 +497,131 @@ const EditDatabase = () => {
           </tbody>
         </table>
       </div>
-      <button className="add-typography-button" onClick={handleAddTypography}>Добавить типографию</button>
+      {!showAddTypographyForm && (
+        <button className="add-typography-button" onClick={handleAddTypography}>Добавить типографию</button>
+      )}
+      {showAddTypographyForm && (
+        <>
+          <div style={{ margin: '10px 0', color: '#888', fontSize: 14 }}>
+            <b>Примечание:</b> Перед отправкой на сервер, если пользователь ввёл строку с разделителями (например, "123, 456"), преобразуйте её в массив по этим разделителям.<br />
+            Для поля <b>format</b> используйте разделитель запятая.<br />
+            Для поля <b>lamination</b> используйте разделитель слэш.<br />
+            <span style={{ color: '#666' }}>
+              <b>Пример:</b> <br />
+              Формат: <code>30, 40, 50</code><br />
+              Ламинация: <code>глянцевая/матовая</code>
+            </span>
+          </div>
+          <form
+            style={{
+              background: '#fafafa',
+              border: '1px solid #ececec',
+              borderRadius: 8,
+              padding: 22,
+              margin: '20px 0',
+              maxWidth: 500
+            }}
+            onSubmit={e => { e.preventDefault(); handleSaveNewTypography(); }}
+          >
+            <h4 style={{ marginTop: 0 }}>Добавление типографии</h4>
+            <div style={{ marginBottom: 10 }}>
+              <label>Формат</label>
+              <input
+                type="text"
+                name="format"
+                value={editableTypography.format || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Основа разворота</label>
+              <input
+                type="text"
+                name="the_basis_of_the_spread"
+                value={editableTypography.the_basis_of_the_spread || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Количество разворотов</label>
+              <input
+                type="number"
+                name="number_of_spreads"
+                value={editableTypography.number_of_spreads || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Ламинация</label>
+              <input
+                type="text"
+                name="lamination"
+                value={editableTypography.lamination || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Количество копий</label>
+              <input
+                type="number"
+                name="number_of_copies"
+                value={editableTypography.number_of_copies || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Адрес доставки</label>
+              <input
+                type="text"
+                name="address_delivery"
+                value={editableTypography.address_delivery || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Итоговая цена</label>
+              <input
+                type="number"
+                name="final_price"
+                value={editableTypography.final_price || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Название альбома</label>
+              <input
+                type="text"
+                name="album_name"
+                value={editableTypography.album_name || ''}
+                onChange={e => handleInputChange(e, setEditableTypography)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <button className="edit-database-button" type="submit">Сохранить</button>
+            <button
+              className="edit-database-button"
+              type="button"
+              style={{ marginLeft: 8 }}
+              onClick={() => { setShowAddTypographyForm(false); setEditableTypography({}); }}
+            >
+              Отмена
+            </button>
+          </form>
+        </>
+      )}
     </div>
   );
 };
