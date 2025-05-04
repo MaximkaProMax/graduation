@@ -52,11 +52,11 @@ const EditDatabase = () => {
   };
 
   const handleSaveStudio = () => {
-    const { studioId, ...updateData } = editableStudio;
+    const { id, ...updateData } = editableStudio;
 
     if (Object.values(updateData).every(value => value)) {
-      if (studioId) {
-        axios.put(`http://localhost:3001/api/photostudios/${studioId}`, updateData)
+      if (id) {
+        axios.put(`http://localhost:3001/api/photostudios/${id}`, updateData)
           .then(() => {
             fetchStudios();
             setIsEditingStudio(false);
@@ -221,7 +221,7 @@ const EditDatabase = () => {
           </thead>
           <tbody>
             {studios.map((studio) => (
-              <tr key={studio.studioId}>
+              <tr key={studio.id}>
                 {Object.keys(studio)
                   .filter(
                     key =>
@@ -235,8 +235,8 @@ const EditDatabase = () => {
                       ].includes(key)
                   )
                   .map((key) => (
-                    <td key={`${studio.studioId}-${key}`}>
-                      {isEditingStudio && editableStudio.studioId === studio.studioId ? (
+                    <td key={`${studio.id}-${key}`}>
+                      {isEditingStudio && editableStudio.id === studio.id ? (
                         <input
                           type="text"
                           name={key}
@@ -249,8 +249,8 @@ const EditDatabase = () => {
                       )}
                     </td>
                   ))}
-                <td key={`${studio.studioId}-actions`}>
-                  {isEditingStudio && editableStudio.studioId === studio.studioId ? (
+                <td key={`${studio.id}-actions`}>
+                  {isEditingStudio && editableStudio.id === studio.id ? (
                     <>
                       <button className="edit-database-button" onClick={handleSaveStudio}>Сохранить</button>
                       <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
@@ -258,7 +258,7 @@ const EditDatabase = () => {
                   ) : (
                     <>
                       <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
-                      <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.studioId)}>Удалить</button>
+                      <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.id)}>Удалить</button>
                     </>
                   )}
                 </td>
