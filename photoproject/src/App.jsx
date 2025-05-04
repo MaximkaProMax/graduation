@@ -20,7 +20,6 @@ import EditDatabase from './components/EditDatabase';
 import EditUsers from './components/EditUsers';
 import Manager from './components/Manager';
 import Requests from './components/Requests';
-import PersonalData from './components/PersonalData';
 import EditPersonalData from './components/EditPersonalData'; // Импортируем компонент EditPersonalData
 import Favourites from './components/Favourites'; // Импортируем компонент Favourites
 import Contacts from './components/Contacts'; // Импортируем компонент Contacts
@@ -71,7 +70,6 @@ function App() {
             <Route path="/admin/edit-database" element={<EditDatabase />} /> {/* Редактирование БД */}
             <Route path="/manager" element={<Manager />} />  {/* Менеджер БД */}
             <Route path="/manager/requests" element={<Requests />} />
-            <Route path="/manager/personal-data" element={<PersonalData />} />
             <Route path="/manager/edit-personal-data" element={<EditPersonalData />} /> {/* Редактирование личных данных */}
             <Route path="/favourites" element={<Favourites />} /> {/* Избранное */}
             <Route path="/contacts" element={<Contacts />} /> {/* Страница контактов */}

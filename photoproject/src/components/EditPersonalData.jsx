@@ -115,7 +115,7 @@ const EditPersonalData = () => {
   };
 
   const handleBackClick = () => {
-    navigate('/profile'); // Переход на страницу Profile.js
+    navigate(-1); // Открыть предыдущую страницу в истории
   };
 
   return (

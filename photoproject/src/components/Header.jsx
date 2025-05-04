@@ -50,7 +50,7 @@ function Header() {
           <li><Link to="/booking">Бронирования</Link></li>
           <li><Link to="/favourites">Избранное</Link></li>
           <li className="profile-menu">
-            <Link to="/login">{userLogin || 'Профиль'}</Link>
+            <Link to={userLogin ? "/manager/edit-personal-data" : "/login"}>{userLogin || 'Профиль'}</Link>
             <ul className="dropdown">
               <li><Link to="/admin">Админ</Link></li>
               <li><Link to="/manager">Менеджеры</Link></li>
@@ -75,7 +75,14 @@ function Header() {
           <li><Link to="/printing" onClick={toggleMenu}>Типография</Link></li>
           <li><Link to="/booking" onClick={toggleMenu}>Бронирования</Link></li>
           <li><Link to="/favourites" onClick={toggleMenu}>Избранное</Link></li>
-          <li><Link to="/login" onClick={toggleMenu}>{userLogin || 'Профиль'}</Link></li>
+          <li>
+            <Link
+              to={userLogin ? "/manager/edit-personal-data" : "/login"}
+              onClick={toggleMenu}
+            >
+              {userLogin || 'Профиль'}
+            </Link>
+          </li>
           <li><button onClick={handleLogout}>Выйти</button></li>
         </ul>
       </nav>

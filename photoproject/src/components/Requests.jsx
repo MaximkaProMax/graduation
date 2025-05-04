@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Requests.css';
+import { useNavigate } from 'react-router-dom';
 
 const Requests = () => {
   const [typographyBookings, setTypographyBookings] = useState([]);
@@ -15,6 +16,7 @@ const Requests = () => {
   });
   const [selectedStudioId, setSelectedStudioId] = useState(null);
   const [selectedTypographyId, setSelectedTypographyId] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     fetchAllRequests();
@@ -180,6 +182,9 @@ const Requests = () => {
   return (
     <div className="requests-container">
       <h2 style={{ fontSize: 'clamp(18px, 4vw, 28px)' }}>Все заказы пользователей</h2>
+      <button className="back-button" style={{ margin: '16px 0 24px 0' }} onClick={() => navigate(-1)}>
+        Вернуться назад
+      </button>
 
       <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на фотостудию</h3>
       <form onSubmit={handleAddStudio} className="add-form">
