@@ -81,4 +81,20 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Маршрут для удаления типографии
+router.delete('/:id', async (req, res) => {
+  try {
+    const typographyId = req.params.id;
+    const deleted = await Printing.destroy({ where: { id: typographyId } });
+    if (deleted) {
+      res.status(200).json({ success: true, message: 'Типография успешно удалена' });
+    } else {
+      res.status(404).json({ success: false, message: 'Типография не найдена' });
+    }
+  } catch (error) {
+    console.error('Ошибка при удалении типографии:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при удалении типографии' });
+  }
+});
+
 module.exports = router;
