@@ -167,33 +167,59 @@ const EditDatabase = () => {
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
 
       <h3>Фотостудии</h3>
-      <div className="edit-database-table-container">
-        <table className="edit-database-table">
+      <div className="edit-database-table-container" style={{ overflowX: 'auto', width: '100%' }}>
+        <table className="edit-database-table" style={{ minWidth: 1200 }}>
           <thead>
             <tr>
-              {studios.length > 0 && Object.keys(studios[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
+              {studios.length > 0 &&
+                Object.keys(studios[0])
+                  .filter(
+                    key =>
+                      ![
+                        'contact_information',
+                        'description',
+                        'booking',
+                        'photo',
+                        'date_of_creation',
+                        'date_of_editing'
+                      ].includes(key)
+                  )
+                  .map((key) => (
+                    <th key={key}>{key}</th>
+                  ))}
               <th>Действия</th>
             </tr>
           </thead>
           <tbody>
             {studios.map((studio) => (
               <tr key={studio.studioId}>
-                {Object.keys(studio).map((key) => (
-                  <td key={`${studio.studioId}-${key}`}>
-                    {isEditingStudio && editableStudio.studioId === studio.studioId ? (
-                      <input
-                        type="text"
-                        name={key}
-                        value={editableStudio[key] || ''}
-                        onChange={(e) => handleInputChange(e, setEditableStudio)}
-                      />
-                    ) : (
-                      studio[key]
-                    )}
-                  </td>
-                ))}
+                {Object.keys(studio)
+                  .filter(
+                    key =>
+                      ![
+                        'contact_information',
+                        'description',
+                        'booking',
+                        'photo',
+                        'date_of_creation',
+                        'date_of_editing'
+                      ].includes(key)
+                  )
+                  .map((key) => (
+                    <td key={`${studio.studioId}-${key}`}>
+                      {isEditingStudio && editableStudio.studioId === studio.studioId ? (
+                        <input
+                          type="text"
+                          name={key}
+                          value={editableStudio[key] || ''}
+                          onChange={(e) => handleInputChange(e, setEditableStudio)}
+                          style={{ minWidth: 120 }}
+                        />
+                      ) : (
+                        studio[key]
+                      )}
+                    </td>
+                  ))}
                 <td key={`${studio.studioId}-actions`}>
                   {isEditingStudio && editableStudio.studioId === studio.studioId ? (
                     <>
@@ -215,33 +241,88 @@ const EditDatabase = () => {
       <button className="add-studio-button" onClick={handleAddStudio}>Добавить фотостудию</button>
 
       <h3>Типографии</h3>
-      <div className="edit-database-table-container">
-        <table className="edit-database-table">
+      <div className="edit-database-table-container" style={{ overflowX: 'auto', width: '100%' }}>
+        <table className="edit-database-table" style={{ minWidth: 1400 }}>
           <thead>
             <tr>
-              {typographies.length > 0 && Object.keys(typographies[0]).map((key) => (
-                <th key={key}>{key}</th>
-              ))}
+              {typographies.length > 0 &&
+                Object.keys(typographies[0])
+                  .filter(
+                    key =>
+                      ![
+                        'main_card_photo',
+                        'name_on_page',
+                        'photos_on_page',
+                        'additional_information',
+                        'date_of_creation',
+                        'date_of_editing'
+                      ].includes(key)
+                  )
+                  .map((key) => (
+                    <th key={key}>{key}</th>
+                  ))}
               <th>Действия</th>
             </tr>
           </thead>
           <tbody>
             {typographies.map((typography) => (
               <tr key={typography.typographyId}>
-                {Object.keys(typography).map((key) => (
-                  <td key={`${typography.typographyId}-${key}`}>
-                    {isEditingTypography && editableTypography.typographyId === typography.typographyId ? (
-                      <input
-                        type="text"
-                        name={key}
-                        value={editableTypography[key] || ''}
-                        onChange={(e) => handleInputChange(e, setEditableTypography)}
-                      />
-                    ) : (
-                      typography[key]
-                    )}
-                  </td>
-                ))}
+                {Object.keys(typography)
+                  .filter(
+                    key =>
+                      ![
+                        'main_card_photo',
+                        'name_on_page',
+                        'photos_on_page',
+                        'additional_information',
+                        'date_of_creation',
+                        'date_of_editing'
+                      ].includes(key)
+                  )
+                  .map((key) => (
+                    <td key={`${typography.typographyId}-${key}`}>
+                      {isEditingTypography && editableTypography.typographyId === typography.typographyId ? (
+                        key === 'format' && Array.isArray(editableTypography[key]) ? (
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            {editableTypography[key].map((f, idx) => (
+                              <input
+                                key={idx}
+                                type="text"
+                                value={f}
+                                style={{ marginBottom: 2 }}
+                                onChange={e => {
+                                  const newArr = [...editableTypography[key]];
+                                  newArr[idx] = e.target.value;
+                                  setEditableTypography(prev => ({
+                                    ...prev,
+                                    [key]: newArr
+                                  }));
+                                }}
+                              />
+                            ))}
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            name={key}
+                            value={editableTypography[key] || ''}
+                            onChange={(e) => handleInputChange(e, setEditableTypography)}
+                            style={{ minWidth: 120 }}
+                          />
+                        )
+                      ) : (
+                        key === 'format' && Array.isArray(typography[key]) ? (
+                          <div style={{ display: 'flex', flexDirection: 'column' }}>
+                            {typography[key].map((f, idx) => (
+                              <span key={idx}>{f}</span>
+                            ))}
+                          </div>
+                        ) : (
+                          typography[key]
+                        )
+                      )}
+                    </td>
+                  ))}
                 <td key={`${typography.typographyId}-actions`}>
                   {isEditingTypography && editableTypography.typographyId === typography.typographyId ? (
                     <>
