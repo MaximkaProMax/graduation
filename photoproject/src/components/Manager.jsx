@@ -46,7 +46,6 @@ const Manager = () => {
         <button className="manager-button" style={{ width: '100%', maxWidth: 500 }} onClick={handleRequestsClick}>Управление всеми заявками</button>
         <button className="manager-button" style={{ width: '100%', maxWidth: 500 }} onClick={handleStudioRequestsClick}>Управление заявками фотостудий</button>
         <button className="manager-button" style={{ width: '100%', maxWidth: 500 }} onClick={handleTypographyRequestsClick}>Управление заявками типографий</button>
-        <button className="manager-button" style={{ width: '100%', maxWidth: 500 }} onClick={handlePersonalDataClick}>Управление личными данными</button>
       </div>
     </div>
   );
