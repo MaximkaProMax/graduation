@@ -73,26 +73,34 @@
 
 .edit-users-table td {
   vertical-align: middle;
-  /* Prevent shrinking when editing */
   min-width: 120px;
   max-width: 260px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  overflow: visible; /* убираем сокращение данных */
+  text-overflow: unset;
+  white-space: normal;
 }
 
 .edit-users-table th:last-child,
 .edit-users-table td:last-child {
   min-width: 120px;
-  max-width: 180px;
   text-align: center;
   white-space: nowrap;
-  /* Добавим вертикальное расположение кнопок */
-  display: flex;
-  flex-direction: column;
   gap: 8px;
   align-items: center;
   justify-content: center;
+  box-shadow: none;
+  border: 1px solid #ddd;
+  padding: 10px;
+}
+
+.edit-users-table td:last-child > * {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+.edit-users-table td:last-child > *:last-child {
+  margin-bottom: 0;
 }
 
 .edit-users-table input {
