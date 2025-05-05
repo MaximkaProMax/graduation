@@ -195,8 +195,7 @@ const PrintingFlexBind = () => {
         <div className="total-price">
           Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
         </div>
-        <button onClick={handleAddToCart}>Добавить в корзину</button>
-        <button onClick={handleBooking} className="booking-button">Забронировать</button> {/* Новая кнопка */}
+        <button onClick={handleBooking} className="booking-button">Забронировать</button>
       </div>
     </div>
   );
