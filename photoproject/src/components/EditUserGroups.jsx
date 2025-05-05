@@ -8,6 +8,7 @@ const EditUserGroups = () => {
   const [editingRoleId, setEditingRoleId] = useState(null);
   const [editingRoleName, setEditingRoleName] = useState('');
   const [newRoleName, setNewRoleName] = useState('');
+  const [showAddForm, setShowAddForm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -29,6 +30,7 @@ const EditUserGroups = () => {
     try {
       await axios.post('http://localhost:3001/api/roles', { roleName: newRoleName });
       setNewRoleName('');
+      setShowAddForm(false);
       fetchRoles();
     } catch (error) {
       console.error('Ошибка при добавлении группы:', error);
@@ -144,27 +146,26 @@ const EditUserGroups = () => {
           ))}
         </tbody>
       </table>
-      <form
-        onSubmit={handleAddRole}
-        style={{ marginBottom: 20 }}
-      >
-        <input
-          type="text"
-          value={newRoleName}
-          onChange={e => setNewRoleName(e.target.value)}
-          placeholder="Введите название новой группы"
-          style={{
-            width: '100%',
-            padding: 8,
-            borderRadius: 5,
-            border: '1px solid #ddd',
-            marginBottom: 8
-          }}
-        />
-        <button type="submit" className="add-role-button" style={{ width: '100%' }}>
+      {showAddForm ? (
+        <div className="add-role-form" style={{ marginBottom: 20 }}>
+          <h3>Добавить группу</h3>
+          <div className="input-group">
+            <label>Название группы</label>
+            <input
+              type="text"
+              value={newRoleName}
+              onChange={e => setNewRoleName(e.target.value)}
+              placeholder="Введите название новой группы"
+            />
+          </div>
+          <button className="edit-user-groups-button edit" onClick={handleAddRole}>Сохранить</button>
+          <button className="edit-user-groups-button" onClick={() => { setShowAddForm(false); setNewRoleName(''); }}>Отмена</button>
+        </div>
+      ) : (
+        <button className="add-role-button" style={{ width: '100%' }} onClick={() => setShowAddForm(true)}>
           Добавить группу
         </button>
-      </form>
+      )}
     </div>
   );
 };
