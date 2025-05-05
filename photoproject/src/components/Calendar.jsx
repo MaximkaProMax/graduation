@@ -302,7 +302,6 @@ const Calendar = () => {
               <label>Итоговая стоимость</label>
               <input type="text" value={`${totalCost} ₽`} readOnly />
             </div>
-            <button type="submit">Оплатить</button>
           </form>
           <button onClick={handleAddToCart}>Забронировать</button>
         </div>
