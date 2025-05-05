@@ -1,10 +1,11 @@
 .edit-user-groups-container {
-  max-width: 800px;
-  margin: 0 auto;
+  max-width: 600px;
+  margin: 40px auto 0 auto; /* Добавлен верхний отступ */
   padding: 20px;
-  background: #fff; /* Белый фон для всей карточки */
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  text-align: center;
 }
 
 .edit-user-groups-container h2 {

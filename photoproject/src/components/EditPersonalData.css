@@ -1,11 +1,10 @@
 .edit-personal-data-container {
-  max-width: 1000px; /* Увеличьте ширину контейнера */
-  margin: 0 auto;
-  padding: 20px;
-  text-align: center;
-  background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  max-width: 900px;
+  margin: 40px auto 0 auto; /* Добавлен верхний отступ */
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
 }
 
 .edit-personal-data-container h2 {

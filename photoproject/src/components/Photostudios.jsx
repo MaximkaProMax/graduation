@@ -71,51 +71,53 @@ function Photostudios() {
   );
 
   return (
-    <div className="photostudios">
-      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
-      <h2>Фотостудии</h2>
+    <div style={{ minHeight: '100vh', background: 'transparent' }}>
+      <div className="photostudios">
+        <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
+        <h2>Фотостудии</h2>
 
-      {/* Строка поиска */}
-      <div className="search-container">
-        <input
-          type="text"
-          placeholder="Поиск по названию..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="search-input"
-        />
-      </div>
+        {/* Строка поиска */}
+        <div className="search-container">
+          <input
+            type="text"
+            placeholder="Поиск по названию..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="search-input"
+          />
+        </div>
 
-      <div className="studio-list">
-        {filteredStudios.length === 0 ? (
-          <p>Нет доступных фотостудий</p>
-        ) : (
-          filteredStudios.map((studio) => (
-            <div key={studio.id} className="studio-card">
-              <div className={`studio-image ${studio.photo}`}></div>
-              <div className="studio-info">
-                <h3>{studio.studio}</h3>
-                <p>{studio.address}</p>
-                <p>{studio.opening_hours}</p>
-                <p>{studio.price}</p>
-                <div className="action-container">
-                  <button
-                    className="book-button"
-                    onClick={() => handleBookButtonClick(studio.studio, studio.address, studio.price)}
-                  >
-                    Забронировать
-                  </button>
-                  <span
-                    className={`favorite-icon ${favorites.includes(studio.id) ? 'favorite' : ''}`}
-                    onClick={() => toggleFavorite(studio.id)}
-                  >
-                    ❤️
-                  </span>
+        <div className="studio-list">
+          {filteredStudios.length === 0 ? (
+            <p>Нет доступных фотостудий</p>
+          ) : (
+            filteredStudios.map((studio) => (
+              <div key={studio.id} className="studio-card">
+                <div className={`studio-image ${studio.photo}`}></div>
+                <div className="studio-info">
+                  <h3>{studio.studio}</h3>
+                  <p>{studio.address}</p>
+                  <p>{studio.opening_hours}</p>
+                  <p>{studio.price}</p>
+                  <div className="action-container">
+                    <button
+                      className="book-button"
+                      onClick={() => handleBookButtonClick(studio.studio, studio.address, studio.price)}
+                    >
+                      Забронировать
+                    </button>
+                    <span
+                      className={`favorite-icon ${favorites.includes(studio.id) ? 'favorite' : ''}`}
+                      onClick={() => toggleFavorite(studio.id)}
+                    >
+                      ❤️
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))
-        )}
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

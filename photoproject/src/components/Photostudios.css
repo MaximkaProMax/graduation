@@ -1,11 +1,11 @@
 .photostudios {
   max-width: 1200px;
-  margin: 0 auto;
-  padding: 20px;
-  background-color: white;
-  color: black;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  margin: 40px auto 40px auto !important; /* Принудительно задаём верхний и нижний отступ */
+  padding: 32px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  box-sizing: border-box;
 }
 
 .studio-list {
@@ -171,4 +171,11 @@
     position: static;
     margin-left: 10px;
   }
+}
+
+/* Если используется .content или .main-content, убедитесь, что у них нет margin/padding: 0 !important; */
+.content, .main-content {
+  /* Не сбрасывать margin/padding, если есть */
+  /* padding-top: 0; */
+  /* margin-top: 0; */
 }

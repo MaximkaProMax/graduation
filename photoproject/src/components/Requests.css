@@ -1,6 +1,6 @@
 .requests-container {
   max-width: 1200px;
-  margin: 0 auto;
+  margin: 40px auto 40px auto; /* Добавлен верхний и нижний отступ */
   padding: 20px;
   background: #fff;
   border-radius: 8px;
