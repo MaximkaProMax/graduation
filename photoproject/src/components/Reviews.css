@@ -1,11 +1,11 @@
 .reviews-container {
-    max-width: 800px;
-    margin: 0 auto; /* Центрирование контейнера */
-    padding: 20px;
-    background-color: white;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    border-radius: 5px;
-    overflow-x: auto; /* Добавляем горизонтальную прокрутку */
+  max-width: 1200px;
+  margin: 40px auto 40px auto;
+  padding: 32px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  box-sizing: border-box;
 }
 
 .reviews-container h2 {
