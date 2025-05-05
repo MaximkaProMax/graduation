@@ -33,14 +33,83 @@
   background-color: #f9f9f9;
 }
 
+.edit-users-table input[type="text"],
+.edit-users-table input[type="email"],
+.edit-users-table input[type="number"] {
+  width: 100%;
+  min-width: 120px;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border: 1.5px solid #f5b91e;
+  border-radius: 5px;
+  font-size: 15px;
+  background: #fff;
+  transition: border 0.2s;
+}
+
+.edit-users-table input[type="text"]:focus,
+.edit-users-table input[type="email"]:focus,
+.edit-users-table input[type="number"]:focus {
+  border: 2px solid #f0bb29;
+  outline: none;
+}
+
+.edit-users-table select {
+  width: 100%;
+  min-width: 120px;
+  box-sizing: border-box;
+  padding: 6px 8px;
+  border: 1.5px solid #f5b91e;
+  border-radius: 5px;
+  font-size: 15px;
+  background: #fff;
+  transition: border 0.2s;
+}
+
+.edit-users-table select:focus {
+  border: 2px solid #f0bb29;
+  outline: none;
+}
+
+.edit-users-table td {
+  vertical-align: middle;
+  /* Prevent shrinking when editing */
+  min-width: 120px;
+  max-width: 260px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.edit-users-table th:last-child,
+.edit-users-table td:last-child {
+  min-width: 120px;
+  max-width: 180px;
+  text-align: center;
+  white-space: nowrap;
+  /* Добавим вертикальное расположение кнопок */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+}
+
+.edit-users-table input {
+  margin: 0;
+}
+
 .edit-users-button {
   padding: 8px 12px;
   border: none;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
-  margin-right: 5px;
+  margin: 0 0 6px 0;
   transition: background 0.2s;
+  width: 100%;
+  min-width: 90px;
+  box-sizing: border-box;
 }
 
 /* Кнопка "Редактировать" */

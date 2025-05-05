@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 
 const EditUsers = () => {
   const [users, setUsers] = useState([]);
+  const [roles, setRoles] = useState([]); // список ролей из БД
   const [editableUser, setEditableUser] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [currentPassword, setCurrentPassword] = useState('');
@@ -16,6 +17,7 @@ const EditUsers = () => {
 
   useEffect(() => {
     fetchUsers();
+    fetchRoles();
   }, []);
 
   const fetchUsers = () => {
@@ -29,6 +31,16 @@ const EditUsers = () => {
       })
       .catch(error => {
         console.error('Ошибка при получении данных о пользователях:', error);
+      });
+  };
+
+  const fetchRoles = () => {
+    axios.get('http://localhost:3001/api/roles')
+      .then(response => {
+        setRoles(response.data);
+      })
+      .catch(error => {
+        console.error('Ошибка при получении ролей:', error);
       });
   };
 
@@ -248,14 +260,24 @@ const EditUsers = () => {
               </td>
               <td>
                 {isEditing && editableUser.userId === user.userId ? (
-                  <input
-                    type="number"
+                  <select
                     name="roleId"
                     value={editableUser.roleId || ''}
                     onChange={handleInputChange}
-                  />
+                  >
+                    <option value="">Выберите роль</option>
+                    {roles.map(role => (
+                      <option key={role.roleId} value={role.roleId}>
+                        {role.roleId} — {role.roleName}
+                      </option>
+                    ))}
+                  </select>
                 ) : (
-                  user.roleId
+                  // Показываем id и название роли, если есть
+                  (() => {
+                    const role = roles.find(r => r.roleId === user.roleId);
+                    return role ? `${role.roleId} — ${role.roleName}` : user.roleId;
+                  })()
                 )}
               </td>
               <td>
@@ -316,12 +338,18 @@ const EditUsers = () => {
           </div>
           <div className="input-group">
             <label>Роль</label>
-            <input
-              type="number"
+            <select
               name="roleId"
               value={editableUser.roleId}
               onChange={handleInputChange}
-            />
+            >
+              <option value="">Выберите роль</option>
+              {roles.map(role => (
+                <option key={role.roleId} value={role.roleId}>
+                  {role.roleId} — {role.roleName}
+                </option>
+              ))}
+            </select>
           </div>
           <div className="input-group">
             <label>Пароль</label>
