@@ -24,6 +24,8 @@ import EditPersonalData from './components/EditPersonalData'; // Импорти�
 import Favourites from './components/Favourites'; // Импортируем компонент Favourites
 import Contacts from './components/Contacts'; // Импортируем компонент Contacts
 import PrivacyPolicy from './components/PrivacyPolicy'; // Импортируем компонент PrivacyPolicy
+import PhotoStudioRequests from './components/PhotoStudioRequests';
+import PrintingHouseRequests from './components/PrintingHouseRequests';
 import './App.css';
 import './index.css';
 
@@ -71,6 +73,8 @@ function App() {
             <Route path="/manager" element={<Manager />} />  {/* Менеджер БД */}
             <Route path="/manager/requests" element={<Requests />} />
             <Route path="/manager/edit-personal-data" element={<EditPersonalData />} /> {/* Редактирование личных данных */}
+            <Route path="/manager/photostudio-requests" element={<PhotoStudioRequests />} />
+            <Route path="/manager/printinghouse-requests" element={<PrintingHouseRequests />} />
             <Route path="/favourites" element={<Favourites />} /> {/* Избранное */}
             <Route path="/contacts" element={<Contacts />} /> {/* Страница контактов */}
             <Route path="/privacy-policy" element={<PrivacyPolicy />} /> {/* Страница политики конфиденциальности */}

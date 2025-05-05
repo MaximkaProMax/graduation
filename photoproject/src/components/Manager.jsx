@@ -14,11 +14,11 @@ const Manager = () => {
   };
 
   const handleStudioRequestsClick = () => {
-    navigate('/manager/requests?type=studio');
+    navigate('/manager/photostudio-requests');
   };
 
   const handleTypographyRequestsClick = () => {
-    navigate('/manager/requests?type=typography');
+    navigate('/manager/printinghouse-requests');
   };
 
   return (
