@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './PrintingLayFlat.css';
 import axios from 'axios'; // Импортируем axios
+import { useNavigate } from 'react-router-dom';
 
 const PrintingLayFlat = () => {
   const [format, setFormat] = useState([]);
@@ -16,6 +17,7 @@ const PrintingLayFlat = () => {
   const [photoClass, setPhotoClass] = useState('');
   const [albumName, setAlbumName] = useState(''); // Добавляем состояние для названия альбома
   const [spreadsError, setSpreadsError] = useState(''); // Добавляем состояние для ошибки количества разворотов
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -147,72 +149,93 @@ const PrintingLayFlat = () => {
   };
 
   return (
-    <div className="printing-layflat">
-      <div className="left-section">
-        <div className={`layflat-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
-        <div className="product-description">
-          <h2>Описание товара</h2>
-          <p>{printingOptions.product_description}</p>
-          <h2>Дополнительная информация</h2>
-          <p>{printingOptions.additional_information}</p>
-        </div>
+    <div
+      className="printing-layflat"
+      style={{
+        margin: '40px auto',
+        maxWidth: 1200,
+        background: '#fff',
+        borderRadius: 10,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+        padding: 32,
+        minHeight: 600,
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+        <button className="back-button" style={{ minWidth: 260, fontWeight: 700, fontSize: 20 }} onClick={() => navigate(-1)}>
+          Вернуться назад
+        </button>
       </div>
-      <div className="right-section">
-        <h2>{albumName}</h2> {/* Название альбома из базы данных */}
-        <div className="options">
-          <div className="option">
-            <label>Формат</label>
-            <select value={selectedFormat} onChange={handleFormatChange}>
-              {format.map((f, index) => (
-                <option key={index} value={f}>{f}</option>
-              ))}
-            </select>
-          </div>
-          <div className="option">
-            <label>Основа разворота</label>
-            <select value={selectedBase} onChange={handleBaseChange}>
-              {base.map((b, index) => (
-                <option key={index} value={b}>{b}</option>
-              ))}
-            </select>
-          </div>
-          <div className="option">
-            <label>Кол-во разворотов</label>
-            <input
-              type="number"
-              value={spreads}
-              onChange={handleSpreadsChange}
-              min="2"
-              max="15"
-              inputMode="numeric"
-              onKeyPress={handleKeyPress}
-            />
-            {spreadsError && <div className="error">{spreadsError}</div>}
-          </div>
-          <div className="option">
-            <label>Ламинация</label>
-            <select value={selectedLamination} onChange={handleLaminationChange}>
-              {lamination.map((l, index) => (
-                <option key={index} value={l}>{l}</option>
-              ))}
-            </select>
-          </div>
-          <div className="option">
-            <label>Количество экземпляров</label>
-            <input
-              type="number"
-              value={quantity}
-              onChange={handleQuantityChange}
-              min="1"
-              inputMode="numeric"
-              onKeyPress={handleKeyPress}
-            />
+      <div style={{ display: 'flex', width: '100%' }}>
+        <div className="left-section">
+          <div className={`layflat-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
+          <div className="product-description">
+            <h2>Описание товара</h2>
+            <p>{printingOptions.product_description}</p>
+            <h2>Дополнительная информация</h2>
+            <p>{printingOptions.additional_information}</p>
           </div>
         </div>
-        <div className="total-price">
-          Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
+        <div className="right-section">
+          <h2>{albumName}</h2> {/* Название альбома из базы данных */}
+          <div className="options">
+            <div className="option">
+              <label>Формат</label>
+              <select value={selectedFormat} onChange={handleFormatChange}>
+                {format.map((f, index) => (
+                  <option key={index} value={f}>{f}</option>
+                ))}
+              </select>
+            </div>
+            <div className="option">
+              <label>Основа разворота</label>
+              <select value={selectedBase} onChange={handleBaseChange}>
+                {base.map((b, index) => (
+                  <option key={index} value={b}>{b}</option>
+                ))}
+              </select>
+            </div>
+            <div className="option">
+              <label>Кол-во разворотов</label>
+              <input
+                type="number"
+                value={spreads}
+                onChange={handleSpreadsChange}
+                min="2"
+                max="15"
+                inputMode="numeric"
+                onKeyPress={handleKeyPress}
+              />
+              {spreadsError && <div className="error">{spreadsError}</div>}
+            </div>
+            <div className="option">
+              <label>Ламинация</label>
+              <select value={selectedLamination} onChange={handleLaminationChange}>
+                {lamination.map((l, index) => (
+                  <option key={index} value={l}>{l}</option>
+                ))}
+              </select>
+            </div>
+            <div className="option">
+              <label>Количество экземпляров</label>
+              <input
+                type="number"
+                value={quantity}
+                onChange={handleQuantityChange}
+                min="1"
+                inputMode="numeric"
+                onKeyPress={handleKeyPress}
+              />
+            </div>
+          </div>
+          <div className="total-price">
+            Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
+          </div>
+          <button onClick={handleBooking} className="booking-button">Забронировать</button>
         </div>
-        <button onClick={handleBooking} className="booking-button">Забронировать</button>
       </div>
     </div>
   );

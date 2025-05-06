@@ -239,71 +239,92 @@ const Calendar = () => {
   };
 
   return (
-    <div className="calendar-page">
+    <div
+      className="calendar-page"
+      style={{
+        margin: '40px auto',
+        maxWidth: 1200,
+        background: '#fff',
+        borderRadius: 10,
+        boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
+        padding: 32,
+        minHeight: 600,
+        boxSizing: 'border-box',
+        display: 'flex',
+        flexDirection: 'column'
+      }}
+    >
+      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+        <button className="back-button" style={{ minWidth: 260, fontWeight: 700, fontSize: 20 }} onClick={() => navigate(-1)}>
+          Вернуться назад
+        </button>
+      </div>
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
-      <div className="left-section">
-        <h2 className="aligned-header">Бронирование дат</h2>
-        <div className="calendar-container">
-          <div className="month-selection">
-            <button className="month-button" onClick={handlePreviousMonth}>&lt;</button>
-            <label>Месяц:</label>
-            <select className="month-select" value={month} onChange={handleMonthChange}>
-              {Array.from({ length: 12 }, (_, index) => (
-                <option key={index} value={index}>
-                  {new Date(0, index).toLocaleString('default', { month: 'long' })}
-                </option>
-              ))}
-            </select>
-            <label>Год:</label>
-            <select className="year-select" value={year} onChange={handleYearChange}>
-              {Array.from({ length: 5 }, (_, index) => (
-                <option key={index} value={currentDate.getFullYear() + index}>
-                  {currentDate.getFullYear() + index}
-                </option>
-              ))}
-            </select>
-            <button className="month-button" onClick={handleNextMonth}>&gt;</button>
-          </div>
-          <div className="calendar">
-            {renderDaysOfWeek()}
-            {renderDays()}
+      <div style={{ display: 'flex', width: '100%' }}>
+        <div className="left-section">
+          <h2 className="aligned-header">Бронирование дат</h2>
+          <div className="calendar-container">
+            <div className="month-selection">
+              <button className="month-button" onClick={handlePreviousMonth}>&lt;</button>
+              <label>Месяц:</label>
+              <select className="month-select" value={month} onChange={handleMonthChange}>
+                {Array.from({ length: 12 }, (_, index) => (
+                  <option key={index} value={index}>
+                    {new Date(0, index).toLocaleString('default', { month: 'long' })}
+                  </option>
+                ))}
+              </select>
+              <label>Год:</label>
+              <select className="year-select" value={year} onChange={handleYearChange}>
+                {Array.from({ length: 5 }, (_, index) => (
+                  <option key={index} value={currentDate.getFullYear() + index}>
+                    {currentDate.getFullYear() + index}
+                  </option>
+                ))}
+              </select>
+              <button className="month-button" onClick={handleNextMonth}>&gt;</button>
+            </div>
+            <div className="calendar">
+              {renderDaysOfWeek()}
+              {renderDays()}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="right-section">
-        <div className="booking-form">
-          <h2 className="aligned-header">Добавить бронирование</h2>
-          <form onSubmit={handleBookingSubmit}>
-            <div className="input-group">
-              <label>Название</label>
-              <input type="text" name="name" value={studio || ''} readOnly />
-            </div>
-            <div className="input-group">
-              <label>Дата</label>
-              <input type="text" value={selectedDate ? `${selectedDate}/${month + 1}/${year}` : ''} readOnly />
-            </div>
-            <div className="input-group">
-              <label>Время с</label>
-              <select name="startTime" value={startTime} onChange={handleStartTimeChange} required>
-                {generateTimeOptions(9, 20)}
-              </select>
-            </div>
-            <div className="input-group">
-              <label>Время до</label>
-              <select name="endTime" value={endTime} onChange={handleEndTimeChange} required>
-                {generateTimeOptions(10, 21)}
-              </select>
-            </div>
-            <div className="input-group">
-              <label>Адрес</label>
-              <input type="text" name="address" value={address || ''} readOnly />
-            </div>
-            <div className="input-group">
-              <label>Итоговая стоимость</label>
-              <input type="text" value={`${totalCost} ₽`} readOnly />
-            </div>
-          </form>
-          <button onClick={handleAddToCart}>Забронировать</button>
+        <div className="right-section">
+          <div className="booking-form">
+            <h2 className="aligned-header">Добавить бронирование</h2>
+            <form onSubmit={handleBookingSubmit}>
+              <div className="input-group">
+                <label>Название</label>
+                <input type="text" name="name" value={studio || ''} readOnly />
+              </div>
+              <div className="input-group">
+                <label>Дата</label>
+                <input type="text" value={selectedDate ? `${selectedDate}/${month + 1}/${year}` : ''} readOnly />
+              </div>
+              <div className="input-group">
+                <label>Время с</label>
+                <select name="startTime" value={startTime} onChange={handleStartTimeChange} required>
+                  {generateTimeOptions(9, 20)}
+                </select>
+              </div>
+              <div className="input-group">
+                <label>Время до</label>
+                <select name="endTime" value={endTime} onChange={handleEndTimeChange} required>
+                  {generateTimeOptions(10, 21)}
+                </select>
+              </div>
+              <div className="input-group">
+                <label>Адрес</label>
+                <input type="text" name="address" value={address || ''} readOnly />
+              </div>
+              <div className="input-group">
+                <label>Итоговая стоимость</label>
+                <input type="text" value={`${totalCost} ₽`} readOnly />
+              </div>
+            </form>
+            <button onClick={handleAddToCart}>Забронировать</button>
+          </div>
         </div>
       </div>
     </div>
