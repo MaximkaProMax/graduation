@@ -44,6 +44,53 @@ table tr:nth-child(even) {
     margin: 0 auto;
   }
 
+.add-role-button {
+  margin-top: 10px;
+  width: 100%;
+  padding: 10px;
+  color: #fff;
+  background-color: #F0BB29;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.2s;
+  font-size: 16px;
+}
+
+.add-role-button:hover {
+  background-color: #e0aa1e;
+}
+
+.edit-user-groups-button {
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-right: 5px;
+  transition: background 0.2s;
+  background-color: #F0BB29;
+  color: #fff;
+  width: 100%;
+  font-size: 16px;
+}
+
+.edit-user-groups-button:hover {
+  background-color: #e0aa1e;
+  color: #fff;
+}
+
+.edit-user-groups-button.edit {
+  background-color: #e0e0e0;
+  color: #222;
+}
+
+.edit-user-groups-button.edit:hover {
+  background-color: #ededed;
+  color: #222;
+}
+
 /* Медиа-запросы для мобильной оптимизации */
 @media (max-width: 768px) {
   .reviews-container {

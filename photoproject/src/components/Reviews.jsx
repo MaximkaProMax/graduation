@@ -211,14 +211,12 @@ const Reviews = () => {
                 <button
                   type="submit"
                   className="add-role-button"
-                  style={{ width: '100%' }}
                 >
                   Сохранить
                 </button>
                 <button
                   type="button"
                   className="edit-user-groups-button"
-                  style={{ width: '100%', marginTop: 8 }}
                   onClick={() => setShowAddForm(false)}
                 >
                   Отмена
@@ -228,7 +226,6 @@ const Reviews = () => {
           ) : (
             <button
               className="add-role-button"
-              style={{ width: '100%' }}
               onClick={() => setShowAddForm(true)}
             >
               Добавить отзыв
