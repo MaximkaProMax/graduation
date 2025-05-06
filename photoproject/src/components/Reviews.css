@@ -1,34 +1,66 @@
 .reviews-container {
-  max-width: 1200px;
-  margin: 40px auto 40px auto;
-  padding: 32px;
+  width: 100%;
+  max-width: 950px;
+  margin: 40px auto;
+  padding: 36px 32px 36px 32px;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(34, 63, 74, 0.10), 0 1.5px 4px rgba(245,185,30,0.07);
   box-sizing: border-box;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
 
 .reviews-container h2 {
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 28px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #223F4A;
+  letter-spacing: 0.5px;
+}
+
+.reviews-container h3 {
+  margin-top: 32px;
+  margin-bottom: 14px;
+  font-size: 1.35rem;
+  font-weight: 700;
+  color: #C17900;
+  letter-spacing: 0.2px;
+}
+
+.reviews-container p,
+.reviews-container .error-message {
+  font-size: 1.08rem;
+  color: #222;
+  margin-bottom: 14px;
+  line-height: 1.7;
 }
 
 table {
   width: 100%;
+  max-width: 900px;
+  margin-left: auto;
+  margin-right: auto;
   border-collapse: collapse;
   margin-bottom: 20px;
-  table-layout: fixed; /* Устанавливаем фиксированную ширину столбцов */
+  table-layout: auto;
+  background: #fff;
+  border-radius: 0;
+  overflow: visible;
+  font-size: 1.05rem;
 }
 
 table th, table td {
   border: 1px solid #ddd;
-  padding: 10px 15px; /* Увеличен горизонтальный отступ для кнопки */
+  padding: 10px 15px;
   text-align: left;
-  word-wrap: break-word; /* Перенос слов для предотвращения выезда текста */
+  word-wrap: break-word;
 }
 
 table th {
   background-color: #f2f2f2;
+  color: #223F4A;
+  font-weight: 600;
 }
 
 table tr:nth-child(even) {
@@ -36,13 +68,26 @@ table tr:nth-child(even) {
 }
 
 .delete-button {
-    white-space: nowrap;
-    text-align: center;
-    display: flex;
-    justify-content: center; /* Центрирование текста по горизонтали */
-    align-items: center; /* Центрирование текста по вертикали */
-    margin: 0 auto;
-  }
+  white-space: nowrap;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  background: #e74c3c;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  padding: 7px 16px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.delete-button:hover {
+  background: #ff5c5c;
+}
 
 .add-role-button {
   margin-top: 10px;
@@ -91,21 +136,95 @@ table tr:nth-child(even) {
   color: #222;
 }
 
-/* Медиа-запросы для мобильной оптимизации */
+.review-form {
+  margin-top: 24px;
+  background: #fafafa;
+  border: 1px solid #ececec;
+  border-radius: 8px;
+  padding: 22px 18px 18px 18px;
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.input-group {
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.input-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 15px;
+  color: #223F4A;
+}
+
+.input-group input,
+.input-group select,
+.input-group textarea {
+  width: 100%;
+  padding: 9px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 15px;
+  box-sizing: border-box;
+  margin-bottom: 2px;
+}
+
+.input-group textarea {
+  min-height: 60px;
+  resize: vertical;
+}
+
+.error-message {
+  color: #e74c3c;
+  font-weight: 600;
+  margin-bottom: 18px;
+  text-align: center;
+}
+
+@media (max-width: 1300px) {
+  .reviews-container {
+    max-width: 98vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+}
+
+@media (max-width: 900px) {
+  .reviews-container {
+    max-width: 98vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+  .reviews-container h2 {
+    font-size: 1.5rem;
+  }
+  .reviews-container h3 {
+    font-size: 1.1rem;
+  }
+  .reviews-container p,
+  .reviews-container .error-message,
+  table {
+    font-size: 0.98rem;
+  }
+  .review-form {
+    padding: 12px 2vw 12px 2vw;
+  }
+}
+
 @media (max-width: 768px) {
   .reviews-container {
-    overflow-x: auto; /* Добавляем горизонтальную прокрутку для мобильной версии */
+    overflow-x: auto;
     padding: 10px;
   }
-
   table {
     width: 100%;
-    display: block; /* Устанавливаем таблицу как блочный элемент для прокрутки */
+    display: block;
     overflow-x: auto;
-    white-space: nowrap; /* Предотвращение переноса строк */
+    white-space: nowrap;
+    font-size: 0.95rem;
   }
-
   th, td {
-    white-space: nowrap; /* Предотвращение расширения столбцов */
+    white-space: nowrap;
+    padding: 8px 8px;
   }
 }
