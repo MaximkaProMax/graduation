@@ -46,20 +46,26 @@
 .studio-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
   gap: 24px 16px;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .studio-card {
   background-color: #fff;
   border: 1.5px solid #ececec;
   border-radius: 12px;
-  width: 490px;
+  width: 100%;
+  max-width: 490px;
+  min-width: 220px;
   margin-bottom: 20px;
   box-shadow: 0 2px 8px rgba(245,185,30,0.07);
   display: flex;
   flex-direction: column;
   transition: box-shadow 0.2s, border 0.2s;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .studio-card:hover {
@@ -69,11 +75,15 @@
 
 .studio-image {
   width: 100%;
-  height: 370px;
+  display: block;
   background-position: center;
   background-size: cover;
   border-top-left-radius: 12px;
   border-top-right-radius: 12px;
+  min-height: 180px;
+  height: 30vw;
+  max-height: 370px;
+  transition: height 0.2s;
 }
 
 .studio-image.replace {
@@ -156,10 +166,13 @@
 
 @media (min-width: 769px) and (max-width: 1199px) {
   .studio-list {
-    justify-content: center;
+    justify-content: flex-start;
   }
   .studio-card {
-    margin: 10px;
+    flex: 0 1 calc(50% - 12px);
+    max-width: 490px;
+    min-width: 320px;
+    box-sizing: border-box;
   }
 }
 
@@ -168,12 +181,24 @@
     max-width: 98vw;
     padding: 18px 6vw 18px 6vw;
   }
+  .studio-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
   .studio-card {
     width: 100%;
     max-width: 360px;
+    min-width: 0;
+    margin-bottom: 20px;
   }
   .studio-image {
-    height: 270px;
+    width: 100%;
+    min-height: 120px;
+    height: 38vw;
+    max-height: 200px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
   }
 }
 
@@ -202,4 +227,54 @@
   .favorite-icon {
     margin-left: 10px;
   }
+}
+
+@media (max-width: 600px) {
+  .photostudios {
+    padding: 6px 0 6px 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  .studio-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  .studio-card {
+    width: 98vw;
+    max-width: 98vw;
+    min-width: 0;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 0;
+  }
+  .studio-image {
+    width: 100%;
+    min-height: 80px;
+    height: 48vw;
+    max-height: 140px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  .studio-info {
+    padding: 10px 6px 10px 6px;
+    font-size: 0.98rem;
+  }
+  .book-button {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 0;
+  }
+  .favorite-icon {
+    font-size: 20px;
+    margin-left: 8px;
+  }
+}
+
+.photostudios,
+.studio-list {
+  overflow-x: hidden;
 }
