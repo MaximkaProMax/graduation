@@ -12,6 +12,7 @@ const Reviews = () => {
   const [photostudios, setPhotostudios] = useState([]); // Состояние для списка фотостудий
   const [printings, setPrintings] = useState([]); // Состояние для списка типографий
   const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const [showAddForm, setShowAddForm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -66,6 +67,11 @@ const Reviews = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    // Проверка: хотя бы одно из двух полей выбрано
+    if (!newReview.photostudio && !newReview.printing) {
+      toast.error('Выберите фотостудию или типографию');
+      return;
+    }
     try {
       const response = await axios.post('http://localhost:3001/api/reviews', newReview, {
         withCredentials: true,
@@ -74,6 +80,7 @@ const Reviews = () => {
         toast.success('Отзыв успешно добавлен!');
         setReviews([...reviews, response.data.review]);
         setNewReview({ photostudio: '', printing: '', rating: '', comment: '' });
+        setShowAddForm(false);
       }
     } catch (error) {
       console.error('Ошибка при добавлении отзыва:', error);
@@ -142,67 +149,91 @@ const Reviews = () => {
 
       {isAuthenticated && (
         <>
-          <h3>Добавить отзыв</h3>
-          <form onSubmit={handleSubmit} className="review-form">
-            <div className="input-group">
-              <label>Фотостудия</label>
-              <select
-                name="photostudio"
-                value={newReview.photostudio}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Выберите студию</option>
-                {photostudios.map((studio) => (
-                  <option key={studio.id} value={studio.studio}>
-                    {studio.studio}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="input-group">
-              <label>Типография</label>
-              <select
-                name="printing"
-                value={newReview.printing}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Выберите типографию</option>
-                {printings.map((printing) => (
-                  <option key={printing.id} value={printing.main_album_name}>
-                    {printing.main_album_name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="input-group">
-              <label>Оценка:</label>
-              <select
-                name="rating"
-                value={newReview.rating}
-                onChange={handleInputChange}
-                required
-              >
-                <option value="">Выберите оценку</option>
-                <option value="плохо">1 - Плохо</option>
-                <option value="нормально">2 - Нормально</option>
-                <option value="хорошо">3 - Хорошо</option>
-                <option value="очень хорошо">4 - Очень хорошо</option>
-                <option value="отлично">5 - Отлично</option>
-              </select>
-            </div>
-            <div className="input-group">
-              <label>Комментарий</label>
-              <textarea
-                name="comment"
-                value={newReview.comment}
-                onChange={handleInputChange}
-                required
-              ></textarea>
-            </div>
-            <button type="submit">Добавить отзыв</button>
-          </form>
+          {showAddForm ? (
+            <>
+              <h3>Добавить отзыв</h3>
+              <form onSubmit={handleSubmit} className="review-form">
+                <div className="input-group">
+                  <label>Фотостудия</label>
+                  <select
+                    name="photostudio"
+                    value={newReview.photostudio}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">—</option>
+                    {photostudios.map((studio) => (
+                      <option key={studio.id} value={studio.studio}>
+                        {studio.studio}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Типография</label>
+                  <select
+                    name="printing"
+                    value={newReview.printing}
+                    onChange={handleInputChange}
+                  >
+                    <option value="">—</option>
+                    {printings.map((printing) => (
+                      <option key={printing.id} value={printing.main_album_name}>
+                        {printing.main_album_name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Оценка:</label>
+                  <select
+                    name="rating"
+                    value={newReview.rating}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Выберите оценку</option>
+                    <option value="плохо">1 - Плохо</option>
+                    <option value="нормально">2 - Нормально</option>
+                    <option value="хорошо">3 - Хорошо</option>
+                    <option value="очень хорошо">4 - Очень хорошо</option>
+                    <option value="отлично">5 - Отлично</option>
+                  </select>
+                </div>
+                <div className="input-group">
+                  <label>Комментарий</label>
+                  <textarea
+                    name="comment"
+                    value={newReview.comment}
+                    onChange={handleInputChange}
+                    required
+                  ></textarea>
+                </div>
+                <button
+                  type="submit"
+                  className="add-role-button"
+                  style={{ width: '100%' }}
+                >
+                  Сохранить
+                </button>
+                <button
+                  type="button"
+                  className="edit-user-groups-button"
+                  style={{ width: '100%', marginTop: 8 }}
+                  onClick={() => setShowAddForm(false)}
+                >
+                  Отмена
+                </button>
+              </form>
+            </>
+          ) : (
+            <button
+              className="add-role-button"
+              style={{ width: '100%' }}
+              onClick={() => setShowAddForm(true)}
+            >
+              Добавить отзыв
+            </button>
+          )}
         </>
       )}
     </div>
