@@ -139,12 +139,18 @@ const PrintingLayFlat = () => {
 
       if (response.data.success) {
         alert('Бронирование успешно создано!');
+      } else if (response.status === 403) {
+        alert('Для бронирования необходимо авторизоваться!');
       } else {
         alert('Ошибка при создании бронирования');
       }
     } catch (error) {
-      console.error('Ошибка при бронировании:', error);
-      alert('Ошибка при бронировании');
+      if (error.response && error.response.status === 403) {
+        alert('Для бронирования необходимо авторизоваться!');
+      } else {
+        console.error('Ошибка при бронировании:', error);
+        alert('Ошибка при бронировании');
+      }
     }
   };
 

@@ -127,37 +127,38 @@ const EditDatabase = () => {
   };
 
   const handleSaveTypography = () => {
-    const { typographyId, ...updateData } = editableTypography;
+    const { id, ...updateData } = editableTypography;
 
-    if (updateData.format && !Array.isArray(updateData.format)) {
-      updateData.format = updateData.format.split(',').map(f => f.trim());
+    // Преобразуем format и lamination в строки перед отправкой на сервер
+    if (Array.isArray(updateData.format)) {
+        updateData.format = updateData.format.join(',');
     }
-    if (updateData.lamination && !Array.isArray(updateData.lamination)) {
-      updateData.lamination = updateData.lamination.split('/').map(l => l.trim());
+    if (Array.isArray(updateData.lamination)) {
+        updateData.lamination = updateData.lamination.join('/');
     }
 
     if (Object.values(updateData).every(value => value)) {
-      if (typographyId) {
-        axios.put(`http://localhost:3001/api/printing/${typographyId}`, updateData)
-          .then(() => {
-            fetchTypographies();
-            setIsEditingTypography(false);
-            setEditableTypography({});
-          })
-          .catch(error => {
-            console.error('Ошибка при обновлении данных типографии:', error);
-          });
-      } else {
-        axios.post('http://localhost:3001/api/printing', updateData)
-          .then(() => {
-            fetchTypographies();
-            setIsEditingTypography(false);
-            setEditableTypography({});
-          })
-          .catch(error => {
-            console.error('Ошибка при добавлении типографии:', error);
-          });
-      }
+        if (id) {
+            axios.put(`http://localhost:3001/api/printing/${id}`, updateData)
+                .then(() => {
+                    fetchTypographies();
+                    setIsEditingTypography(false);
+                    setEditableTypography({});
+                })
+                .catch(error => {
+                    console.error('Ошибка при обновлении данных типографии:', error);
+                });
+        } else {
+            axios.post('http://localhost:3001/api/printing', updateData)
+                .then(() => {
+                    fetchTypographies();
+                    setIsEditingTypography(false);
+                    setEditableTypography({});
+                })
+                .catch(error => {
+                    console.error('Ошибка при добавлении типографии:', error);
+                });
+        }
     }
   };
 
@@ -407,6 +408,12 @@ const EditDatabase = () => {
             <tr>
               {studios.length > 0 &&
                 Object.keys(studios[0])
+                  .filter(
+                    key =>
+                      key !== 'contact_information' &&
+                      key !== 'description' &&
+                      key !== 'booking'
+                  )
                   .map((key) => (
                     <th key={key}>{key}</th>
                   ))}
@@ -414,83 +421,91 @@ const EditDatabase = () => {
             </tr>
           </thead>
           <tbody>
-            {studios.map((studio) => (
-              <tr key={studio.id}>
-                {Object.keys(studio)
-                  .map((key) => (
-                    <td key={`${studio.id}-${key}`}>
-                      {key === 'photo' ? (
-                        <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                          {studio[key] && (
-                            studio[key].startsWith('/src/components/assets/images/Photostudios/') ? (
-                              <img src={studio[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                            ) : (
-                              <div className={`studio-image ${studio[key]}`} style={{ width: '100%', height: '100%' }} />
-                            )
-                          )}
-                          {isEditingStudio && editableStudio.id === studio.id ? null : (
-                            <>
-                              <button
-                                type="button"
-                                className="edit-database-button"
-                                style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
-                                onClick={() => handleEditPhotoClick(studio.id)}
-                              >
-                                Изм. фото
-                              </button>
-                              {editingPhotoStudioId === studio.id && (
-                                <input
-                                  type="file"
-                                  accept="image/*"
-                                  ref={editingPhotoInputRef}
-                                  style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
-                                  onChange={e => handleEditPhotoFileChange(e, studio)}
-                                  onClick={e => e.stopPropagation()}
-                                />
-                              )}
-                            </>
-                          )}
-                        </div>
-                      ) : (
-                        isEditingStudio && editableStudio.id === studio.id ? (
-                          <input
-                            type="text"
-                            name={key}
-                            value={editableStudio[key] || ''}
-                            onChange={(e) => handleInputChange(e, setEditableStudio)}
-                            style={{ minWidth: 120 }}
-                          />
+            {[...studios]
+              .sort((a, b) => (a.id || 0) - (b.id || 0))
+              .map((studio) => (
+                <tr key={studio.id}>
+                  {Object.keys(studio)
+                    .filter(
+                      key =>
+                        key !== 'contact_information' &&
+                        key !== 'description' &&
+                        key !== 'booking'
+                    )
+                    .map((key) => (
+                      <td key={`${studio.id}-${key}`}>
+                        {key === 'photo' ? (
+                          <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                            {studio[key] && (
+                              studio[key].startsWith('/src/components/assets/images/Photostudios/') ? (
+                                <img src={studio[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                <div className={`studio-image ${studio[key]}`} style={{ width: '100%', height: '100%' }} />
+                              )
+                            )}
+                            {isEditingStudio && editableStudio.id === studio.id ? null : (
+                              <>
+                                <button
+                                  type="button"
+                                  className="edit-database-button"
+                                  style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
+                                  onClick={() => handleEditPhotoClick(studio.id)}
+                                >
+                                  Изм. фото
+                                </button>
+                                {editingPhotoStudioId === studio.id && (
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={editingPhotoInputRef}
+                                    style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                                    onChange={e => handleEditPhotoFileChange(e, studio)}
+                                    onClick={e => e.stopPropagation()}
+                                  />
+                                )}
+                              </>
+                            )}
+                          </div>
                         ) : (
-                          Array.isArray(studio[key])
-                            ? studio[key].join(', ')
-                            : typeof studio[key] === 'object' && studio[key] !== null
-                              ? JSON.stringify(studio[key])
-                              : studio[key]
-                        )
-                      )}
-                    </td>
-                  ))}
-                <td key={`${studio.id}-actions`}>
-                  {isEditingStudio && editableStudio.id === studio.id ? (
-                    <>
-                      <button
-                        className="edit-database-button"
-                        onClick={handleSaveStudio}
-                        disabled={savingStudio}
-                      >
-                        Сохранить
-                      </button>
-                      <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
-                    </>
-                  ) : (
-                    <>
-                      <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
-                      <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.id)}>Удалить</button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+                          isEditingStudio && editableStudio.id === studio.id ? (
+                            <input
+                              type="text"
+                              name={key}
+                              value={editableStudio[key] || ''}
+                              onChange={(e) => handleInputChange(e, setEditableStudio)}
+                              style={{ minWidth: 120 }}
+                            />
+                          ) : (
+                            Array.isArray(studio[key])
+                              ? studio[key].join(', ')
+                              : typeof studio[key] === 'object' && studio[key] !== null
+                                ? JSON.stringify(studio[key])
+                                : studio[key]
+                          )
+                        )}
+                      </td>
+                    ))}
+                  <td key={`${studio.id}-actions`}>
+                    {isEditingStudio && editableStudio.id === studio.id ? (
+                      <>
+                        <button
+                          className="edit-database-button"
+                          onClick={handleSaveStudio}
+                          disabled={savingStudio}
+                        >
+                          Сохранить
+                        </button>
+                        <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
+                        <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.id)}>Удалить</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
@@ -630,37 +645,6 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>Контактная информация</label>
-              <input
-                type="text"
-                name="contact_information"
-                value={editableStudio.contact_information || ''}
-                onChange={e => handleInputChange(e, setEditableStudio)}
-                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-              />
-            </div>
-            <div style={{ marginBottom: 10 }}>
-              <label>Описание</label>
-              <textarea
-                name="description"
-                value={editableStudio.description || ''}
-                onChange={e => handleInputChange(e, setEditableStudio)}
-                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-                rows={3}
-              />
-            </div>
-            <div style={{ marginBottom: 10 }}>
-              <label>Бронирование (true/false)</label>
-              <input
-                type="text"
-                name="booking"
-                value={editableStudio.booking || ''}
-                onChange={e => handleInputChange(e, setEditableStudio)}
-                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-                placeholder="true или false"
-              />
-            </div>
-            <div style={{ marginBottom: 10 }}>
               <label>Дата создания</label>
               <input
                 type="datetime-local"
@@ -702,14 +686,6 @@ const EditDatabase = () => {
             <tr>
               {typographies.length > 0 &&
                 Object.keys(typographies[0])
-                  .filter(
-                    key =>
-                      ![
-                        'date_of_creation',
-                        'date_of_editing',
-                        'additional_information'
-                      ].includes(key)
-                  )
                   .map((key) => (
                     <th key={key}>{key}</th>
                   ))}
@@ -717,40 +693,14 @@ const EditDatabase = () => {
             </tr>
           </thead>
           <tbody>
-            {typographies.map((typography) => (
-              <tr key={typography.typographyId || typography.id}>
-                {Object.keys(typography)
-                  .filter(
-                    key =>
-                      ![
-                        'date_of_creation',
-                        'date_of_editing',
-                        'additional_information'
-                      ].includes(key)
-                  )
-                  .map((key) => (
-                    <td key={`${typography.typographyId || typography.id}-${key}`}>
-                      {isEditingTypography && editableTypography.typographyId === typography.typographyId ? (
-                        key === 'format' && Array.isArray(editableTypography[key]) ? (
-                          <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            {editableTypography[key].map((f, idx) => (
-                              <input
-                                key={idx}
-                                type="text"
-                                value={f}
-                                style={{ marginBottom: 2 }}
-                                onChange={e => {
-                                  const newArr = [...editableTypography[key]];
-                                  newArr[idx] = e.target.value;
-                                  setEditableTypography(prev => ({
-                                    ...prev,
-                                    [key]: newArr
-                                  }));
-                                }}
-                              />
-                            ))}
-                          </div>
-                        ) : (
+            {[...typographies]
+              .sort((a, b) => (a.id || 0) - (b.id || 0))
+              .map((typography) => (
+                <tr key={typography.id}>
+                  {Object.keys(typography)
+                    .map((key) => (
+                      <td key={`${typography.id}-${key}`}>
+                        {isEditingTypography && editableTypography.id === typography.id ? (
                           <input
                             type="text"
                             name={key}
@@ -758,43 +708,28 @@ const EditDatabase = () => {
                             onChange={(e) => handleInputChange(e, setEditableTypography)}
                             style={{ minWidth: 120 }}
                           />
-                        )
-                      ) : (
-                        key === 'format' && Array.isArray(typography[key]) ? (
-                          <div style={{ display: 'flex', flexDirection: 'column' }}>
-                            {typography[key].map((f, idx) => (
-                              <span key={idx}>{f}</span>
-                            ))}
-                          </div>
                         ) : (
                           Array.isArray(typography[key])
                             ? typography[key].join(', ')
                             : typography[key]
-                        )
-                      )}
-                    </td>
-                  ))}
-                <td key={`${typography.typographyId || typography.id}-actions`}>
-                  {isEditingTypography && editableTypography.typographyId === typography.typographyId ? (
-                    <>
-                      <button className="edit-database-button" onClick={handleSaveTypography}>Сохранить</button>
-                      <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
-                    </>
-                  ) : (
-                    <>
-                      <button className="edit-database-button" onClick={() => handleEditTypography(typography)}>Редактировать</button>
-                      <button
-                        className="edit-database-button delete"
-                        onClick={() => handleDeleteTypography(typography.typographyId || typography.id)}
-                        disabled={!(typography.typographyId || typography.id)}
-                      >
-                        Удалить
-                      </button>
-                    </>
-                  )}
-                </td>
-              </tr>
-            ))}
+                        )}
+                      </td>
+                    ))}
+                  <td>
+                    {isEditingTypography && editableTypography.id === typography.id ? (
+                      <>
+                        <button className="edit-database-button" onClick={handleSaveTypography}>Сохранить</button>
+                        <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="edit-database-button" onClick={() => handleEditTypography(typography)}>Редактировать</button>
+                        <button className="edit-database-button delete" onClick={() => handleDeleteTypography(typography.id)}>Удалить</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
           </tbody>
         </table>
       </div>
@@ -802,41 +737,76 @@ const EditDatabase = () => {
         <button className="add-typography-button" onClick={handleAddTypography}>Добавить типографию</button>
       )}
       {showAddTypographyForm && (
-        <>
-          <div style={{ margin: '10px 0', color: '#888', fontSize: 14 }}>
-            <b>Примечание:</b> Перед отправкой на сервер, если пользователь ввёл строку с разделителями (например, "30, 40, 50"), преобразуйте её в массив по этим разделителям.<br />
-            Для поля <b>format</b> используйте разделитель запятая.<br />
-            Для поля <b>lamination</b> используйте разделитель слэш.<br />
-            <span style={{ color: '#666' }}>
-              <b>Пример:</b> <br />
-              Формат: <code>30, 40, 50</code><br />
-              Ламинация: <code>глянцевая/матовая</code>
-            </span>
+        <div
+          style={{
+            background: '#fff',
+            border: '1.5px solid #ececec',
+            borderRadius: 12,
+            maxWidth: 490,
+            minWidth: 220,
+            margin: '24px auto',
+            boxShadow: '0 2px 8px rgba(245,185,30,0.07)',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            padding: 0
+          }}
+        >
+          <div
+            className="printing-card-image"
+            style={{
+              width: '100%',
+              minHeight: 180,
+              height: '30vw',
+              maxHeight: 370,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              borderTopLeftRadius: 12,
+              borderTopRightRadius: 12,
+              backgroundColor: '#fafafa',
+              backgroundImage: editableTypography.main_card_photo
+                ? `url(${editableTypography.main_card_photo})`
+                : undefined
+            }}
+          >
+            <div style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#aaa',
+              fontSize: 18,
+              fontWeight: 500,
+              opacity: editableTypography.main_card_photo ? 0 : 1,
+              pointerEvents: 'none'
+            }}>
+              {editableTypography.main_card_photo ? '' : 'Вставьте ссылку на фото или оставьте пустым'}
+            </div>
           </div>
           <form
             style={{
-              background: '#fafafa',
-              border: '1px solid #ececec',
-              borderRadius: 8,
               padding: 22,
-              margin: '20px 0',
-              maxWidth: 500
+              display: 'flex',
+              flexDirection: 'column',
+              gap: 8
             }}
             onSubmit={e => { e.preventDefault(); handleSaveNewTypography(); }}
           >
-            <h4 style={{ marginTop: 0 }}>Добавление типографии</h4>
+            <h4 style={{ marginTop: 0, color: '#C17900', fontWeight: 700, textAlign: 'center' }}>Добавление типографии</h4>
             <div style={{ marginBottom: 10 }}>
-              <label>main_card_photo</label>
+              <label>Фото (ссылка на изображение)</label>
               <input
                 type="text"
                 name="main_card_photo"
                 value={editableTypography.main_card_photo || ''}
                 onChange={e => handleInputChange(e, setEditableTypography)}
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                placeholder="URL изображения"
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>main_album_name</label>
+              <label>Название альбома</label>
               <input
                 type="text"
                 name="main_album_name"
@@ -846,7 +816,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>main_card_description</label>
+              <label>Описание карточки</label>
               <input
                 type="text"
                 name="main_card_description"
@@ -856,7 +826,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>name_on_page</label>
+              <label>Название на странице</label>
               <input
                 type="text"
                 name="name_on_page"
@@ -866,7 +836,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>photos_on_page (через запятую)</label>
+              <label>Фотографии на странице (через запятую)</label>
               <input
                 type="text"
                 name="photos_on_page"
@@ -877,7 +847,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>product_description</label>
+              <label>Описание продукта</label>
               <input
                 type="text"
                 name="product_description"
@@ -887,7 +857,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>additional_information</label>
+              <label>Дополнительная информация</label>
               <input
                 type="text"
                 name="additional_information"
@@ -897,7 +867,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>format (через запятую)</label>
+              <label>Форматы (через запятую)</label>
               <input
                 type="text"
                 name="format"
@@ -909,7 +879,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>basis_for_spread</label>
+              <label>Основа разворота</label>
               <input
                 type="text"
                 name="basis_for_spread"
@@ -919,7 +889,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>price_of_spread</label>
+              <label>Цена за разворот</label>
               <input
                 type="number"
                 name="price_of_spread"
@@ -929,7 +899,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>lamination</label>
+              <label>Ламинация</label>
               <input
                 type="text"
                 name="lamination"
@@ -939,7 +909,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>copy_price</label>
+              <label>Цена за копию</label>
               <input
                 type="number"
                 name="copy_price"
@@ -949,7 +919,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>address_delivery</label>
+              <label>Адрес доставки</label>
               <input
                 type="text"
                 name="address_delivery"
@@ -959,7 +929,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>final_price</label>
+              <label>Итоговая цена</label>
               <input
                 type="number"
                 name="final_price"
@@ -969,7 +939,7 @@ const EditDatabase = () => {
               />
             </div>
             <div style={{ marginBottom: 10 }}>
-              <label>album_name</label>
+              <label>Название альбома (техническое)</label>
               <input
                 type="text"
                 name="album_name"
@@ -978,17 +948,19 @@ const EditDatabase = () => {
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
               />
             </div>
-            <button className="edit-database-button" type="submit">Сохранить</button>
-            <button
-              className="edit-database-button"
-              type="button"
-              style={{ marginLeft: 8 }}
-              onClick={() => { setShowAddTypographyForm(false); setEditableTypography({}); }}
-            >
-              Отмена
-            </button>
+            <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+              <button className="edit-database-button" type="submit" style={{ flex: 1 }}>Сохранить</button>
+              <button
+                className="edit-database-button"
+                type="button"
+                style={{ flex: 1 }}
+                onClick={() => { setShowAddTypographyForm(false); setEditableTypography({}); }}
+              >
+                Отмена
+              </button>
+            </div>
           </form>
-        </>
+        </div>
       )}
     </div>
   );

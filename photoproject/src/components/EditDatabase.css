@@ -29,6 +29,10 @@
   background: #fff; /* Белый фон для таблицы */
 }
 
+.edit-database-table tr {
+  height: 60px; /* Фиксированная высота строки для визуального выравнивания */
+}
+
 .edit-database-table th, .edit-database-table td {
   border: 1px solid #ddd;
   padding: 10px;
@@ -41,6 +45,30 @@
 
 .edit-database-table tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+/* Стили для редактируемых input в таблицах */
+.edit-database-table input[type="text"],
+.edit-database-table input[type="number"],
+.edit-database-table input[type="datetime-local"],
+.edit-database-table textarea {
+  background: #fff; /* Белый фон для редактируемых полей */
+  border: 1.5px solid #f0bb29;
+  border-radius: 5px;
+  padding: 6px 8px;
+  font-size: 15px;
+  color: #222;
+  outline: none;
+  transition: border 0.2s, box-shadow 0.2s;
+  min-width: 80px;
+}
+
+.edit-database-table input[type="text"]:focus,
+.edit-database-table input[type="number"]:focus,
+.edit-database-table input[type="datetime-local"]:focus,
+.edit-database-table textarea:focus {
+  border: 2px solid #C17900;
+  box-shadow: 0 0 0 2px #ffe9b3;
 }
 
 .edit-database-button {
@@ -95,4 +123,19 @@
 
 .back-button:hover {
   background-color: #5a6268;
+}
+
+.printing-card-image {
+  width: 100%;
+  min-height: 180px;
+  height: 30vw;
+  max-height: 370px;
+  background-position: center;
+  background-size: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background-color: #fafafa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

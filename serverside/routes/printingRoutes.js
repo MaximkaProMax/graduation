@@ -81,6 +81,44 @@ router.post('/', async (req, res) => {
   }
 });
 
+// Обновление данных типографии
+router.put('/:id', async (req, res) => {
+  try {
+    const typographyId = req.params.id;
+    const updatedData = { ...req.body };
+
+    // Преобразуем format и lamination в массивы для Postgres ARRAY
+    if (typeof updatedData.format === 'string') {
+      updatedData.format = updatedData.format.split(',').map(f => f.trim()).filter(Boolean);
+    }
+    if (Array.isArray(updatedData.format)) {
+      updatedData.format = updatedData.format.filter(f => typeof f === 'string' && f.trim() !== '');
+    }
+
+    // lamination — всегда строка (в БД), берем первый элемент если массив
+    if (Array.isArray(updatedData.lamination)) {
+      updatedData.lamination = updatedData.lamination[0] || '';
+    }
+
+    // Удаляем лишние поля, которые не существуют в модели
+    delete updatedData.id;
+
+    // Лог для отладки
+    console.log('Данные для обновления типографии:', updatedData);
+
+    const [updated] = await Printing.update(updatedData, { where: { id: typographyId } });
+    if (updated) {
+      const updatedTypography = await Printing.findByPk(typographyId);
+      res.status(200).json(updatedTypography);
+    } else {
+      res.status(404).json({ success: false, message: 'Типография не найдена' });
+    }
+  } catch (error) {
+    console.error('Ошибка при обновлении данных типографии:', error);
+    res.status(500).json({ success: false, message: 'Ошибка при обновлении данных типографии', details: error.message });
+  }
+});
+
 // Маршрут для удаления типографии
 router.delete('/:id', async (req, res) => {
   try {
