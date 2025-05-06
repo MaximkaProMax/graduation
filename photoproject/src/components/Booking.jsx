@@ -10,6 +10,7 @@ const Booking = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [editAddress, setEditAddress] = useState('');
   const [isEditingAddress, setIsEditingAddress] = useState(false);
+  const [studiosList, setStudiosList] = useState([]);
 
   useEffect(() => {
     // Проверка авторизации
@@ -82,6 +83,7 @@ const Booking = () => {
 
     axios.get('http://localhost:3001/api/photostudios').then(res => {
       window.studios = res.data;
+      setStudiosList(res.data); // сохраняем список студий для поиска фото
     });
     axios.get('http://localhost:3001/api/printing').then(res => {
       window.printingOptions = res.data;
@@ -250,11 +252,30 @@ const Booking = () => {
               studioImageClass = 'white-garden';
             }
 
+            // Найти студию по id или названию для получения фото
+            let studioPhoto = '';
+            if (studiosList.length > 0) {
+              // Поиск по id (предпочтительно)
+              const foundStudio = studiosList.find(
+                s => s.id === booking.studio_id || s.studio === booking.studio_name
+              );
+              if (foundStudio && foundStudio.photo && foundStudio.photo.startsWith('/src/components/assets/images/Photostudios/')) {
+                studioPhoto = foundStudio.photo;
+              }
+            }
+
             return (
               <div key={index} className="cart-item">
-                <div
-                  className={`cart-image ${studioImageClass}`}
-                ></div>
+                {studioPhoto ? (
+                  <div
+                    className="cart-image"
+                    style={{
+                      backgroundImage: `url(${studioPhoto})`
+                    }}
+                  />
+                ) : (
+                  <div className={`cart-image ${studioImageClass}`} />
+                )}
                 <div className="cart-details">
                   <h3>{booking.studio_name || '-'}</h3>
                   <p>Адрес: {booking.address || '-'}</p>

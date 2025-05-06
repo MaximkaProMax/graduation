@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './EditDatabase.css';
 import { useNavigate } from 'react-router-dom';
@@ -12,6 +12,12 @@ const EditDatabase = () => {
   const [isEditingTypography, setIsEditingTypography] = useState(false);
   const [showAddStudioForm, setShowAddStudioForm] = useState(false);
   const [showAddTypographyForm, setShowAddTypographyForm] = useState(false);
+  const [savingStudio, setSavingStudio] = useState(false);
+  const [uploading, setUploading] = useState(false);
+  const [uploadError, setUploadError] = useState('');
+  const [editingPhotoStudioId, setEditingPhotoStudioId] = useState(null);
+  const fileInputRef = useRef(null);
+  const editingPhotoInputRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -53,44 +59,62 @@ const EditDatabase = () => {
   };
 
   const handleSaveStudio = () => {
-    const { id, ...updateData } = editableStudio;
-
-    if (Object.values(updateData).every(value => value)) {
-      if (id) {
-        axios.put(`http://localhost:3001/api/photostudios/${id}`, updateData)
-          .then(() => {
-            fetchStudios();
-            setIsEditingStudio(false);
-            setEditableStudio({});
-          })
-          .catch(error => {
-            console.error('Ошибка при обновлении данных фотостудии:', error);
-          });
-      } else {
-        axios.post('http://localhost:3001/api/photostudios', updateData)
-          .then(() => {
-            fetchStudios();
-            setIsEditingStudio(false);
-            setEditableStudio({});
-          })
-          .catch(error => {
-            console.error('Ошибка при добавлении фотостудии:', error);
-          });
-      }
-    }
-  };
-
-  const handleSaveNewStudio = () => {
-    const { studio, address, opening_hours, price } = editableStudio;
+    const { id, studio, address, opening_hours, price, photo } = editableStudio;
     if (!studio || !address || !opening_hours || !price) {
       alert('Все поля должны быть заполнены');
       return;
     }
+    setSavingStudio(true);
+    if (id) {
+      axios.put(`http://localhost:3001/api/photostudios/${id}`, {
+        studio,
+        address,
+        opening_hours,
+        price,
+        photo
+      })
+        .then(() => {
+          fetchStudios();
+          setIsEditingStudio(false);
+          setEditableStudio({});
+        })
+        .catch(error => {
+          console.error('Ошибка при обновлении данных фотостудии:', error);
+        })
+        .finally(() => setSavingStudio(false));
+    } else {
+      axios.post('http://localhost:3001/api/photostudios', {
+        studio,
+        address,
+        opening_hours,
+        price,
+        photo
+      })
+        .then(() => {
+          fetchStudios();
+          setIsEditingStudio(false);
+          setEditableStudio({});
+        })
+        .catch(error => {
+          console.error('Ошибка при добавлении фотостудии:', error);
+        })
+        .finally(() => setSavingStudio(false));
+    }
+  };
+
+  const handleSaveNewStudio = () => {
+    const { studio, address, opening_hours, price, photo } = editableStudio;
+    if (!studio || !address || !opening_hours || !price) {
+      alert('Все поля должны быть заполнены');
+      return;
+    }
+    // ВАЖНО: photo может быть undefined, если пользователь не загрузил фото
     axios.post('http://localhost:3001/api/photostudios', {
       studio,
       address,
       opening_hours,
-      price
+      price,
+      photo: photo || '' // всегда отправляем поле photo
     })
       .then(() => {
         fetchStudios();
@@ -105,7 +129,6 @@ const EditDatabase = () => {
   const handleSaveTypography = () => {
     const { typographyId, ...updateData } = editableTypography;
 
-    // Преобразуем format и lamination в массивы, если это строки
     if (updateData.format && !Array.isArray(updateData.format)) {
       updateData.format = updateData.format.split(',').map(f => f.trim());
     }
@@ -139,7 +162,6 @@ const EditDatabase = () => {
   };
 
   const handleSaveNewTypography = () => {
-    // Собираем все поля, которые есть в форме
     const {
       main_card_photo,
       main_album_name,
@@ -158,7 +180,6 @@ const EditDatabase = () => {
       album_name
     } = editableTypography;
 
-    // Проверяем, что все поля заполнены
     if (
       !main_card_photo ||
       !main_album_name ||
@@ -180,11 +201,9 @@ const EditDatabase = () => {
       return;
     }
 
-    // Преобразуем format и photos_on_page в массивы, если пользователь ввёл строку с разделителями
     let formatArr = typeof format === 'string' ? format.split(',').map(f => f.trim()) : [];
     let photosArr = typeof photos_on_page === 'string' ? photos_on_page.split(',').map(f => f.trim()) : [];
 
-    // Преобразуем lamination в строку (берём только первую часть, если через слэш)
     let laminationStr = typeof lamination === 'string' ? lamination.split('/')[0].trim() : '';
 
     axios.post('http://localhost:3001/api/printing', {
@@ -215,8 +234,9 @@ const EditDatabase = () => {
   };
 
   const handleEditStudio = (studio) => {
-    setEditableStudio(studio);
+    setEditableStudio({ ...studio });
     setIsEditingStudio(true);
+    setShowAddStudioForm(false);
   };
 
   const handleEditTypography = (typography) => {
@@ -286,7 +306,93 @@ const EditDatabase = () => {
   };
 
   const handleBackClick = () => {
-    navigate('/admin'); // Переход на страницу Admin.js
+    navigate('/admin');
+  };
+
+  const handleDrop = async (e) => {
+    e.preventDefault();
+    setUploadError('');
+    const file = e.dataTransfer.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Можно загружать только изображения (jpg, png, jpeg, webp, gif и др.)');
+      return;
+    }
+    await uploadPhoto(file);
+  };
+
+  const handleDragOver = (e) => {
+    e.preventDefault();
+  };
+
+  const handleFileChange = async (e) => {
+    setUploadError('');
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Можно загружать только изображения (jpg, png, jpeg, webp, gif и др.)');
+      return;
+    }
+    await uploadPhoto(file);
+  };
+
+  const uploadPhoto = async (file) => {
+    setUploading(true);
+    setUploadError('');
+    try {
+      const formData = new FormData();
+      formData.append('photo', file);
+      const res = await axios.post('http://localhost:3001/api/photostudios/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.data && res.data.filename) {
+        setEditableStudio(prev => ({
+          ...prev,
+          photo: res.data.filename // теперь это полный путь для <img src=...>
+        }));
+      }
+    } catch (err) {
+      setUploadError('Ошибка загрузки файла');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleEditPhotoClick = (studioId) => {
+    setEditingPhotoStudioId(studioId);
+    setUploadError('');
+  };
+
+  const handleEditPhotoFileChange = async (e, studio) => {
+    setUploadError('');
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Можно загружать только изображения (jpg, png, jpeg, webp, gif и др.)');
+      return;
+    }
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('photo', file);
+      const res = await axios.post('http://localhost:3001/api/photostudios/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.data && res.data.filename) {
+        // Обновляем только поле photo для этой студии
+        await axios.put(`http://localhost:3001/api/photostudios/${studio.id}`, {
+          ...studio,
+          photo: res.data.filename
+        });
+        fetchStudios();
+        setEditingPhotoStudioId(null);
+        setUploadError('');
+      }
+    } catch (err) {
+      setUploadError('Ошибка загрузки файла');
+    } finally {
+      setUploading(false);
+    }
   };
 
   return (
@@ -301,16 +407,6 @@ const EditDatabase = () => {
             <tr>
               {studios.length > 0 &&
                 Object.keys(studios[0])
-                  .filter(
-                    key =>
-                      ![
-                        'contact_information',
-                        'description',
-                        'booking',
-                        'date_of_creation',
-                        'date_of_editing'
-                      ].includes(key)
-                  )
                   .map((key) => (
                     <th key={key}>{key}</th>
                   ))}
@@ -321,35 +417,69 @@ const EditDatabase = () => {
             {studios.map((studio) => (
               <tr key={studio.id}>
                 {Object.keys(studio)
-                  .filter(
-                    key =>
-                      ![
-                        'contact_information',
-                        'description',
-                        'booking',
-                        'date_of_creation',
-                        'date_of_editing'
-                      ].includes(key)
-                  )
                   .map((key) => (
                     <td key={`${studio.id}-${key}`}>
-                      {isEditingStudio && editableStudio.id === studio.id ? (
-                        <input
-                          type="text"
-                          name={key}
-                          value={editableStudio[key] || ''}
-                          onChange={(e) => handleInputChange(e, setEditableStudio)}
-                          style={{ minWidth: 120 }}
-                        />
+                      {key === 'photo' ? (
+                        <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                          {studio[key] && (
+                            studio[key].startsWith('/src/components/assets/images/Photostudios/') ? (
+                              <img src={studio[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                            ) : (
+                              <div className={`studio-image ${studio[key]}`} style={{ width: '100%', height: '100%' }} />
+                            )
+                          )}
+                          {isEditingStudio && editableStudio.id === studio.id ? null : (
+                            <>
+                              <button
+                                type="button"
+                                className="edit-database-button"
+                                style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
+                                onClick={() => handleEditPhotoClick(studio.id)}
+                              >
+                                Изм. фото
+                              </button>
+                              {editingPhotoStudioId === studio.id && (
+                                <input
+                                  type="file"
+                                  accept="image/*"
+                                  ref={editingPhotoInputRef}
+                                  style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                                  onChange={e => handleEditPhotoFileChange(e, studio)}
+                                  onClick={e => e.stopPropagation()}
+                                />
+                              )}
+                            </>
+                          )}
+                        </div>
                       ) : (
-                        studio[key]
+                        isEditingStudio && editableStudio.id === studio.id ? (
+                          <input
+                            type="text"
+                            name={key}
+                            value={editableStudio[key] || ''}
+                            onChange={(e) => handleInputChange(e, setEditableStudio)}
+                            style={{ minWidth: 120 }}
+                          />
+                        ) : (
+                          Array.isArray(studio[key])
+                            ? studio[key].join(', ')
+                            : typeof studio[key] === 'object' && studio[key] !== null
+                              ? JSON.stringify(studio[key])
+                              : studio[key]
+                        )
                       )}
                     </td>
                   ))}
                 <td key={`${studio.id}-actions`}>
                   {isEditingStudio && editableStudio.id === studio.id ? (
                     <>
-                      <button className="edit-database-button" onClick={handleSaveStudio}>Сохранить</button>
+                      <button
+                        className="edit-database-button"
+                        onClick={handleSaveStudio}
+                        disabled={savingStudio}
+                      >
+                        Сохранить
+                      </button>
                       <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
                     </>
                   ) : (
@@ -370,79 +500,198 @@ const EditDatabase = () => {
       {showAddStudioForm && (
         <form
           style={{
-            background: '#fafafa',
-            border: '1px solid #ececec',
-            borderRadius: 8,
-            padding: 22,
-            margin: '20px 0',
-            maxWidth: 500
+            background: '#fff',
+            border: '1.5px solid #ececec',
+            borderRadius: 12,
+            maxWidth: 490,
+            minWidth: 220,
+            margin: '24px auto',
+            boxShadow: '0 2px 8px rgba(245,185,30,0.07)',
+            display: 'flex',
+            flexDirection: 'column',
+            overflow: 'hidden',
+            padding: 0
           }}
           onSubmit={e => { e.preventDefault(); handleSaveNewStudio(); }}
         >
-          <h4 style={{ marginTop: 0 }}>Добавление фотостудии</h4>
-          <div style={{ marginBottom: 10 }}>
-            <label>Название студии</label>
-            <input
-              type="text"
-              name="studio"
-              value={editableStudio.studio || ''}
-              onChange={e => handleInputChange(e, setEditableStudio)}
-              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: 10 }}>
-            <label>Адрес</label>
-            <input
-              type="text"
-              name="address"
-              value={editableStudio.address || ''}
-              onChange={e => handleInputChange(e, setEditableStudio)}
-              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: 10 }}>
-            <label>Время работы</label>
-            <input
-              type="text"
-              name="opening_hours"
-              value={editableStudio.opening_hours || ''}
-              onChange={e => handleInputChange(e, setEditableStudio)}
-              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: 10 }}>
-            <label>Цена</label>
-            <input
-              type="text"
-              name="price"
-              value={editableStudio.price || ''}
-              onChange={e => handleInputChange(e, setEditableStudio)}
-              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-              required
-            />
-          </div>
-          <div style={{ marginBottom: 10 }}>
-            <label>Фото</label>
-            <input
-              type="text"
-              name="photo"
-              value={editableStudio.photo || ''}
-              onChange={e => handleInputChange(e, setEditableStudio)}
-              style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-            />
-          </div>
-          <button className="edit-database-button" type="submit">Сохранить</button>
-          <button
-            className="edit-database-button"
-            type="button"
-            style={{ marginLeft: 8 }}
-            onClick={() => { setShowAddStudioForm(false); setEditableStudio({}); }}
+          <div
+            className={`studio-image`}
+            style={{
+              width: '100%',
+              minHeight: 180,
+              height: '30vw',
+              maxHeight: 370,
+              backgroundPosition: 'center',
+              backgroundSize: 'cover',
+              borderTopLeftRadius: 12,
+              borderTopRightRadius: 12,
+              backgroundColor: '#fafafa',
+              backgroundImage: editableStudio.photo
+                ? (
+                    editableStudio.photo.startsWith('/src/components/assets/images/Photostudios/')
+                      ? `url(${editableStudio.photo})`
+                      : `url('/src/components/assets/images/Photostudios/${editableStudio.photo}')`
+                  )
+                : undefined
+            }}
+            onDrop={handleDrop}
+            onDragOver={handleDragOver}
           >
-            Отмена
-          </button>
+            <div style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#aaa',
+              fontSize: 18,
+              fontWeight: 500,
+              opacity: editableStudio.photo ? 0 : 1,
+              pointerEvents: 'none'
+            }}>
+              {uploading ? 'Загрузка...' : 'Перетащите фото сюда или выберите файл'}
+            </div>
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              style={{ display: 'none' }}
+              onChange={handleFileChange}
+            />
+            <button
+              type="button"
+              style={{
+                position: 'absolute',
+                top: 12,
+                right: 12,
+                background: '#fff',
+                border: '1px solid #ccc',
+                borderRadius: 6,
+                padding: '4px 10px',
+                cursor: 'pointer',
+                fontSize: 13,
+                zIndex: 2
+              }}
+              onClick={e => {
+                e.preventDefault();
+                fileInputRef.current && fileInputRef.current.click();
+              }}
+            >
+              Выбрать файл
+            </button>
+          </div>
+          {uploadError && (
+            <div style={{ color: 'red', textAlign: 'center', marginTop: 6 }}>{uploadError}</div>
+          )}
+          <div className="studio-info" style={{ padding: 22, display: 'flex', flexDirection: 'column', gap: 8 }}>
+            <h4 style={{ marginTop: 0, color: '#C17900', fontWeight: 700 }}>Добавление фотостудии</h4>
+            <div style={{ marginBottom: 10 }}>
+              <label>Название студии</label>
+              <input
+                type="text"
+                name="studio"
+                value={editableStudio.studio || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Адрес</label>
+              <input
+                type="text"
+                name="address"
+                value={editableStudio.address || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Время работы</label>
+              <input
+                type="text"
+                name="opening_hours"
+                value={editableStudio.opening_hours || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Цена</label>
+              <input
+                type="text"
+                name="price"
+                value={editableStudio.price || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                required
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Контактная информация</label>
+              <input
+                type="text"
+                name="contact_information"
+                value={editableStudio.contact_information || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Описание</label>
+              <textarea
+                name="description"
+                value={editableStudio.description || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                rows={3}
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Бронирование (true/false)</label>
+              <input
+                type="text"
+                name="booking"
+                value={editableStudio.booking || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+                placeholder="true или false"
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Дата создания</label>
+              <input
+                type="datetime-local"
+                name="date_of_creation"
+                value={editableStudio.date_of_creation || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              />
+            </div>
+            <div style={{ marginBottom: 10 }}>
+              <label>Дата изменения</label>
+              <input
+                type="datetime-local"
+                name="date_of_editing"
+                value={editableStudio.date_of_editing || ''}
+                onChange={e => handleInputChange(e, setEditableStudio)}
+                style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+              />
+            </div>
+            <div style={{ display: 'flex', gap: 8, marginTop: 10 }}>
+              <button className="edit-database-button" type="submit" style={{ flex: 1 }}>Сохранить</button>
+              <button
+                className="edit-database-button"
+                type="button"
+                style={{ flex: 1 }}
+                onClick={() => { setShowAddStudioForm(false); setEditableStudio({}); }}
+              >
+                Отмена
+              </button>
+            </div>
+          </div>
         </form>
       )}
 

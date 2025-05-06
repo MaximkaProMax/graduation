@@ -83,7 +83,16 @@ function Favourites() {
         ) : (
           favorites.map((fav) => (
             <div key={fav.id} className="studio-card">
-              <div className={`studio-image ${fav.photo}`}></div>
+              {fav.photo && fav.photo.startsWith('/src/components/assets/images/Photostudios/') ? (
+                <div
+                  className="studio-image"
+                  style={{
+                    backgroundImage: `url(${fav.photo})`
+                  }}
+                />
+              ) : (
+                <div className={`studio-image ${fav.photo || ''}`} />
+              )}
               <div className="studio-info">
                 <h3>{fav.studio}</h3>
                 <p>{fav.address}</p>

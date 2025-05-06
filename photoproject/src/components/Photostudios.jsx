@@ -93,7 +93,16 @@ function Photostudios() {
           ) : (
             filteredStudios.map((studio) => (
               <div key={studio.id} className="studio-card">
-                <div className={`studio-image ${studio.photo}`}></div>
+                {studio.photo && studio.photo.startsWith('/src/components/assets/images/Photostudios/') ? (
+                  <div
+                    className="studio-image"
+                    style={{
+                      backgroundImage: `url(${studio.photo})`
+                    }}
+                  />
+                ) : (
+                  <div className={`studio-image ${studio.photo || ''}`} />
+                )}
                 <div className="studio-info">
                   <h3>{studio.studio}</h3>
                   <p>{studio.address}</p>
