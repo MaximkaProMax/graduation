@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './Home.css';
 
@@ -15,15 +16,14 @@ function Home() {
   });
   const [photostudios, setPhotostudios] = useState([]);
   const [printings, setPrintings] = useState([]);
+  const location = useLocation();
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
-      .then(response => {
-        if (response.data.isAuthenticated) {
-          toast.success('Добро пожаловать на главную страницу!');
-        }
-      })
-      .catch(() => toast.error('Ошибка проверки авторизации.'));
+    if (location.state?.showWelcomeToast) {
+      toast.success('Добро пожаловать на главную страницу!');
+      // Очищаем state, чтобы toast не показывался при обновлении
+      window.history.replaceState({}, document.title);
+    }
 
     // Загрузка списка фотостудий и типографий
     const fetchData = async () => {
@@ -39,7 +39,7 @@ function Home() {
     };
 
     fetchData();
-  }, []);
+  }, [location.state]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

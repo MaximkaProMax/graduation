@@ -27,7 +27,7 @@ function Login({ setIsAuthenticated }) {
         setIsTwoFactorRequired(true);
       } else {
         setIsAuthenticated(true);
-        navigate('/'); // Перенаправление на главную страницу
+        navigate('/', { state: { showWelcomeToast: true } }); // Передаём флаг через state
         window.dispatchEvent(new Event('authChange')); // Обновление шапки
       }
     } catch (error) {
@@ -48,7 +48,7 @@ function Login({ setIsAuthenticated }) {
       );
       if (response.data.success) {
         setIsAuthenticated(true);
-        navigate('/'); // Перенаправление на главную страницу
+        navigate('/', { state: { showWelcomeToast: true } }); // Передаём флаг через state
         window.dispatchEvent(new Event('authChange')); // Обновление шапки
       } else {
         setErrorMessage('Неверный код');
