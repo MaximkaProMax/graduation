@@ -13,6 +13,7 @@ const Reviews = () => {
   const [printings, setPrintings] = useState([]); // Состояние для списка типографий
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
+  const [authChecked, setAuthChecked] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,8 +57,14 @@ const Reviews = () => {
     fetchPrintings();
 
     axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
-      .then(response => setIsAuthenticated(response.data.isAuthenticated))
-      .catch(() => setIsAuthenticated(false));
+      .then(response => {
+        setIsAuthenticated(response.data.isAuthenticated);
+        setAuthChecked(true);
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setAuthChecked(true);
+      });
   }, []); // Убрано navigate из зависимостей, так как он не используется напрямую
 
   const handleInputChange = (e) => {
@@ -108,6 +115,10 @@ const Reviews = () => {
     }
   };
 
+  if (!authChecked) {
+    return <div>Загрузка...</div>;
+  }
+
   return (
     <div className="reviews-container">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
@@ -146,6 +157,21 @@ const Reviews = () => {
           ))}
         </tbody>
       </table>
+
+      {!isAuthenticated && (
+        <div>
+          <div style={{ color: 'red', fontWeight: 600, textAlign: 'center', margin: '40px 0' }}>
+            Для того, чтобы оставить отзыв, необходимо авторизоваться в системе.
+          </div>
+          <div style={{ textAlign: 'center', marginTop: 20 }}>
+            <a href="/login">
+              <button style={{ padding: '10px 24px', background: '#ffcc00', border: 'none', borderRadius: 5, fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>
+                Войти
+              </button>
+            </a>
+          </div>
+        </div>
+      )}
 
       {isAuthenticated && (
         <>
@@ -192,11 +218,11 @@ const Reviews = () => {
                     required
                   >
                     <option value="">Выберите оценку</option>
-                    <option value="плохо">1 - Плохо</option>
-                    <option value="нормально">2 - Нормально</option>
-                    <option value="хорошо">3 - Хорошо</option>
-                    <option value="очень хорошо">4 - Очень хорошо</option>
-                    <option value="отлично">5 - Отлично</option>
+                    <option value="плохо">1 – Плохо</option>
+                    <option value="нормально">2 – Нормально</option>
+                    <option value="хорошо">3 – Хорошо</option>
+                    <option value="очень хорошо">4 – Очень хорошо</option>
+                    <option value="отлично">5 – Отлично</option>
                   </select>
                 </div>
                 <div className="input-group">
