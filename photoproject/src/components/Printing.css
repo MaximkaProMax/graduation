@@ -1,41 +1,76 @@
 /* src/components/Printing.css */
 
 .printing {
+  width: 100%;
   max-width: 1200px;
-  margin: 40px auto 40px auto; /* Добавлен верхний и нижний отступ */
-  padding: 20px;
+  margin: 40px auto;
+  padding: 36px 32px 36px 32px;
   background: #fff;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(34, 63, 74, 0.10), 0 1.5px 4px rgba(245,185,30,0.07);
+  box-sizing: border-box;
+  font-family: 'Montserrat', Arial, sans-serif;
 }
 
 .main-content {
   text-align: center;
 }
 
+.printing h2 {
+  text-align: center;
+  margin-bottom: 28px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #223F4A;
+  letter-spacing: 0.5px;
+}
+
 .printing-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-around; /* Убедившись, что элементы равномерно распределяются */
-  gap: 50px; /* Задает отступ между карточками */
+  justify-content: center;
+  gap: 24px 16px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: stretch; /* Все карточки по высоте */
 }
 
 .printing-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  width: 490px;
+  background-color: #fff;
+  border: 1.5px solid #ececec;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 490px;
+  min-width: 220px;
   margin-bottom: 20px;
-  padding-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Кнопка всегда внизу */
+  transition: box-shadow 0.2s, border 0.2s;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 100%; /* Для выравнивания по высоте */
+  min-height: 570px; /* Минимальная высота для одинаковых карточек */
+}
+
+.printing-card:hover {
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+  border: 1.5px solid #f5b91e;
 }
 
 .printing-image {
-  width: 490px;
-  height: 370px;
+  width: 100%;
+  display: block;
   background-position: center;
   background-size: cover;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  min-height: 270px;
+  height: 270px;
+  max-height: 270px;
+  transition: height 0.2s;
+  flex-shrink: 0;
 }
 
 .printing-image.layflat {
@@ -47,20 +82,29 @@
 }
 
 .printing-info {
-  padding: 20px;
+  padding: 22px 18px 18px 18px;
   text-align: center;
-  color: black; /* Изменяем цвет текста на черный */
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #222;
+  flex: 1 1 auto; /* Растягиваем инфо-блок */
+  justify-content: flex-start;
 }
 
 .printing-info h3 {
   margin: 10px 0 5px 0;
   min-height: 48px;
   line-height: 1.2;
+  font-size: 1.25rem;
+  color: #C17900;
+  font-weight: 700;
 }
 
 .printing-info p {
   margin: 5px 0;
-  color: black; /* Изменяем цвет текста на черный */
+  color: #222;
+  font-size: 1.05rem;
 }
 
 .action-container {
@@ -68,36 +112,179 @@
   justify-content: center;
   align-items: center;
   position: relative;
-  margin-top: 10px;
+  margin-top: auto; /* Прижимаем к низу карточки */
+  gap: 10px;
+  min-height: 56px; /* Минимальная высота для выравнивания кнопок */
 }
 
 .order-button {
-  background-color: #ffeb3b;
+  background-color: #F0BB29;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 24px;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 14px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  transition: background 0.2s;
+  margin-right: 0;
+}
+
+.order-button:hover {
+  background-color: #e0aa1e;
 }
 
 .favorite-icon {
   cursor: pointer;
-  font-size: 18px;
-  color: red;
-  position: absolute;
-  right: 10px;
+  font-size: 22px;
+  color: #bbb;
+  margin-left: 10px;
+  transition: color 0.2s;
+  position: static;
+}
+
+.favorite-icon.favorite {
+  color: #ff0000;
+}
+
+.favorite-icon:hover {
+  color: #C17900;
 }
 
 .search-container {
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   text-align: center;
 }
 
 .search-input {
   width: 100%;
   max-width: 400px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
+  padding: 12px;
+  border: 1.5px solid #f0bb29;
+  border-radius: 8px;
+  font-size: 17px;
+  background: #fafafa;
+  transition: border 0.2s;
+}
+
+.search-input:focus {
+  border: 2px solid #C17900;
+  outline: none;
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .printing-list {
+    justify-content: center;
+  }
+  .printing-card {
+    flex: 0 1 calc(50% - 12px);
+    max-width: 490px;
+    min-width: 320px;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 900px) {
+  .printing {
+    max-width: 98vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+  .printing-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .printing-card {
+    width: 100%;
+    max-width: 360px;
+    min-width: 0;
+    margin-bottom: 20px;
+    min-height: 480px;
+  }
+  .printing-image {
+    width: 100%;
+    min-height: 180px;
+    height: 180px;
+    max-height: 180px;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .printing-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .printing-card {
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 20px;
+  }
+  .printing-image {
+    width: 100%;
+    height: 200px;
+  }
+  .printing-info {
+    padding: 15px;
+  }
+  .order-button {
+    width: 100%;
+    margin-right: 0;
+  }
+  .favorite-icon {
+    margin-left: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .printing {
+    padding: 6px 0 6px 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  .printing-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+  }
+  .printing-card {
+    width: 98vw;
+    max-width: 98vw;
+    min-width: 0;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    padding: 0;
+    min-height: 340px;
+  }
+  .printing-image {
+    width: 100%;
+    min-height: 100px;
+    height: 100px;
+    max-height: 100px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  .printing-info {
+    padding: 10px 6px 10px 6px;
+    font-size: 0.98rem;
+  }
+  .order-button {
+    width: 100%;
+    font-size: 14px;
+    padding: 8px 0;
+  }
+  .favorite-icon {
+    font-size: 20px;
+    margin-left: 8px;
+  }
+}
+
+.printing,
+.printing-list {
+  overflow-x: hidden;
 }
