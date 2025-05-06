@@ -115,13 +115,13 @@ const EditPersonalData = () => {
   };
 
   const handleBackClick = () => {
-    navigate(-1); // Открыть предыдущую страницу в истории
+    navigate('/'); // Переход на главную страницу
   };
 
   return (
     <div className="edit-personal-data-container">
       <h2>Редактирование личных данных</h2>
-      <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
+      <button className="back-button" onClick={handleBackClick}>Вернуться на главную</button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
       <div className="table-container">
