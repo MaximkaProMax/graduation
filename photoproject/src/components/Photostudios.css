@@ -1,87 +1,115 @@
 .photostudios {
+  width: 100%;
   max-width: 1200px;
-  margin: 40px auto 40px auto !important; /* Принудительно задаём верхний и нижний отступ */
-  padding: 32px;
+  margin-top: 40px !important;
+  margin-bottom: 40px !important;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 36px 32px 36px 32px;
   background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(34, 63, 74, 0.10), 0 1.5px 4px rgba(245,185,30,0.07);
   box-sizing: border-box;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.photostudios h2 {
+  text-align: center;
+  margin-bottom: 28px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #223F4A;
+  letter-spacing: 0.5px;
+}
+
+.search-container {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 400px;
+  padding: 12px;
+  border: 1.5px solid #f0bb29;
+  border-radius: 8px;
+  font-size: 17px;
+  background: #fafafa;
+  transition: border 0.2s;
+}
+
+.search-input:focus {
+  border: 2px solid #C17900;
+  outline: none;
 }
 
 .studio-list {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  gap: 24px 16px;
 }
 
 .studio-card {
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  background-color: #fff;
+  border: 1.5px solid #ececec;
+  border-radius: 12px;
   width: 490px;
   margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.2s, border 0.2s;
+}
+
+.studio-card:hover {
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+  border: 1.5px solid #f5b91e;
 }
 
 .studio-image {
-  width: 490px;
+  width: 100%;
   height: 370px;
   background-position: center;
   background-size: cover;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
 }
 
 .studio-image.replace {
   background-image: url('/src/components/assets/images/Photostudios/Replace.jpg');
 }
-
 .studio-image.apart {
   background-image: url('/src/components/assets/images/Photostudios/APART.jpg');
 }
-
 .studio-image.hot-yellow {
   background-image: url('/src/components/assets/images/Photostudios/Hot Yellow.png');
 }
-
 .studio-image.white-garden {
   background-image: url('/src/components/assets/images/Photostudios/White Garden.jpeg');
 }
 
 .studio-info {
-  padding: 20px;
+  padding: 22px 18px 18px 18px;
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .studio-info h3 {
   margin: 10px 0 5px 0;
   min-height: 48px;
   line-height: 1.2;
+  font-size: 1.25rem;
+  color: #C17900;
+  font-weight: 700;
 }
 
 .studio-info p {
   margin: 5px 0;
-}
-
-.book-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 10px;
-}
-
-.book-button {
-  background-color: #ffeb3b;
-  border: none;
-  padding: 10px 20px;
-  cursor: pointer;
-  border-radius: 5px;
-  font-size: 14px;
-}
-
-.favorite-icon {
-  cursor: pointer;
-  font-size: 18px;
-  color: red;
+  color: #222;
+  font-size: 1.05rem;
 }
 
 .action-container {
@@ -90,92 +118,88 @@
   align-items: center;
   position: relative;
   margin-top: 10px;
+  gap: 10px;
 }
 
 .book-button {
-  background-color: #ffeb3b;
+  background-color: #F0BB29;
   border: none;
-  padding: 10px 20px;
+  padding: 10px 24px;
   cursor: pointer;
-  border-radius: 5px;
-  font-size: 14px;
-  margin-right: 10px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  transition: background 0.2s;
+  margin-right: 0;
+}
+
+.book-button:hover {
+  background-color: #e0aa1e;
 }
 
 .favorite-icon {
-  position: absolute;
-  top: 50%;
-  right: 10px;
-  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 22px;
+  color: #bbb;
+  margin-left: 10px;
+  transition: color 0.2s;
 }
 
 .favorite-icon.favorite {
   color: #ff0000;
 }
 
-.search-container {
-  margin-bottom: 20px;
-  text-align: center;
+.favorite-icon:hover {
+  color: #C17900;
 }
 
-.search-input {
-  width: 100%;
-  max-width: 400px;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
-  font-size: 16px;
-}
-
-/* Центрирование и отступы для карточек на десктопе */
 @media (min-width: 769px) and (max-width: 1199px) {
   .studio-list {
     justify-content: center;
   }
-
   .studio-card {
-    margin: 10px; /* Добавляем отступы */
+    margin: 10px;
   }
 }
 
-/* Медиа-запросы для мобильной оптимизации */
+@media (max-width: 900px) {
+  .photostudios {
+    max-width: 98vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+  .studio-card {
+    width: 100%;
+    max-width: 360px;
+  }
+  .studio-image {
+    height: 270px;
+  }
+}
+
 @media (max-width: 768px) {
   .studio-list {
     flex-direction: column;
     align-items: center;
+    gap: 18px;
   }
-
   .studio-card {
     width: 100%;
-    max-width: 360px; /* Уменьшаем ширину карточки */
+    max-width: 360px;
     margin-bottom: 20px;
   }
-
   .studio-image {
     width: 100%;
-    height: 270px; /* Пропорционально устанавливаем высоту изображений */
-    background-position: center;
-    background-size: cover;
+    height: 200px;
   }
-
   .studio-info {
     padding: 15px;
   }
-
   .book-button {
     width: 100%;
     margin-right: 0;
   }
-
   .favorite-icon {
-    position: static;
     margin-left: 10px;
   }
-}
-
-/* Если используется .content или .main-content, убедитесь, что у них нет margin/padding: 0 !important; */
-.content, .main-content {
-  /* Не сбрасывать margin/padding, если есть */
-  /* padding-top: 0; */
-  /* margin-top: 0; */
 }
