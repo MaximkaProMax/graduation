@@ -11,6 +11,31 @@
   border-radius: 5px;
 }
 
+.printing-layflat-page {
+  margin: 40px auto;
+  max-width: 1200px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  padding: 32px;
+  min-height: 600px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.printing-layflat-back-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.printing-layflat-content {
+  display: flex;
+  width: 100%;
+}
+
 .left-section {
   flex: 1;
   margin-right: 20px;

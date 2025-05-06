@@ -140,27 +140,13 @@ const PrintingFlexBind = () => {
   };
 
   return (
-    <div
-      className="printing-flexbind"
-      style={{
-        margin: '40px auto',
-        maxWidth: 1200,
-        background: '#fff',
-        borderRadius: 10,
-        boxShadow: '0 2px 8px rgba(0,0,0,0.10)',
-        padding: 32,
-        minHeight: 600,
-        boxSizing: 'border-box',
-        display: 'flex',
-        flexDirection: 'column'
-      }}
-    >
-      <div style={{ width: '100%', display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-        <button className="back-button" style={{ minWidth: 260, fontWeight: 700, fontSize: 20 }} onClick={() => navigate(-1)}>
+    <div className="printing-flexbind-page">
+      <div className="printing-flexbind-back-btn-container">
+        <button className="back-button" onClick={() => navigate(-1)}>
           Вернуться назад
         </button>
       </div>
-      <div style={{ display: 'flex', width: '100%' }}>
+      <div className="printing-flexbind-content">
         <div className="left-section">
           <div className={`flexbind-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
           <div className="product-description">
