@@ -76,6 +76,13 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     try {
         const studioId = req.params.id;
+        // Проверяем, существует ли студия
+        const studio = await Photostudios.findByPk(studioId);
+        if (!studio) {
+            return res.status(404).json({ success: false, message: 'Фотостудия не найдена' });
+        }
+        // Если нужно, можно добавить удаление связанных файлов/записей здесь
+
         const deleted = await Photostudios.destroy({ where: { id: studioId } });
         if (deleted) {
             res.status(200).json({ success: true, message: 'Фотостудия успешно удалена' });
@@ -84,7 +91,7 @@ router.delete('/:id', async (req, res) => {
         }
     } catch (error) {
         console.error('Ошибка при удалении фотостудии:', error);
-        res.status(500).json({ success: false, message: 'Ошибка при удалении фотостудии' });
+        res.status(500).json({ success: false, message: 'Ошибка при удалении фотостудии', details: error.message });
     }
 });
 
