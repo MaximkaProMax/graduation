@@ -10,16 +10,21 @@
   }
   
   .manager-button {
-    padding: 10px 20px;
+    width: 263.5px;
+    height: 56.5px;
+    padding: 10px;
     background-color: #F0BB29;
     border: none;
     border-radius: 5px;
     color: white;
     font-weight: bold;
     cursor: pointer;
-    margin: 10px;
+    text-align: center;
+    font-size: 16px;
+    margin-bottom: 0;
+    transition: background 0.2s;
   }
   
   .manager-button:hover {
-    background-color: #e0aa1e;
-  }  
+    background-color: #e6b800;
+  }

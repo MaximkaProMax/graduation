@@ -35,7 +35,7 @@ const Manager = () => {
       flexDirection: 'column',
       alignItems: 'center'
     }}>
-      <h2 style={{ marginBottom: 28 }}>Менеджер</h2>
+      <h2 style={{ marginBottom: 28 }}>Страница менеджера</h2>
       <div style={{
         width: '100%',
         display: 'flex',
@@ -43,9 +43,9 @@ const Manager = () => {
         gap: 16,
         alignItems: 'center'
       }}>
-        <button className="manager-button" style={{ width: '100%', maxWidth: 500 }} onClick={handleRequestsClick}>Управление всеми заявками</button>
-        <button className="manager-button" style={{ width: '100%', maxWidth: 500 }} onClick={handleStudioRequestsClick}>Управление заявками фотостудий</button>
-        <button className="manager-button" style={{ width: '100%', maxWidth: 500 }} onClick={handleTypographyRequestsClick}>Управление заявками типографий</button>
+        <button className="manager-button" onClick={handleRequestsClick}>Управление всеми заявками</button>
+        <button className="manager-button" onClick={handleStudioRequestsClick}>Управление заявками фотостудий</button>
+        <button className="manager-button" onClick={handleTypographyRequestsClick}>Управление заявками типографий</button>
       </div>
     </div>
   );
