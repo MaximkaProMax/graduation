@@ -11,7 +11,21 @@ const PhoneRequests = () => {
   });
   const [photostudios, setPhotostudios] = useState([]);
   const [printings, setPrintings] = useState([]);
+  const [selectedBookingId, setSelectedBookingId] = useState(null);
   const navigate = useNavigate();
+
+  const statusOptions = [
+    'Новая заявка',
+    'В обработке',
+    'Ожидает подтверждения',
+    'Подтверждена',
+    'Ожидает оплаты',
+    'Оплачена',
+    'Передана в исполнение',
+    'Завершено',
+    'Отменено',
+    'Перенесено',
+  ];
 
   useEffect(() => {
     fetchPhoneRequests();
@@ -130,7 +144,19 @@ const PhoneRequests = () => {
           placeholder="Комментарий"
           className="modal-input modal-textarea" // Добавляем классы для стиля
         />
-        <input name="status" value={newBooking.status} onChange={handleNewBookingChange} placeholder="Статус" />
+        <select
+          name="status"
+          value={newBooking.status}
+          onChange={handleNewBookingChange}
+          required
+        >
+          <option value="">Выберите статус</option>
+          {statusOptions.map((status, index) => (
+            <option key={index} value={status}>
+              {status}
+            </option>
+          ))}
+        </select>
         <button type="submit">Добавить</button>
       </form>
 
@@ -194,16 +220,33 @@ const PhoneRequests = () => {
                       className="modal-input modal-textarea" // Добавляем классы для стиля
                     />
                   </td>
-                  <td><input name="status" value={editingBooking.status} onChange={handleBookingChange} /></td>
+                  <td>
+                    <select
+                      name="status"
+                      value={editingBooking.status}
+                      onChange={handleBookingChange}
+                    >
+                      <option value="">Выберите статус</option>
+                      {statusOptions.map((status, index) => (
+                        <option key={index} value={status}>
+                          {status}
+                        </option>
+                      ))}
+                    </select>
+                  </td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                   <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
                   <td>
-                    <button onClick={handleSaveBooking}>Сохранить</button>
-                    <button onClick={() => setEditingBooking(null)}>Отмена</button>
+                    <span style={{ color: "#888" }}>Редактируется</span>
                   </td>
                 </tr>
               ) : (
-                <tr key={booking.booking_by_phone_id}>
+                <tr
+                  key={booking.booking_by_phone_id}
+                  className={selectedBookingId === booking.booking_by_phone_id ? 'selected-row' : ''}
+                  onClick={() => setSelectedBookingId(booking.booking_by_phone_id)}
+                  style={{ cursor: 'pointer' }}
+                >
                   <td>{booking.booking_by_phone_id}</td>
                   <td>{booking.full_name}</td>
                   <td>{booking.telephone}</td>
@@ -214,8 +257,7 @@ const PhoneRequests = () => {
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                   <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
                   <td>
-                    <button onClick={() => handleEditBooking(booking)}>Редактировать</button>
-                    <button onClick={() => handleDeleteBooking(booking.booking_by_phone_id)}>Удалить</button>
+                    {/* Пусто, кнопки вынесены вниз */}
                   </td>
                 </tr>
               )
@@ -223,6 +265,22 @@ const PhoneRequests = () => {
           </tbody>
         </table>
       </div>
+      {selectedBookingId && !editingBooking && (
+        <div className="action-buttons">
+          <button onClick={() => handleEditBooking(phoneBookings.find(b => b.booking_by_phone_id === selectedBookingId))}>
+            Редактировать
+          </button>
+          <button onClick={() => handleDeleteBooking(selectedBookingId)}>
+            Удалить
+          </button>
+        </div>
+      )}
+      {editingBooking && (
+        <div className="action-buttons">
+          <button onClick={handleSaveBooking}>Сохранить</button>
+          <button onClick={() => setEditingBooking(null)}>Отмена</button>
+        </div>
+      )}
     </div>
   );
 };
