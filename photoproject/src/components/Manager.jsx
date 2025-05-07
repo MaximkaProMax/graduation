@@ -21,6 +21,10 @@ const Manager = () => {
     navigate('/manager/printinghouse-requests');
   };
 
+  const handlePhoneRequestsClick = () => {
+    navigate('/manager/phone-requests');
+  };
+
   return (
     <div className="manager-container" style={{
       maxWidth: 600,
@@ -46,6 +50,7 @@ const Manager = () => {
         <button className="manager-button" onClick={handleRequestsClick}>Управление всеми заявками</button>
         <button className="manager-button" onClick={handleStudioRequestsClick}>Управление заявками фотостудий</button>
         <button className="manager-button" onClick={handleTypographyRequestsClick}>Управление заявками типографий</button>
+        <button className="manager-button" onClick={handlePhoneRequestsClick}>Управление телефонными заявками</button>
       </div>
     </div>
   );
