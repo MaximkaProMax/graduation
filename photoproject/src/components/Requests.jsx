@@ -3,6 +3,31 @@ import axios from 'axios';
 import './Requests.css';
 import { useNavigate } from 'react-router-dom';
 
+const TYPOGRAPHY_STATUSES = [
+  "Новый заказ",
+  "Подтвержден",
+  "В работе",
+  "Печать завершена",
+  "Готов к отправке",
+  "Отправлен",
+  "Доставлен",
+  "Отменен",
+  "Ожидание оплаты",
+  "Возврат / Рекламация"
+];
+
+const STUDIO_STATUSES = [
+  "Запрос брони",
+  "Подтверждено",
+  "Оплачено",
+  "Ожидает начала",
+  "В процессе",
+  "Завершено",
+  "Отменено",
+  "Перенесено",
+  "Неявка"
+];
+
 const Requests = () => {
   const [typographyBookings, setTypographyBookings] = useState([]);
   const [studioBookings, setStudioBookings] = useState([]);
@@ -104,11 +129,34 @@ const Requests = () => {
   const handleTypographyChange = (e) => setEditingTypography({ ...editingTypography, [e.target.name]: e.target.value });
   const handleSaveTypography = async () => {
     try {
-      await axios.put(`http://localhost:3001/api/bookings/typography/${editingTypography.booking_typographie_id}`, editingTypography, { withCredentials: true });
+      // Проверяем наличие id перед отправкой запроса
+      if (
+        !editingTypography ||
+        !editingTypography.booking_typographie_id ||
+        isNaN(Number(editingTypography.booking_typographie_id))
+      ) {
+        alert('Ошибка: не найден корректный идентификатор заявки на типографию.');
+        return;
+      }
+      // Для отладки: логируем id и данные
+      console.log(
+        'PUT /api/bookings/typography/' + editingTypography.booking_typographie_id,
+        editingTypography
+      );
+      await axios.put(
+        `http://localhost:3001/api/bookings/typography/${editingTypography.booking_typographie_id}`,
+        editingTypography,
+        { withCredentials: true }
+      );
       setEditingTypography(null);
       fetchAllRequests();
-    } catch {
-      alert('Ошибка при сохранении');
+    } catch (err) {
+      console.error('Ошибка при сохранении заявки на типографию:', err);
+      if (err.response && err.response.status === 404) {
+        alert('Ошибка: заявка на типографию не найдена на сервере (404).');
+      } else {
+        alert('Ошибка при сохранении');
+      }
     }
   };
 
@@ -344,7 +392,19 @@ const Requests = () => {
                 <tr key={booking.booking_typographie_id}>
                   <td>{booking.booking_typographie_id}</td>
                   <td>{booking.user}</td>
-                  <td><input name="status" value={editingTypography.status} onChange={handleTypographyChange} /></td>
+                  <td>
+                    <select
+                      name="status"
+                      value={editingTypography.status || ''}
+                      onChange={handleTypographyChange}
+                      style={{ minWidth: 120 }}
+                    >
+                      <option value="">Выберите статус</option>
+                      {TYPOGRAPHY_STATUSES.map(status => (
+                        <option key={status} value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </td>
                   <td><input name="format" value={editingTypography.format} onChange={handleTypographyChange} /></td>
                   <td><input name="the_basis_of_the_spread" value={editingTypography.the_basis_of_the_spread} onChange={handleTypographyChange} /></td>
                   <td><input name="number_of_spreads" value={editingTypography.number_of_spreads} onChange={handleTypographyChange} /></td>
@@ -430,9 +490,22 @@ const Requests = () => {
                   <td>{booking.booking_studio_id}</td>
                   <td>{booking.user}</td>
                   <td><input name="studio_name" value={editingStudio.studio_name} onChange={handleStudioChange} /></td>
-                  <td><input name="status" value={editingStudio.status} onChange={handleStudioChange} /></td>
+                  <td>
+                    <select
+                      name="status"
+                      value={editingStudio.status || ''}
+                      onChange={handleStudioChange}
+                      style={{ minWidth: 120 }}
+                    >
+                      <option value="">Выберите статус</option>
+                      {STUDIO_STATUSES.map(status => (
+                        <option key={status} value={status}>{status}</option>
+                      ))}
+                    </select>
+                  </td>
                   <td><input name="date" value={editingStudio.date} onChange={handleStudioChange} /></td>
                   <td><input name="time" value={editingStudio.time} onChange={handleStudioChange} /></td>
+                  <td><input name="end_time" value={editingStudio.end_time} onChange={handleStudioChange} /></td>
                   <td><input name="address" value={editingStudio.address} onChange={handleStudioChange} /></td>
                   <td><input name="final_price" value={editingStudio.final_price} onChange={handleStudioChange} /></td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
@@ -454,6 +527,7 @@ const Requests = () => {
                   <td>{booking.status}</td>
                   <td>{booking.date}</td>
                   <td>{booking.time}</td>
+                  <td>{booking.end_time}</td>
                   <td>{booking.address}</td>
                   <td>{booking.final_price}</td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
