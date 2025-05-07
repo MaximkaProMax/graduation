@@ -12,7 +12,8 @@ function Home() {
     fullName: '',
     phoneNumber: '',
     photostudio: '',
-    printing: ''
+    printing: '',
+    comment: ''
   });
   const [photostudios, setPhotostudios] = useState([]);
   const [printings, setPrintings] = useState([]);
@@ -92,6 +93,16 @@ function Home() {
                 setFormData({ ...formData, fullName: value });
               }}
               required
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1.5px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '16px',
+                background: '#fff',
+                color: '#222',
+                marginBottom: '15px'
+              }}
             />
           </div>
           <div className="form-group">
@@ -105,6 +116,16 @@ function Home() {
                 setFormData({ ...formData, phoneNumber: value });
               }}
               required
+              style={{
+                width: '100%',
+                padding: '10px',
+                border: '1.5px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '16px',
+                background: '#fff',
+                color: '#222',
+                marginBottom: '15px'
+              }}
             />
           </div>
           <div className="form-group">
@@ -138,6 +159,31 @@ function Home() {
                 </option>
               ))}
             </select>
+          </div>
+          <div className="form-group">
+            <label>Комментарий</label>
+            <textarea
+              name="comment"
+              value={formData.comment}
+              onChange={handleInputChange}
+              rows={3}
+              placeholder="Ваши пожелания или вопросы"
+              style={{
+                width: '100%',
+                minHeight: '70px',
+                maxHeight: '180px',
+                padding: '10px',
+                border: '1.5px solid #ccc',
+                borderRadius: '5px',
+                fontSize: '16px',
+                fontFamily: 'Montserrat, sans-serif',
+                background: '#fff',
+                color: '#222',
+                resize: 'vertical',
+                marginBottom: '15px',
+                transition: 'border 0.2s, box-shadow 0.2s'
+              }}
+            />
           </div>
           <button type="submit" className="submit-button">Отправить</button>
         </form>
