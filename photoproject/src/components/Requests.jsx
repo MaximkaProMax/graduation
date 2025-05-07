@@ -227,6 +227,20 @@ const Requests = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.requests-table') && !e.target.closest('.action-buttons')) {
+        setSelectedStudioId(null);
+        setSelectedTypographyId(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="requests-container">
       <h2 style={{ fontSize: 'clamp(18px, 4vw, 28px)' }}>Все заказы пользователей</h2>

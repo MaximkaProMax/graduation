@@ -32,6 +32,19 @@ const PhoneRequests = () => {
     fetchPhotostudiosAndPrintings();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.requests-table') && !e.target.closest('.action-buttons')) {
+        setSelectedBookingId(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   const fetchPhoneRequests = async () => {
     try {
       const response = await axios.get('http://localhost:3001/api/booking-by-phone', { withCredentials: true });

@@ -16,6 +16,19 @@ const PhotoStudioRequests = () => {
     fetchStudioRequests();
   }, []);
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.requests-table') && !e.target.closest('.action-buttons')) {
+        setSelectedStudioId(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   const fetchStudioRequests = async () => {
     try {
       const studioResponse = await axios.get('http://localhost:3001/api/bookings/studios/all', {

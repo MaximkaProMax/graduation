@@ -78,6 +78,19 @@ const PrintingHouseRequests = () => {
     }
   };
 
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (!e.target.closest('.requests-table') && !e.target.closest('.action-buttons')) {
+        setSelectedTypographyId(null);
+      }
+    };
+
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+
   return (
     <div className="requests-container">
       <h2 className="requests-title" style={{ fontSize: 'clamp(18px, 4vw, 28px)' }}>Заказы на типографию</h2>
