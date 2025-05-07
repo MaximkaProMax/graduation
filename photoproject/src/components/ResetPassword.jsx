@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom'; // Импорт useNavigate
 import './Login.css'; // Подключаем стили Login.css
 
 const ResetPassword = () => {
   const { token } = useParams();
+  const navigate = useNavigate(); // Инициализация useNavigate
   const [newPassword, setNewPassword] = useState('');
   const [message, setMessage] = useState('');
 
@@ -13,6 +14,10 @@ const ResetPassword = () => {
     try {
       const response = await axios.post(`http://localhost:3001/api/users/reset-password/${token}`, { newPassword });
       setMessage(response.data.message);
+
+      if (response.data.success) {
+        setTimeout(() => navigate('/login'), 2000); // Переход на страницу Login через 2 секунды
+      }
     } catch (error) {
       setMessage('Ошибка при сбросе пароля. Попробуйте позже.');
     }
@@ -21,6 +26,7 @@ const ResetPassword = () => {
   return (
     <div className="login-wrapper">
       <div className="login-container">
+        <button className="back-button" onClick={() => navigate('/login')}>Назад</button> {/* Кнопка назад */}
         <h2>Введите новый пароль</h2>
         <form onSubmit={handleSubmit}>
           <div className="input-group">
