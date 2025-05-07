@@ -181,7 +181,8 @@ const PhotoStudioRequests = () => {
               <th>Название студии</th>
               <th>Статус</th>
               <th>Дата</th>
-              <th>Время</th>
+              <th>Время начала</th>
+              <th>Время конца</th>
               <th>Адрес</th>
               <th>Итоговая цена</th>
               <th>Дата создания</th>
@@ -199,6 +200,7 @@ const PhotoStudioRequests = () => {
                   <td><input name="status" value={editingStudio.status} onChange={handleStudioChange} /></td>
                   <td><input name="date" value={editingStudio.date} onChange={handleStudioChange} /></td>
                   <td><input name="time" value={editingStudio.time} onChange={handleStudioChange} /></td>
+                  <td><input name="end_time" value={editingStudio.end_time} onChange={handleStudioChange} /></td>
                   <td><input name="address" value={editingStudio.address} onChange={handleStudioChange} /></td>
                   <td><input name="final_price" value={editingStudio.final_price} onChange={handleStudioChange} /></td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
@@ -220,6 +222,7 @@ const PhotoStudioRequests = () => {
                   <td>{booking.status}</td>
                   <td>{booking.date}</td>
                   <td>{booking.time}</td>
+                  <td>{booking.end_time}</td>
                   <td>{booking.address}</td>
                   <td>{booking.final_price}</td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
