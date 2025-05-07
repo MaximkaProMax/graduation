@@ -111,6 +111,25 @@ body {
   max-width: 500px;
 }
 
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  border: 1.5px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  background: #fff;
+  color: #222;
+  margin-bottom: 15px;
+  font-family: 'Montserrat', sans-serif;
+  transition: border 0.2s, box-shadow 0.2s;
+}
+
+.modal-textarea {
+  min-height: 70px;
+  max-height: 180px;
+  resize: vertical;
+}
+
 .overlay {
   position: fixed;
   top: 0;

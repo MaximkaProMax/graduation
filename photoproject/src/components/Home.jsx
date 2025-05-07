@@ -89,20 +89,11 @@ function Home() {
               name="fullName"
               value={formData.fullName}
               onChange={(e) => {
-                const value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ\s]/g, ''); // Удаляем все символы, кроме букв и пробелов
+                const value = e.target.value.replace(/[^a-zA-Zа-яА-ЯёЁ\s]/g, '');
                 setFormData({ ...formData, fullName: value });
               }}
               required
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1.5px solid #ccc',
-                borderRadius: '5px',
-                fontSize: '16px',
-                background: '#fff',
-                color: '#222',
-                marginBottom: '15px'
-              }}
+              className="modal-input"
             />
           </div>
           <div className="form-group">
@@ -112,20 +103,11 @@ function Home() {
               name="phoneNumber"
               value={formData.phoneNumber}
               onChange={(e) => {
-                const value = e.target.value.replace(/\D/g, ''); // Удаляем все символы, кроме цифр
+                const value = e.target.value.replace(/\D/g, '');
                 setFormData({ ...formData, phoneNumber: value });
               }}
               required
-              style={{
-                width: '100%',
-                padding: '10px',
-                border: '1.5px solid #ccc',
-                borderRadius: '5px',
-                fontSize: '16px',
-                background: '#fff',
-                color: '#222',
-                marginBottom: '15px'
-              }}
+              className="modal-input"
             />
           </div>
           <div className="form-group">
@@ -135,6 +117,7 @@ function Home() {
               value={formData.photostudio}
               onChange={handleInputChange}
               required
+              className="modal-input"
             >
               <option value="">Выберите фотостудию</option>
               {photostudios.map((studio) => (
@@ -151,6 +134,7 @@ function Home() {
               value={formData.printing}
               onChange={handleInputChange}
               required
+              className="modal-input"
             >
               <option value="">Выберите типографию</option>
               {printings.map((printing) => (
@@ -168,21 +152,7 @@ function Home() {
               onChange={handleInputChange}
               rows={3}
               placeholder="Ваши пожелания или вопросы"
-              style={{
-                width: '100%',
-                minHeight: '70px',
-                maxHeight: '180px',
-                padding: '10px',
-                border: '1.5px solid #ccc',
-                borderRadius: '5px',
-                fontSize: '16px',
-                fontFamily: 'Montserrat, sans-serif',
-                background: '#fff',
-                color: '#222',
-                resize: 'vertical',
-                marginBottom: '15px',
-                transition: 'border 0.2s, box-shadow 0.2s'
-              }}
+              className="modal-input modal-textarea"
             />
           </div>
           <button type="submit" className="submit-button">Отправить</button>
