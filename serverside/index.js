@@ -10,7 +10,7 @@ const sequelize = require('./config/database');
 const User = require('./models/User');
 const Role = require('./models/Role'); // Импортируем модель Role
 const Printing = require('./models/Printing'); // Импортируем модель Printing
-const userRoutes = require('./routes/userRoutes');
+const userRoutes = require('./routes/userRoutes'); // Импорт маршрутов пользователей
 const roleRoutes = require('./routes/roleRoutes'); // Импортируем маршруты ролей
 const photostudiosRoutes = require('./routes/photostudiosRoutes'); // Импортируем маршруты фотостудий
 const printingRoutes = require('./routes/printingRoutes'); // Импортируем маршруты печати
@@ -48,7 +48,7 @@ const authenticateToken = (req, res, next) => {
 };
 
 // Подключение маршрутов для пользователей и ролей
-app.use('/api/users', userRoutes);
+app.use('/api/users', userRoutes); // Подключение маршрутов пользователей
 // Добавьте этот маршрут для совместимости с Booking.jsx
 app.use('/api/user', userRoutes);
 app.use('/api/roles', roleRoutes); // Подключаем маршруты ролей

@@ -102,7 +102,7 @@ function Login({ setIsAuthenticated }) {
           {errorMessage && <p className="error">{errorMessage}</p>}
         </form>
         <button className="register-button" onClick={handleRegisterClick}>Регистрация</button>
-        <a className="forgot-password" href="/reset-password">Сброс пароля</a>
+        <a className="forgot-password" href="/forgot-password">Сброс пароля</a>
       </div>
     </div>
   );

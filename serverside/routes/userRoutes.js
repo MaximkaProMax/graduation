@@ -5,6 +5,9 @@ const { sendEmail } = require('../services/emailService');
 const { generateTwoFactorCode, verifyTwoFactorCode } = require('../services/twoFactorAuth');
 const User = require('../models/User');
 const Role = require('../models/Role'); // Импорт модели Role
+const crypto = require('crypto');
+const { sendPasswordResetEmail } = require('../services/emailService');
+const { Op } = require('sequelize'); // Импортируем операторы Sequelize
 const router = express.Router();
 
 // Middleware для проверки JWT токенов
@@ -322,6 +325,63 @@ router.get('/profile', authenticateToken, async (req, res) => {
     });
   } catch (error) {
     console.error('Ошибка при получении профиля пользователя:', error);
+    res.status(500).json({ success: false, message: 'Ошибка сервера' });
+  }
+});
+
+// Маршрут для отправки письма со сбросом пароля
+router.post('/forgot-password', async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ where: { email } });
+    if (!user) {
+      console.error('Пользователь с указанным email не найден:', email);
+      return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+    }
+
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetLink = `http://localhost:3000/reset-password/${resetToken}`;
+
+    user.resetToken = resetToken;
+    user.resetTokenExpires = Date.now() + 3600000; // 1 час
+    await user.save();
+
+    console.log('Ссылка для сброса пароля:', resetLink);
+
+    await sendPasswordResetEmail(email, resetLink);
+    res.json({ success: true, message: 'Ссылка для сброса пароля отправлена на вашу почту' });
+  } catch (error) {
+    console.error('Ошибка при отправке письма для сброса пароля:', error);
+    res.status(500).json({ success: false, message: 'Ошибка сервера' });
+  }
+});
+
+// Маршрут для сброса пароля
+router.post('/reset-password/:token', async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    const user = await User.findOne({
+      where: {
+        resetToken: token,
+        resetTokenExpires: { [Op.gt]: Date.now() },
+      },
+    });
+
+    if (!user) {
+      return res.status(400).json({ success: false, message: 'Токен недействителен или истёк' });
+    }
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetToken = null;
+    user.resetTokenExpires = null;
+    await user.save();
+
+    res.json({ success: true, message: 'Пароль успешно сброшен' });
+  } catch (error) {
+    console.error('Ошибка при сбросе пароля:', error);
     res.status(500).json({ success: false, message: 'Ошибка сервера' });
   }
 });
