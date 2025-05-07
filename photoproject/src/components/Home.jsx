@@ -47,10 +47,31 @@ function Home() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Данные формы:', formData);
-    setIsModalOpen(false);
+    try {
+      // Отправляем данные на сервер
+      await axios.post('http://localhost:3001/api/booking-by-phone/phone/add', {
+        full_name: formData.fullName,
+        telephone: formData.phoneNumber,
+        photostudio: formData.photostudio,
+        printing: formData.printing,
+        comment: formData.comment,
+        status: 'Новая', // Устанавливаем статус по умолчанию
+      });
+      toast.success('Заявка успешно добавлена!');
+      setFormData({
+        fullName: '',
+        phoneNumber: '',
+        photostudio: '',
+        printing: '',
+        comment: '',
+      });
+      setIsModalOpen(false);
+    } catch (error) {
+      console.error('Ошибка при добавлении заявки:', error);
+      toast.error('Ошибка при добавлении заявки');
+    }
   };
 
   return (

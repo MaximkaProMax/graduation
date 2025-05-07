@@ -56,6 +56,7 @@ app.use('/api/photostudios', photostudiosRoutes); // Подключаем мар
 app.use('/api/printing', printingRoutes); // Подключаем маршруты печати
 app.use('/api/favourites', favouritesRoutes); // Подключаем маршруты для избранного
 app.use('/api/bookings', bookingRoutes); // Подключаем маршруты для бронирования
+app.use('/api/booking-by-phone', require('./routes/bookingByPhoneRoutes')); // Убедимся, что маршрут подключен
 app.use('/api/requests', requestsRoutes); // Подключение маршрута для запросов
 app.use('/api/reviews', reviewRoutes); // Подключение маршрутов для отзывов
 

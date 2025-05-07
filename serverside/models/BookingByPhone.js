@@ -45,7 +45,7 @@ const BookingByPhone = sequelize.define(
   },
   {
     tableName: 'booking_by_phone',
-    timestamps: false,
+    timestamps: false, // Отключаем автоматическое управление временем
   }
 );
 
