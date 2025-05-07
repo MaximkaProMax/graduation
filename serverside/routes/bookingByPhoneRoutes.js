@@ -59,16 +59,23 @@ router.put('/:id', async (req, res) => {
   try {
     const id = req.params.id;
     const { full_name, telephone, photostudio, printing, comment, status } = req.body;
+
+    if (!full_name || !telephone) {
+      return res.status(400).json({ success: false, message: 'ФИО и телефон обязательны' });
+    }
+
     const [updated] = await BookingByPhone.update(
       { full_name, telephone, photostudio, printing, comment, status },
       { where: { booking_by_phone_id: id } }
     );
+
     if (updated) {
       res.json({ success: true, message: 'Заявка обновлена' });
     } else {
       res.status(404).json({ success: false, message: 'Заявка не найдена' });
     }
   } catch (error) {
+    console.error('Ошибка при обновлении заявки:', error);
     res.status(500).json({ success: false, message: 'Ошибка при обновлении заявки' });
   }
 });

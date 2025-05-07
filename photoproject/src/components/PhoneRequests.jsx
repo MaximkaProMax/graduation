@@ -52,15 +52,21 @@ const PhoneRequests = () => {
   const handleEditBooking = (booking) => setEditingBooking({ ...booking });
   const handleBookingChange = (e) => setEditingBooking({ ...editingBooking, [e.target.name]: e.target.value });
   const handleSaveBooking = async () => {
+    if (!editingBooking || !editingBooking.booking_by_phone_id) {
+      alert('Некорректные данные для сохранения');
+      return;
+    }
+
     try {
       await axios.put(
-        `http://localhost:3001/api/bookings/phone/${editingBooking.booking_phone_id}`,
+        `http://localhost:3001/api/booking-by-phone/${editingBooking.booking_by_phone_id}`,
         editingBooking,
         { withCredentials: true }
       );
       setEditingBooking(null);
       fetchPhoneRequests();
     } catch (err) {
+      console.error('Ошибка при сохранении:', err);
       alert('Ошибка при сохранении');
     }
   };
