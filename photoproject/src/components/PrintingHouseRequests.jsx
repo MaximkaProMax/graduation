@@ -4,6 +4,8 @@ import './Requests.css';
 import { useNavigate } from 'react-router-dom';
 
 const PrintingHouseRequests = () => {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [typographyBookings, setTypographyBookings] = useState([]);
   const [editingTypography, setEditingTypography] = useState(null);
   const [newTypography, setNewTypography] = useState({
@@ -11,6 +13,23 @@ const PrintingHouseRequests = () => {
   });
   const [selectedTypographyId, setSelectedTypographyId] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
+      .then(response => {
+        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
+          setIsAuthorized(true);
+        } else {
+          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
+        }
+      })
+      .catch(() => {
+        navigate('/'); // Перенаправляем на главную при ошибке
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [navigate]);
 
   useEffect(() => {
     fetchTypographyRequests();
@@ -90,6 +109,14 @@ const PrintingHouseRequests = () => {
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null; // Не отображаем ничего, если пользователь не авторизован
+  }
 
   return (
     <div className="requests-container">

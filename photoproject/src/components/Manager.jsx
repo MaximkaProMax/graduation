@@ -1,9 +1,37 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import './Manager.css';
 
 const Manager = () => {
   const navigate = useNavigate();
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
+      .then(response => {
+        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
+          setIsAuthorized(true);
+        } else {
+          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
+        }
+      })
+      .catch(() => {
+        navigate('/'); // Перенаправляем на главную при ошибке
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [navigate]);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null; // Не отображаем ничего, если пользователь не авторизован
+  }
 
   const handleRequestsClick = () => {
     navigate('/manager/requests');

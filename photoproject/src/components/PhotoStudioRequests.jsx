@@ -4,6 +4,8 @@ import './Requests.css';
 import { useNavigate } from 'react-router-dom';
 
 const PhotoStudioRequests = () => {
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [studioBookings, setStudioBookings] = useState([]);
   const [editingStudio, setEditingStudio] = useState(null);
   const [newStudio, setNewStudio] = useState({
@@ -11,6 +13,23 @@ const PhotoStudioRequests = () => {
   });
   const [selectedStudioId, setSelectedStudioId] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
+      .then(response => {
+        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
+          setIsAuthorized(true);
+        } else {
+          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
+        }
+      })
+      .catch(() => {
+        navigate('/'); // Перенаправляем на главную при ошибке
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [navigate]);
 
   useEffect(() => {
     fetchStudioRequests();
@@ -121,6 +140,14 @@ const PhotoStudioRequests = () => {
       alert('Ошибка при добавлении');
     }
   };
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null; // Не отображаем ничего, если пользователь не авторизован
+  }
 
   return (
     <div className="requests-container">
