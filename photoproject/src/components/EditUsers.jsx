@@ -13,12 +13,9 @@ const EditUsers = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchUsers();
-    fetchRoles();
-  }, []);
 
   const fetchUsers = () => {
     axios.get('http://localhost:3001/api/users')
@@ -43,6 +40,35 @@ const EditUsers = () => {
         console.error('Ошибка при получении ролей:', error);
       });
   };
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
+      .then(response => {
+        console.log('Проверка роли пользователя:', response.data); // Отладочное сообщение
+        if (response.data.success && response.data.role === 'Admin') {
+          setIsAuthorized(true);
+          fetchUsers();
+          fetchRoles();
+        } else {
+          navigate('/'); // Перенаправляем на главную, если роль не "Admin"
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
+        navigate('/'); // Перенаправляем на главную при ошибке
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [navigate]);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null; // Не отображаем ничего, если пользователь не авторизован
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

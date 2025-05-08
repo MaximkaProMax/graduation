@@ -9,11 +9,9 @@ const EditUserGroups = () => {
   const [editingRoleName, setEditingRoleName] = useState('');
   const [newRoleName, setNewRoleName] = useState('');
   const [showAddForm, setShowAddForm] = useState(false);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchRoles();
-  }, []);
 
   const fetchRoles = async () => {
     try {
@@ -23,6 +21,34 @@ const EditUserGroups = () => {
       console.error('Ошибка при загрузке ролей:', error);
     }
   };
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
+      .then(response => {
+        console.log('Проверка роли пользователя:', response.data); // Отладочное сообщение
+        if (response.data.success && response.data.role === 'Admin') {
+          setIsAuthorized(true);
+          fetchRoles(); // Теперь вызов функции происходит после её объявления
+        } else {
+          navigate('/'); // Перенаправляем на главную, если роль не "Admin"
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
+        navigate('/'); // Перенаправляем на главную при ошибке
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [navigate]);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null; // Не отображаем ничего, если пользователь не авторизован
+  }
 
   const handleAddRole = async (e) => {
     e.preventDefault();

@@ -65,6 +65,6 @@ const User = sequelize.define('User', {
 });
 
 // Устанавливаем связь между User и Role
-User.belongsTo(Role, { foreignKey: 'roleId', onDelete: 'RESTRICT' });
+User.belongsTo(Role, { foreignKey: 'roleId', as: 'Role', onDelete: 'RESTRICT' });
 
 module.exports = User;

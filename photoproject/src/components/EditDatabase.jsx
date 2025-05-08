@@ -16,14 +16,11 @@ const EditDatabase = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [editingPhotoStudioId, setEditingPhotoStudioId] = useState(null);
+  const [isAuthorized, setIsAuthorized] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
   const editingPhotoInputRef = useRef(null);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    fetchStudios();
-    fetchTypographies();
-  }, []);
 
   const fetchStudios = () => {
     console.log('Загрузка данных о фотостудиях...');
@@ -52,6 +49,35 @@ const EditDatabase = () => {
         console.error('Ошибка при получении данных о типографиях:', error);
       });
   };
+
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
+      .then(response => {
+        console.log('Проверка роли пользователя:', response.data); // Отладочное сообщение
+        if (response.data.success && response.data.role === 'Admin') {
+          setIsAuthorized(true);
+          fetchStudios();
+          fetchTypographies();
+        } else {
+          navigate('/'); // Перенаправляем на главную, если роль не "Admin"
+        }
+      })
+      .catch(error => {
+        console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
+        navigate('/'); // Перенаправляем на главную при ошибке
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  }, [navigate]);
+
+  if (isLoading) {
+    return <div>Загрузка...</div>;
+  }
+
+  if (!isAuthorized) {
+    return null; // Не отображаем ничего, если пользователь не авторизован
+  }
 
   const handleInputChange = (e, setEditable) => {
     const { name, value } = e.target;
