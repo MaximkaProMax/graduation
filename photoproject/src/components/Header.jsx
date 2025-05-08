@@ -63,6 +63,10 @@ function Header() {
               {userRole === 'Admin' && (
                 <>
                   <li><Link to="/admin">Админ</Link></li>
+                </>
+              )}
+              {(userRole === 'Admin' || userRole === 'Manager') && (
+                <>
                   <li><Link to="/manager">Менеджеры</Link></li>
                 </>
               )}
@@ -98,6 +102,10 @@ function Header() {
           {userRole === 'Admin' && (
             <>
               <li><Link to="/admin" onClick={toggleMenu}>Админ</Link></li>
+            </>
+          )}
+          {(userRole === 'Admin' || userRole === 'Manager') && (
+            <>
               <li><Link to="/manager" onClick={toggleMenu}>Менеджеры</Link></li>
             </>
           )}
