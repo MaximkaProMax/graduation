@@ -6,12 +6,19 @@ import axios from 'axios';
 function Header() {
   const [menuOpen, setMenuOpen] = useState(false);
   const [userLogin, setUserLogin] = useState(null);
+  const [userRole, setUserRole] = useState(null); // Добавляем состояние для роли пользователя
 
   useEffect(() => {
     const fetchUser = () => {
       axios.get('http://localhost:3001/api/users/user', { withCredentials: true })
-        .then(response => setUserLogin(response.data.login))
-        .catch(() => setUserLogin(null));
+        .then(response => {
+          setUserLogin(response.data.login);
+          setUserRole(response.data.Role?.roleName); // Устанавливаем роль пользователя
+        })
+        .catch(() => {
+          setUserLogin(null);
+          setUserRole(null);
+        });
     };
 
     fetchUser();
@@ -34,6 +41,7 @@ function Header() {
     axios.post('http://localhost:3001/api/users/logout', {}, { withCredentials: true })
       .then(() => {
         setUserLogin(null);
+        setUserRole(null); // Сбрасываем роль при выходе
         window.location.href = '/login';
       })
       .catch(() => alert('Ошибка при выходе.'));
@@ -52,8 +60,12 @@ function Header() {
           <li className="profile-menu">
             <Link to={userLogin ? "/manager/edit-personal-data" : "/login"}>{userLogin || 'Профиль'}</Link>
             <ul className="dropdown">
-              <li><Link to="/admin">Админ</Link></li>
-              <li><Link to="/manager">Менеджеры</Link></li>
+              {userRole === 'Admin' && (
+                <>
+                  <li><Link to="/admin">Админ</Link></li>
+                  <li><Link to="/manager">Менеджеры</Link></li>
+                </>
+              )}
               {userLogin ? (
                 <li><button onClick={handleLogout}>Выйти</button></li>
               ) : (
@@ -83,7 +95,13 @@ function Header() {
               {userLogin || 'Профиль'}
             </Link>
           </li>
-          <li><button onClick={handleLogout}>Выйти</button></li>
+          {userRole === 'Admin' && (
+            <>
+              <li><Link to="/admin" onClick={toggleMenu}>Админ</Link></li>
+              <li><Link to="/manager" onClick={toggleMenu}>Менеджеры</Link></li>
+            </>
+          )}
+          {userLogin && <li><button onClick={handleLogout}>Выйти</button></li>}
         </ul>
       </nav>
     </header>

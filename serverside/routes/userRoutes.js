@@ -105,7 +105,10 @@ router.post('/login', async (req, res) => {
 // Получить данные авторизованного пользователя
 router.get('/user', authenticateToken, async (req, res) => {
   try {
-    const user = await User.findOne({ where: { email: req.user.email } });
+    const user = await User.findOne({
+      where: { email: req.user.email },
+      include: [{ model: Role, as: 'Role', attributes: ['roleName'] }],
+    });
     if (!user) {
       return res.status(404).json({ success: false, message: 'Пользователь не найден' });
     }
