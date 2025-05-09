@@ -131,7 +131,7 @@
 
 .book-button {
   width: 70%; /* Уменьшена ширина кнопки */
-  background-color: #F0BB29;
+  background-color: #F0BB29 !important; /* Цвет кнопки изменен с использованием !important */
   border: none;
   padding: 10px 24px;
   cursor: pointer;
@@ -143,7 +143,7 @@
 }
 
 .book-button:hover {
-  background-color: #e0aa1e;
+  background-color: #e0aa1e !important; /* Цвет при наведении */
 }
 
 .favorite-icon {
