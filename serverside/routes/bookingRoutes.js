@@ -3,6 +3,8 @@ const router = express.Router();
 const { BookingTypographie } = require('../models/BookingTypographie');
 const { BookingStudio } = require('../models/BookingStudio');
 const jwt = require('jsonwebtoken');
+const User = require('../models/User');
+const Role = require('../models/Role');
 
 // Middleware для проверки JWT токенов
 const authenticateToken = (req, res, next) => {
@@ -67,9 +69,22 @@ router.get('/user', authenticateToken, async (req, res) => {
 router.delete('/typography/:id', authenticateToken, async (req, res) => {
   try {
     const bookingId = req.params.id;
+    const userId = req.user.userId;
+
+    // Получаем пользователя и его роль
+    const user = await User.findOne({
+      where: { userId },
+      include: [{ model: Role, as: 'Role', attributes: ['roleName'] }]
+    });
+
+    let whereClause = { booking_typographie_id: bookingId };
+    if (!user || user.Role.roleName !== 'Admin') {
+      // Только не-админ ограничен удалением своих заявок
+      whereClause.user = userId;
+    }
 
     const deleted = await BookingTypographie.destroy({
-      where: { booking_typographie_id: bookingId, user: req.user.userId },
+      where: whereClause,
     });
 
     if (deleted) {
@@ -192,9 +207,22 @@ router.get('/studios/user', authenticateToken, async (req, res) => {
 router.delete('/studios/:id', authenticateToken, async (req, res) => {
   try {
     const bookingId = req.params.id;
+    const userId = req.user.userId;
+
+    // Получаем пользователя и его роль
+    const user = await User.findOne({
+      where: { userId },
+      include: [{ model: Role, as: 'Role', attributes: ['roleName'] }]
+    });
+
+    let whereClause = { booking_studio_id: bookingId };
+    if (!user || user.Role.roleName !== 'Admin') {
+      // Только не-админ ограничен удалением своих заявок
+      whereClause.user = userId;
+    }
 
     const deleted = await BookingStudio.destroy({
-      where: { booking_studio_id: bookingId, user: req.user.userId },
+      where: whereClause,
     });
 
     if (deleted) {
