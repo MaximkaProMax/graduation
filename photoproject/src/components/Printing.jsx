@@ -104,7 +104,17 @@ const Printing = () => {
           {filteredPrintingOptions.length > 0 ? (
             filteredPrintingOptions.map((option, index) => (
               <div className="printing-card" key={index}>
-                <div className={`printing-image ${option.main_card_photo}`}></div>
+                {/* Исправлено: корректное отображение фото из папки Printing */}
+                {option.main_card_photo && option.main_card_photo.startsWith('/src/components/assets/images/Printing/') ? (
+                  <div
+                    className="printing-image"
+                    style={{
+                      backgroundImage: `url(${option.main_card_photo})`
+                    }}
+                  />
+                ) : (
+                  <div className={`printing-image ${option.main_card_photo || ''}`} />
+                )}
                 <div className="printing-info">
                   <h3>{option.main_album_name}</h3>
                   <p>{option.main_card_description}</p>

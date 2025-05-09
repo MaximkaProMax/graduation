@@ -58,6 +58,7 @@ const Admin = () => {
         <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/edit-user-groups')}>Редактировать группы пользователей</button>
         <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/edit-users')}>Редактировать пользователей</button>
         <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/edit-database')}>Редактировать базы данных</button>
+        <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/create-items')}>Создание элементов</button>
       </div>
     </div>
   );

@@ -28,6 +28,7 @@ import PrintingHouseRequests from './components/PrintingHouseRequests';
 import PhoneRequests from './components/PhoneRequests'; // Импортируем компонент PhoneRequests
 import ForgotPassword from './components/ForgotPassword'; // Импортируем компонент ForgotPassword
 import ResetPassword from './components/ResetPassword'; // Импортируем компонент ResetPassword
+import CreateItems from './pages/CreateItems'; // Импортируем компонент создания элементов
 import './App.css';
 import './index.css';
 
@@ -71,6 +72,7 @@ function App() {
             <Route path="/edit-user-groups" element={<EditUserGroups />} /> {/* Редактирование групп пользователей */}
             <Route path="/admin/edit-users" element={<EditUsers />} /> {/* Редактирование пользователей */}
             <Route path="/admin/edit-database" element={<EditDatabase />} /> {/* Редактирование БД */}
+            <Route path="/admin/create-items" element={<CreateItems />} /> {/* Создание элементов */}
             <Route path="/manager" element={<Manager />} />  {/* Менеджер БД */}
             <Route path="/manager/requests" element={<Requests />} />
             <Route path="/manager/edit-personal-data" element={<EditPersonalData />} /> {/* Редактирование личных данных */}

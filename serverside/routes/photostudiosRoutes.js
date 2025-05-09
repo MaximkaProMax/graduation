@@ -5,20 +5,33 @@ const path = require('path');
 const multer = require('multer');
 const fs = require('fs');
 
-// Настройка multer для загрузки файлов в папку Photостudios
-const storage = multer.diskStorage({
+// --- Существующий storage для фотостудий ---
+const storagePhotostudios = multer.diskStorage({
     destination: function (req, file, cb) {
-        // Жестко указываем абсолютный путь для Windows
-        cb(null, 'C:\\Users\\Max\\Documents\\УЧЕБА\\graduation\\photoproject\\src\\components\\assets\\images\\Photostudios');
+        cb(null, path.join(__dirname, '../public/src/components/assets/images/Photostudios/'));
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
     }
 });
-const upload = multer({ 
-    storage: storage,
-    limits: { fileSize: 10 * 1024 * 1024 } // 10 МБ
+const upload = multer({ storage: storagePhotostudios });
+
+// --- Новый storage для типографий ---
+const storagePrinting = multer.diskStorage({
+    destination: function (req, file, cb) {
+        // Проверяем, существует ли папка, если нет — создаём
+        // Путь должен совпадать с frontend: graduation/photoproject/src/components/assets/images/Printing
+        const printingDir = path.join(__dirname, '../../photoproject/src/components/assets/images/Printing/');
+        if (!fs.existsSync(printingDir)) {
+            fs.mkdirSync(printingDir, { recursive: true });
+        }
+        cb(null, printingDir);
+    },
+    filename: function (req, file, cb) {
+        cb(null, file.originalname);
+    }
 });
+const uploadPrinting = multer({ storage: storagePrinting });
 
 // Получение всех фотостудий
 router.get('/', async (req, res) => {
@@ -107,6 +120,22 @@ router.post('/upload', (req, res) => {
         }
         // Сохраняем путь для фронта (относительно public/static)
         const photoPath = `/src/components/assets/images/Photostudios/${req.file.originalname}`;
+        res.json({ filename: photoPath });
+    });
+});
+
+// Загрузка фотографии для типографии (Printing)
+router.post('/upload-printing', (req, res) => {
+    uploadPrinting.single('photo')(req, res, function (err) {
+        if (err) {
+            console.error('Ошибка загрузки файла:', err);
+            return res.status(500).json({ error: 'Ошибка загрузки файла', details: err.message });
+        }
+        if (!req.file) {
+            return res.status(400).json({ error: 'Файл не загружен' });
+        }
+        // Сохраняем путь для фронта (относительно public/static)
+        const photoPath = `/src/components/assets/images/Printing/${req.file.originalname}`;
         res.json({ filename: photoPath });
     });
 });
