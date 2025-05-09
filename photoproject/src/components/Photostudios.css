@@ -124,14 +124,13 @@
 
 .action-container {
   display: flex;
-  justify-content: center;
   align-items: center;
-  position: relative;
   margin-top: 10px;
   gap: 10px;
 }
 
 .book-button {
+  width: 70%; /* Уменьшена ширина кнопки */
   background-color: #F0BB29;
   border: none;
   padding: 10px 24px;
@@ -141,7 +140,6 @@
   font-weight: 600;
   color: #fff;
   transition: background 0.2s;
-  margin-right: 0;
 }
 
 .book-button:hover {
@@ -149,10 +147,10 @@
 }
 
 .favorite-icon {
-  cursor: pointer;
+  margin-left: auto; /* Иконка выровнена по правому краю */
   font-size: 22px;
   color: #bbb;
-  margin-left: 10px;
+  cursor: pointer;
   transition: color 0.2s;
 }
 

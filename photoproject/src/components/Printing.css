@@ -118,6 +118,7 @@
 }
 
 .order-button {
+  width: 70%; /* Уменьшена ширина кнопки */
   background-color: #F0BB29;
   border: none;
   padding: 10px 24px;
@@ -138,7 +139,7 @@
   cursor: pointer;
   font-size: 22px;
   color: #bbb;
-  margin-left: 10px;
+  margin-left: auto; /* Иконка выровнена по правому краю */
   transition: color 0.2s;
   position: static;
 }
