@@ -1,0 +1,2 @@
+ALTER TABLE favourites
+ALTER COLUMN studio_id DROP NOT NULL;

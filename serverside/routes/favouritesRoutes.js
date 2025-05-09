@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Favourites = require('../models/Favourites');
 const Photostudios = require('../models/Photostudios');
+const Printing = require('../models/Printing'); // Импорт модели Printing
 const jwt = require('jsonwebtoken');
 
 // Middleware для проверки JWT токенов
@@ -16,19 +17,29 @@ const authenticateToken = (req, res, next) => {
   });
 };
 
-// Получение избранных фотостудий для пользователя
+// Получение избранных фотостудий и типографий для пользователя
 router.get('/', authenticateToken, async (req, res) => {
   try {
     const userId = req.user.userId;
-    console.log('Получение избранных фотостудий для пользователя с ID:', userId);
+    console.log('Получение избранного для пользователя с ID:', userId);
     const favourites = await Favourites.findAll({
       where: { user_id: userId },
-      include: [Photostudios]
+      include: [Photostudios, Printing]
     });
-    console.log('Избранные фотостудии:', favourites);
-    res.json(favourites.map(fav => fav.photostudio));
+
+    const result = favourites.map(fav => {
+      if (fav.photostudio) {
+        return { type: 'photostudio', ...fav.photostudio.dataValues };
+      } else if (fav.printing) {
+        return { type: 'printing', ...fav.printing.dataValues };
+      }
+      return null;
+    }).filter(item => item !== null);
+
+    console.log('Избранное:', result);
+    res.json(result);
   } catch (err) {
-    console.error('Ошибка при получении избранных фотостудий:', err);
+    console.error('Ошибка при получении избранного:', err);
     res.status(500).json({ error: err.message });
   }
 });
@@ -57,6 +68,30 @@ router.post('/', authenticateToken, async (req, res) => {
   }
 });
 
+// Добавление типографии в избранное
+router.post('/printing', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { printing_id } = req.body;
+
+    // Проверка на наличие типографии в избранном
+    const existingFavourite = await Favourites.findOne({
+      where: { user_id: userId, printing_id }
+    });
+
+    if (existingFavourite) {
+      return res.status(400).json({ message: 'Типография уже в избранном' });
+    }
+
+    console.log('Добавление типографии в избранное:', { user_id: userId, printing_id });
+    await Favourites.create({ user_id: userId, printing_id, studio_id: null }); // Указан null для studio_id
+    res.status(201).json({ message: 'Added to favourites' });
+  } catch (err) {
+    console.error('Ошибка при добавлении типографии в избранное:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // Удаление фотостудии из избранного
 router.delete('/:studio_id', authenticateToken, async (req, res) => {
   try {
@@ -72,6 +107,25 @@ router.delete('/:studio_id', authenticateToken, async (req, res) => {
     res.status(200).json({ message: 'Removed from favourites' });
   } catch (err) {
     console.error('Ошибка при удалении фотостудии из избранного:', err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
+// Удаление типографии из избранного
+router.delete('/printing/:printing_id', authenticateToken, async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    const { printing_id } = req.params;
+    console.log('Удаление типографии из избранного:', { user_id: userId, printing_id });
+    await Favourites.destroy({
+      where: {
+        user_id: userId,
+        printing_id
+      }
+    });
+    res.status(200).json({ message: 'Removed from favourites' });
+  } catch (err) {
+    console.error('Ошибка при удалении типографии из избранного:', err);
     res.status(500).json({ error: err.message });
   }
 });

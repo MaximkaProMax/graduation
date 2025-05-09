@@ -177,3 +177,106 @@
       margin-left: 10px;
     }
   }
+
+  .printing-image {
+    width: 100%;
+    display: block;
+    background-position: center;
+    background-size: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    min-height: 270px;
+    height: 270px;
+    max-height: 270px;
+    transition: height 0.2s;
+    flex-shrink: 0;
+  }
+  
+  .printing-image.layflat {
+    background-image: url('/src/components/assets/images/Printing/LayFlat.jpg');
+  }
+  
+  .printing-image.flexbind {
+    background-image: url('/src/components/assets/images/Printing/FlexBind.jpg');
+  }
+  
+  .printing-info {
+    padding: 22px 18px 18px 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #222;
+    flex: 1 1 auto;
+    justify-content: flex-start;
+  }
+  
+  .printing-info h3 {
+    margin: 10px 0 5px 0;
+    min-height: 48px;
+    line-height: 1.2;
+    font-size: 1.25rem;
+    color: #C17900;
+    font-weight: 700;
+  }
+  
+  .printing-info p {
+    margin: 5px 0;
+    color: #222;
+    font-size: 1.05rem;
+  }
+
+  .printing-card {
+    background-color: #fff;
+    border: 1.5px solid #ececec;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 490px;
+    min-width: 220px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.2s, border 0.2s;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 100%;
+    min-height: 570px;
+  }
+  
+  .printing-card:hover {
+    box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+    border: 1.5px solid #f5b91e;
+  }
+  
+  .printing-action-container {
+    display: flex;
+    justify-content: center; /* Центрируем кнопку "Заказать" */
+    align-items: center;
+    position: relative;
+    margin-top: auto;
+    gap: 10px;
+    min-height: 56px;
+  }
+  
+  .printing-order-button {
+    background-color: #F0BB29;
+    border: none;
+    padding: 10px 24px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    transition: background 0.2s;
+  }
+  
+  .printing-order-button:hover {
+    background-color: #e0aa1e;
+  }
+
+  .favourites-section h3 {
+    margin-top: 20px; /* Добавлен отступ сверху */
+    margin-bottom: 20px; /* Сохраняем отступ снизу */
+  }
