@@ -40,7 +40,14 @@ router.post('/', async (req, res) => {
       album_name,
       main_card_photo,
       main_album_name,
-      main_card_description
+      main_card_description,
+      // добавляем новые поля
+      name_on_page,
+      photos_on_page,
+      product_description,
+      additional_information,
+      price_of_spread,
+      copy_price
     } = req.body;
 
     // format должен быть массивом строк
@@ -59,18 +66,35 @@ router.post('/', async (req, res) => {
       laminationValue = lamination;
     }
 
+    // photos_on_page — массив строк
+    let photosOnPageArr = [];
+    if (Array.isArray(photos_on_page)) {
+      photosOnPageArr = photos_on_page.filter(f => typeof f === 'string' && f.trim() !== '');
+    } else if (typeof photos_on_page === 'string' && photos_on_page.trim() !== '') {
+      photosOnPageArr = photos_on_page.split(',').map(f => f.trim()).filter(Boolean);
+    }
+
+    // price_of_spread и copy_price — числа
+    const priceOfSpreadNum = price_of_spread !== undefined && price_of_spread !== '' ? Number(price_of_spread) : null;
+    const copyPriceNum = copy_price !== undefined && copy_price !== '' ? Number(copy_price) : null;
+
     const newTypography = await Printing.create({
       format: formatArray,
       basis_for_spread: the_basis_of_the_spread || 'Не указано',
-      price_of_spread: number_of_spreads,
+      price_of_spread: priceOfSpreadNum !== null ? priceOfSpreadNum : number_of_spreads,
       lamination: laminationValue,
-      copy_price: number_of_copies,
+      copy_price: copyPriceNum !== null ? copyPriceNum : number_of_copies,
       address_delivery: address_delivery || 'Не указано',
       final_price,
       album_name,
       main_card_photo,
       main_album_name,
-      main_card_description
+      main_card_description,
+      // сохраняем новые поля
+      name_on_page: name_on_page || null,
+      photos_on_page: photosOnPageArr.length > 0 ? photosOnPageArr : null,
+      product_description: product_description || null,
+      additional_information: additional_information || null
     });
 
     console.log('Добавлена новая типография:', newTypography);

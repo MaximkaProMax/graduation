@@ -155,37 +155,45 @@ const EditDatabase = () => {
   const handleSaveTypography = () => {
     const { id, ...updateData } = editableTypography;
 
-    // Преобразуем format и lamination в строки перед отправкой на сервер
-    if (Array.isArray(updateData.format)) {
-        updateData.format = updateData.format.join(',');
+    // Преобразуем format и photos_on_page в массивы строк
+    if (typeof updateData.format === 'string') {
+      updateData.format = updateData.format.split(',').map(f => f.trim()).filter(Boolean);
     }
-    if (Array.isArray(updateData.lamination)) {
-        updateData.lamination = updateData.lamination.join('/');
+    if (typeof updateData.photos_on_page === 'string') {
+      updateData.photos_on_page = updateData.photos_on_page.split(',').map(f => f.trim()).filter(Boolean);
     }
 
-    if (Object.values(updateData).every(value => value)) {
-        if (id) {
-            axios.put(`http://localhost:3001/api/printing/${id}`, updateData)
-                .then(() => {
-                    fetchTypographies();
-                    setIsEditingTypography(false);
-                    setEditableTypography({});
-                })
-                .catch(error => {
-                    console.error('Ошибка при обновлении данных типографии:', error);
-                });
-        } else {
-            axios.post('http://localhost:3001/api/printing', updateData)
-                .then(() => {
-                    fetchTypographies();
-                    setIsEditingTypography(false);
-                    setEditableTypography({});
-                })
-                .catch(error => {
-                    console.error('Ошибка при добавлении типографии:', error);
-                });
-        }
+    // lamination — всегда строка (в БД), берем первый элемент если массив
+    if (Array.isArray(updateData.lamination)) {
+      updateData.lamination = updateData.lamination[0] || '';
     }
+
+    // price_of_spread, copy_price, final_price — числа
+    if (updateData.price_of_spread !== undefined && updateData.price_of_spread !== '') {
+      updateData.price_of_spread = Number(updateData.price_of_spread);
+    }
+    if (updateData.copy_price !== undefined && updateData.copy_price !== '') {
+      updateData.copy_price = Number(updateData.copy_price);
+    }
+    if (updateData.final_price !== undefined && updateData.final_price !== '') {
+      updateData.final_price = Number(updateData.final_price);
+    }
+
+    // Удаляем id, если есть
+    delete updateData.id;
+
+    // Проверяем, что все обязательные поля заполнены (можно скорректировать по вашей модели)
+    // ...оставьте свою валидацию, если нужно...
+
+    axios.put(`http://localhost:3001/api/printing/${id}`, updateData)
+      .then(() => {
+        fetchTypographies();
+        setIsEditingTypography(false);
+        setEditableTypography({});
+      })
+      .catch(error => {
+        console.error('Ошибка при обновлении данных типографии:', error);
+      });
   };
 
   const handleSaveNewTypography = () => {
@@ -206,6 +214,14 @@ const EditDatabase = () => {
       final_price,
       album_name
     } = editableTypography;
+
+    // Отладочные сообщения для проверки значений полей
+    console.log('DEBUG: name_on_page:', name_on_page);
+    console.log('DEBUG: photos_on_page:', photos_on_page);
+    console.log('DEBUG: product_description:', product_description);
+    console.log('DEBUG: additional_information:', additional_information);
+    console.log('DEBUG: price_of_spread:', price_of_spread);
+    console.log('DEBUG: copy_price:', copy_price);
 
     if (
       !main_card_photo ||
@@ -228,10 +244,37 @@ const EditDatabase = () => {
       return;
     }
 
-    let formatArr = typeof format === 'string' ? format.split(',').map(f => f.trim()) : [];
-    let photosArr = typeof photos_on_page === 'string' ? photos_on_page.split(',').map(f => f.trim()) : [];
+    // Преобразуем format и photos_on_page в массивы строк
+    let formatArr = typeof format === 'string' ? format.split(',').map(f => f.trim()).filter(Boolean) : Array.isArray(format) ? format : [];
+    let photosArr = typeof photos_on_page === 'string' ? photos_on_page.split(',').map(f => f.trim()).filter(Boolean) : Array.isArray(photos_on_page) ? photos_on_page : [];
 
-    let laminationStr = typeof lamination === 'string' ? lamination.split('/')[0].trim() : '';
+    // lamination — всегда строка (в БД), берем первый элемент если массив
+    let laminationStr = Array.isArray(lamination) ? (lamination[0] || '') : (typeof lamination === 'string' ? lamination : '');
+
+    // price_of_spread, copy_price, final_price — числа
+    const priceOfSpreadNum = price_of_spread !== undefined && price_of_spread !== '' ? Number(price_of_spread) : null;
+    const copyPriceNum = copy_price !== undefined && copy_price !== '' ? Number(copy_price) : null;
+    const finalPriceNum = final_price !== undefined && final_price !== '' ? Number(final_price) : null;
+
+    // Отладочный вывод перед отправкой на сервер
+    // (Показывает итоговый payload, который отправляется на сервер)
+    console.log('DEBUG: payload for POST /printing', {
+      main_card_photo,
+      main_album_name,
+      main_card_description,
+      name_on_page,
+      photos_on_page: photosArr,
+      product_description,
+      additional_information,
+      format: formatArr,
+      basis_for_spread,
+      price_of_spread: priceOfSpreadNum,
+      lamination: laminationStr,
+      copy_price: copyPriceNum,
+      address_delivery,
+      final_price: finalPriceNum,
+      album_name
+    });
 
     axios.post('http://localhost:3001/api/printing', {
       main_card_photo,
@@ -243,11 +286,11 @@ const EditDatabase = () => {
       additional_information,
       format: formatArr,
       basis_for_spread,
-      price_of_spread,
+      price_of_spread: priceOfSpreadNum,
       lamination: laminationStr,
-      copy_price,
+      copy_price: copyPriceNum,
       address_delivery,
-      final_price,
+      final_price: finalPriceNum,
       album_name
     })
       .then(() => {
@@ -326,7 +369,14 @@ const EditDatabase = () => {
       number_of_copies: '',
       address_delivery: '',
       final_price: '',
-      album_name: ''
+      album_name: '',
+      // добавляем новые поля
+      name_on_page: '',
+      photos_on_page: '',
+      product_description: '',
+      additional_information: '',
+      price_of_spread: '',
+      copy_price: ''
     });
     setShowAddTypographyForm(true);
     setIsEditingTypography(false);
@@ -727,13 +777,31 @@ const EditDatabase = () => {
                     .map((key) => (
                       <td key={`${typography.id}-${key}`}>
                         {isEditingTypography && editableTypography.id === typography.id ? (
-                          <input
-                            type="text"
-                            name={key}
-                            value={editableTypography[key] || ''}
-                            onChange={(e) => handleInputChange(e, setEditableTypography)}
-                            style={{ minWidth: 120 }}
-                          />
+                          // делаем новые поля редактируемыми
+                          ([
+                            'name_on_page',
+                            'photos_on_page',
+                            'product_description',
+                            'additional_information',
+                            'price_of_spread',
+                            'copy_price'
+                          ].includes(key)) ? (
+                            <input
+                              type={['price_of_spread', 'copy_price'].includes(key) ? 'number' : 'text'}
+                              name={key}
+                              value={editableTypography[key] || ''}
+                              onChange={(e) => handleInputChange(e, setEditableTypography)}
+                              style={{ minWidth: 120 }}
+                            />
+                          ) : (
+                            <input
+                              type="text"
+                              name={key}
+                              value={editableTypography[key] || ''}
+                              onChange={(e) => handleInputChange(e, setEditableTypography)}
+                              style={{ minWidth: 120 }}
+                            />
+                          )
                         ) : (
                           Array.isArray(typography[key])
                             ? typography[key].join(', ')
@@ -820,6 +888,7 @@ const EditDatabase = () => {
             onSubmit={e => { e.preventDefault(); handleSaveNewTypography(); }}
           >
             <h4 style={{ marginTop: 0, color: '#C17900', fontWeight: 700, textAlign: 'center' }}>Добавление типографии</h4>
+            {/* ...существующие поля... */}
             <div style={{ marginBottom: 10 }}>
               <label>Фото (ссылка на изображение)</label>
               <input
@@ -851,6 +920,7 @@ const EditDatabase = () => {
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
               />
             </div>
+            {/* Новые поля */}
             <div style={{ marginBottom: 10 }}>
               <label>Название на странице</label>
               <input
@@ -892,6 +962,7 @@ const EditDatabase = () => {
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
               />
             </div>
+            {/* ...существующие поля... */}
             <div style={{ marginBottom: 10 }}>
               <label>Форматы (через запятую)</label>
               <input
@@ -914,6 +985,7 @@ const EditDatabase = () => {
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
               />
             </div>
+            {/* Новые поля */}
             <div style={{ marginBottom: 10 }}>
               <label>Цена за разворот</label>
               <input
@@ -924,6 +996,7 @@ const EditDatabase = () => {
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
               />
             </div>
+            {/* ...существующие поля... */}
             <div style={{ marginBottom: 10 }}>
               <label>Ламинация</label>
               <input
@@ -934,6 +1007,7 @@ const EditDatabase = () => {
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
               />
             </div>
+            {/* Новое поле */}
             <div style={{ marginBottom: 10 }}>
               <label>Цена за копию</label>
               <input
@@ -944,6 +1018,7 @@ const EditDatabase = () => {
                 style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
               />
             </div>
+            {/* ...существующие поля... */}
             <div style={{ marginBottom: 10 }}>
               <label>Адрес доставки</label>
               <input
