@@ -394,18 +394,20 @@ router.get('/check-role', authenticateToken, async (req, res) => {
   try {
     const user = await User.findOne({
       where: { userId: req.user.userId },
-      include: [{ model: Role, as: 'Role', attributes: ['roleName'] }],
+      include: [{ model: Role, as: 'Role', attributes: ['roleName', 'permissions'] }],
     });
 
     if (!user) {
-      console.log('Пользователь не найден'); // Отладочное сообщение
       return res.status(404).json({ success: false, message: 'Пользователь не найден' });
     }
 
-    console.log('Роль пользователя:', user.Role.roleName); // Отладочное сообщение
-    res.json({ success: true, role: user.Role.roleName });
+    res.json({
+      success: true,
+      role: user.Role.roleName,
+      permissions: user.Role.permissions || [],
+    });
   } catch (error) {
-    console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
+    console.error('Ошибка при проверке роли пользователя:', error);
     res.status(500).json({ success: false, message: 'Ошибка сервера' });
   }
 });

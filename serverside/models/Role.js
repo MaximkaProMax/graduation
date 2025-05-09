@@ -11,9 +11,13 @@ const Role = sequelize.define('Role', {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  permissions: {
+    type: DataTypes.JSON,
+    defaultValue: {},
+  },
 }, {
-  tableName: 'Roles', // Указываем имя таблицы
-  timestamps: false, // Отключаем автоматическое добавление полей createdAt и updatedAt
+  tableName: 'Roles',
+  timestamps: false,
 });
 
 module.exports = Role;

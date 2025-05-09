@@ -25,12 +25,14 @@ const EditUserGroups = () => {
   useEffect(() => {
     axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
       .then(response => {
-        console.log('Проверка роли пользователя:', response.data); // Отладочное сообщение
-        if (response.data.success && response.data.role === 'Admin') {
+        console.log('Ответ от API /check-role:', response.data); // Отладочное сообщение
+        const permissions = response.data.permissions?.Admin || []; // Проверяем права для роли Admin
+        if (response.data.success && permissions.includes('EditUserGroups')) {
           setIsAuthorized(true);
-          fetchRoles(); // Теперь вызов функции происходит после её объявления
+          fetchRoles();
         } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin"
+          console.warn('Доступ запрещен. Права доступа:', response.data.permissions); // Отладочное сообщение
+          navigate('/'); // Перенаправляем на главную, если нет доступа
         }
       })
       .catch(error => {

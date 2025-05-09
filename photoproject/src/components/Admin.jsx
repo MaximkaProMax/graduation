@@ -11,13 +11,16 @@ const Admin = () => {
   useEffect(() => {
     axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
       .then(response => {
-        if (response.data.success && response.data.role === 'Admin') {
+        console.log('Ответ от API /check-role:', response.data); // Отладочное сообщение
+        if (response.data.success && response.data.permissions.Admin) {
           setIsAuthorized(true);
         } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin"
+          console.warn('Доступ запрещен. Права доступа:', response.data.permissions); // Отладочное сообщение
+          navigate('/'); // Перенаправляем на главную, если нет доступа
         }
       })
-      .catch(() => {
+      .catch(error => {
+        console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
         navigate('/'); // Перенаправляем на главную при ошибке
       })
       .finally(() => {
@@ -58,6 +61,7 @@ const Admin = () => {
         <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/edit-user-groups')}>Редактировать группы пользователей</button>
         <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/edit-users')}>Редактировать пользователей</button>
         <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/edit-database')}>Редактировать базы данных</button>
+        <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/manage-permissions')}>Управление правами</button>
       </div>
     </div>
   );

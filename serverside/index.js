@@ -18,6 +18,7 @@ const favouritesRoutes = require('./routes/favouritesRoutes'); // Импорти
 const bookingRoutes = require('./routes/bookingRoutes'); // Импортируем маршруты для бронирования
 const requestsRoutes = require('./routes/requestsRoutes'); // Импорт нового маршрута
 const reviewRoutes = require('./routes/reviewRoutes'); // Импорт маршрутов для отзывов
+const permissionsRoutes = require('./routes/permissionsRoutes'); // Импорт маршрутов для прав доступа
 
 const app = express();
 app.use(cors({
@@ -59,6 +60,7 @@ app.use('/api/bookings', bookingRoutes); // Подключаем маршрут�
 app.use('/api/booking-by-phone', require('./routes/bookingByPhoneRoutes')); // Убедимся, что маршрут подключен
 app.use('/api/requests', requestsRoutes); // Подключение маршрута для запросов
 app.use('/api/reviews', reviewRoutes); // Подключение маршрутов для отзывов
+app.use('/api/permissions', permissionsRoutes); // Подключение маршрутов для прав доступа
 
 // Маршрут по умолчанию авторизации через cookies
 app.get('/', (req, res) => {

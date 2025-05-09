@@ -32,12 +32,10 @@ const PhoneRequests = () => {
   useEffect(() => {
     axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
       .then(response => {
-        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
+        if (response.data.success && response.data.permissions?.Manager?.includes('PhoneRequests')) {
           setIsAuthorized(true);
-          fetchPhoneRequests();
-          fetchPhotostudiosAndPrintings();
         } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
+          navigate('/'); // Перенаправляем на главную, если нет доступа
         }
       })
       .catch(() => {

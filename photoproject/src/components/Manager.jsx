@@ -11,13 +11,16 @@ const Manager = () => {
   useEffect(() => {
     axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
       .then(response => {
-        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
+        console.log('Ответ от API /check-role:', response.data); // Отладочное сообщение
+        if (response.data.success && (response.data.permissions.Manager || response.data.permissions.Admin)) {
           setIsAuthorized(true);
         } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
+          console.warn('Доступ запрещен. Права доступа:', response.data.permissions); // Отладочное сообщение
+          navigate('/'); // Перенаправляем на главную, если нет доступа
         }
       })
-      .catch(() => {
+      .catch(error => {
+        console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
         navigate('/'); // Перенаправляем на главную при ошибке
       })
       .finally(() => {

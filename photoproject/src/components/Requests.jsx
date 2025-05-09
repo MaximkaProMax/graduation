@@ -48,11 +48,14 @@ const Requests = () => {
   useEffect(() => {
     axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
       .then(response => {
-        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
+        console.log('Ответ от API /check-role:', response.data); // Отладочное сообщение
+        const permissions = response.data.permissions?.Admin || response.data.permissions?.Manager || [];
+        if (response.data.success && (permissions.includes('Admin') || permissions.includes('Manager'))) {
           setIsAuthorized(true);
           fetchAllRequests();
         } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
+          console.warn('Доступ запрещен. Права доступа:', response.data.permissions); // Отладочное сообщение
+          navigate('/'); // Перенаправляем на главную, если нет доступа
         }
       })
       .catch(() => {
