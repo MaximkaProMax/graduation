@@ -8,7 +8,12 @@ const fs = require('fs');
 // --- Существующий storage для фотостудий ---
 const storagePhotostudios = multer.diskStorage({
     destination: function (req, file, cb) {
-        cb(null, path.join(__dirname, '../public/src/components/assets/images/Photostudios/'));
+        // Исправленный путь до папки для фотостудий
+        const photostudiosDir = path.join(__dirname, '../../photoproject/src/components/assets/images/Photostudios/');
+        if (!fs.existsSync(photostudiosDir)) {
+            fs.mkdirSync(photostudiosDir, { recursive: true });
+        }
+        cb(null, photostudiosDir);
     },
     filename: function (req, file, cb) {
         cb(null, file.originalname);
