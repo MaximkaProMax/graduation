@@ -43,13 +43,7 @@ const Printing = () => {
   }, []);
 
   const handleOrderClick = (option) => {
-    if (option.main_album_name === 'LayFlat') {
-      navigate('/printing-layflat');
-    } else if (option.main_album_name === 'FlexBind') {
-      navigate('/printing-flexbind');
-    } else {
-      console.log('Неизвестный тип печати:', option.main_album_name);
-    }
+    navigate(`/printing/${option.id}`);
   };
 
   const toggleFavorite = (printingId) => {

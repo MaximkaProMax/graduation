@@ -29,6 +29,7 @@ import PhoneRequests from './components/PhoneRequests'; // Импортируе�
 import ForgotPassword from './components/ForgotPassword'; // Импортируем компонент ForgotPassword
 import ResetPassword from './components/ResetPassword'; // Импортируем компонент ResetPassword
 import CreateItems from './pages/CreateItems'; // Импортируем компонент создания элементов
+import PrintingDynamic from './components/PrintingDynamic'; // Новый универсальный компонент
 import './App.css';
 import './index.css';
 
@@ -84,6 +85,7 @@ function App() {
             <Route path="/privacy-policy" element={<PrivacyPolicy />} /> {/* Страница политики конфиденциальности */}
             <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Сброс пароля */}
             <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Ввод нового пароля */}
+            <Route path="/printing/:id" element={<PrintingDynamic />} /> {/* Универсальная страница типографии */}
           </Routes>
         </main>
         <Footer />
