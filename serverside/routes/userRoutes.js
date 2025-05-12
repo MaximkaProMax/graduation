@@ -80,25 +80,55 @@ router.post('/register', async (req, res) => {
 router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
+  console.log('[LOGIN] Запрос на логин:', { email }); // Логируем email
+
   try {
+    console.log('[LOGIN] Попытка найти пользователя в базе данных...');
     const user = await User.findOne({ where: { email } });
 
     if (!user) {
+      console.log('[LOGIN] Пользователь не найден:', email);
       return res.status(404).json({ success: false, message: 'Пользователь не найден' });
     }
 
+    console.log('[LOGIN] Пользователь найден, проверка пароля...');
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
+      console.log('[LOGIN] Неверный пароль для пользователя:', email);
       return res.status(400).json({ success: false, message: 'Неверный пароль' });
     }
 
-    const code = generateTwoFactorCode();
-    await sendEmail(email, 'Ваш код двухфакторной аутентификации', `Ваш код для входа: ${code}`);
+    // Оптимизация: если есть активный resetToken, сбрасываем его
+    if (user.resetToken || user.resetTokenExpires) {
+      user.resetToken = null;
+      user.resetTokenExpires = null;
+      await user.save();
+      console.log('[LOGIN] Сброшен resetToken/resetTokenExpires при успешном входе');
+    }
 
+    const code = generateTwoFactorCode();
+    console.log('[LOGIN] Пароль верный, отправка 2FA кода...');
+
+    try {
+      console.log('[LOGIN] Вызов sendEmail...');
+      await sendEmail(email, 'Ваш код двухфакторной аутентификации', `Ваш код для входа: ${code}`);
+      console.log('[LOGIN] sendEmail завершился без ошибок');
+    } catch (emailError) {
+      console.error('[LOGIN] Ошибка при отправке email:', emailError);
+      if (emailError && emailError.stack) {
+        console.error('[LOGIN] Stack trace (email):', emailError.stack);
+      }
+      return res.status(500).json({ success: false, message: 'Ошибка при отправке email', error: emailError.message });
+    }
+
+    console.log('[LOGIN] Код 2FA отправлен, логин завершён успешно.');
     res.json({ success: true, twoFactorRequired: true });
   } catch (error) {
-    console.error('Ошибка при входе:', error);
-    res.status(500).json({ success: false, message: 'Ошибка сервера' });
+    console.error('[LOGIN] Ошибка при входе:', error);
+    if (error instanceof Error && error.stack) {
+      console.error('[LOGIN] Stack trace:', error.stack);
+    }
+    res.status(500).json({ success: false, message: 'Ошибка сервера', error: error.message });
   }
 });
 
