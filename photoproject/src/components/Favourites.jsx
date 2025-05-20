@@ -134,7 +134,17 @@ function Favourites() {
           ) : (
             printings.map((fav) => (
               <div key={fav.id} className="printing-card">
-                <div className={`printing-image ${fav.main_card_photo || ''}`}></div>
+                {/* Показываем фото из папки Printing по пути */}
+                {fav.main_card_photo && fav.main_card_photo.startsWith('/src/components/assets/images/Printing/') ? (
+                  <div
+                    className="printing-image"
+                    style={{
+                      backgroundImage: `url(${fav.main_card_photo})`
+                    }}
+                  />
+                ) : (
+                  <div className={`printing-image ${fav.main_card_photo || ''}`} />
+                )}
                 <div className="printing-info">
                   <h3>{fav.main_album_name}</h3>
                   <p>{fav.main_card_description}</p>
