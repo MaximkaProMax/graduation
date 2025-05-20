@@ -54,31 +54,21 @@ const Manager = () => {
   };
 
   return (
-    <div className="manager-container" style={{
-      maxWidth: 600,
-      margin: '40px auto',
-      padding: 32,
-      backgroundColor: 'white',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.10)',
-      borderRadius: 10,
-      textAlign: 'center',
-      minHeight: 420,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center'
-    }}>
-      <h2 style={{ marginBottom: 28 }}>Страница менеджера</h2>
-      <div style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 16,
-        alignItems: 'center'
-      }}>
-        <button className="manager-button" onClick={handleRequestsClick}>Управление всеми заявками</button>
-        <button className="manager-button" onClick={handleStudioRequestsClick}>Управление заявками фотостудий</button>
-        <button className="manager-button" onClick={handleTypographyRequestsClick}>Управление заявками типографий</button>
-        <button className="manager-button" onClick={handlePhoneRequestsClick}>Управление телефонными заявками</button>
+    <div className="manager-container">
+      <h2 className="manager-title">Страница менеджера</h2>
+      <div className="manager-buttons">
+        <button className="manager-button" onClick={handleRequestsClick}>
+          Управление всеми заявками
+        </button>
+        <button className="manager-button" onClick={handleStudioRequestsClick}>
+          Управление заявками фотостудий
+        </button>
+        <button className="manager-button" onClick={handleTypographyRequestsClick}>
+          Управление заявками типографий
+        </button>
+        <button className="manager-button" onClick={handlePhoneRequestsClick}>
+          Управление телефонными заявками
+        </button>
       </div>
     </div>
   );

@@ -34,31 +34,13 @@ const Admin = () => {
   }
 
   return (
-    <div className="admin-container" style={{
-      maxWidth: 600,
-      margin: '40px auto',
-      padding: 32,
-      backgroundColor: 'white',
-      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.10)',
-      borderRadius: 10,
-      textAlign: 'center',
-      minHeight: 420,
-      display: 'flex',
-      flexDirection: 'column',
-      alignItems: 'center'
-    }}>
-      <h2 style={{ marginBottom: 28 }}>Страница администратора</h2>
-      <div className="admin-buttons" style={{
-        width: '100%',
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 16,
-        alignItems: 'center'
-      }}>
-        <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/edit-user-groups')}>Редактировать группы пользователей</button>
-        <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/edit-users')}>Редактировать пользователей</button>
-        <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/edit-database')}>Редактировать базы данных</button>
-        <button className="admin-button" style={{ width: '100%', maxWidth: 500 }} onClick={() => navigate('/admin/create-items')}>Создание элементов</button>
+    <div className="admin-container">
+      <h2 className="admin-title">Страница администратора</h2>
+      <div className="admin-buttons">
+        <button className="admin-button" onClick={() => navigate('/edit-user-groups')}>Редактировать группы пользователей</button>
+        <button className="admin-button" onClick={() => navigate('/admin/edit-users')}>Редактировать пользователей</button>
+        <button className="admin-button" onClick={() => navigate('/admin/edit-database')}>Редактировать базы данных</button>
+        <button className="admin-button" onClick={() => navigate('/admin/create-items')}>Создание элементов</button>
       </div>
     </div>
   );

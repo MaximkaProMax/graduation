@@ -1,22 +1,32 @@
 .admin-container {
   max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
+  margin: 40px auto;
+  padding: 32px;
   background-color: white;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-radius: 5px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.10);
+  border-radius: 10px;
   text-align: center;
-}
-
-.admin-buttons {
+  min-height: 420px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 10px;
+}
+
+.admin-title {
+  margin-bottom: 28px;
+}
+
+.admin-buttons {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
 }
 
 .admin-button {
-  width: 263.5px;
+  width: 100%;
+  max-width: 500px;
   height: 56.5px;
   padding: 10px;
   background-color: #F0BB29;
@@ -26,6 +36,8 @@
   font-weight: bold;
   cursor: pointer;
   text-align: center;
+  font-size: 16px;
+  transition: background 0.2s;
 }
 
 .admin-button:hover {
