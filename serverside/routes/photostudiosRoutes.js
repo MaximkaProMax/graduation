@@ -99,8 +99,16 @@ router.delete('/:id', async (req, res) => {
         if (!studio) {
             return res.status(404).json({ success: false, message: 'Фотостудия не найдена' });
         }
-        // Если нужно, можно добавить удаление связанных файлов/записей здесь
-
+        // Удаляем файл фотографии, если есть
+        if (studio.photo && typeof studio.photo === 'string') {
+            // Обрезаем начальный слэш, если есть
+            let photoPath = studio.photo.startsWith('/') ? studio.photo.slice(1) : studio.photo;
+            // Абсолютный путь
+            const absPath = path.resolve(__dirname, '../../photoproject', photoPath.replace(/\\/g, '/'));
+            if (fs.existsSync(absPath)) {
+                try { fs.unlinkSync(absPath); } catch (e) { /* ignore */ }
+            }
+        }
         const deleted = await Photostudios.destroy({ where: { id: studioId } });
         if (deleted) {
             res.status(200).json({ success: true, message: 'Фотостудия успешно удалена' });

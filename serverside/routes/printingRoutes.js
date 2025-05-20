@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Printing = require('../models/Printing');
+const path = require('path');
+const fs = require('fs');
 
 // Маршрут для получения всех опций печати
 router.get('/', async (req, res) => {
@@ -147,6 +149,15 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const typographyId = req.params.id;
+    // Найти запись для получения пути к фото
+    const typography = await Printing.findByPk(typographyId);
+    if (typography && typography.main_card_photo && typeof typography.main_card_photo === 'string') {
+      let photoPath = typography.main_card_photo.startsWith('/') ? typography.main_card_photo.slice(1) : typography.main_card_photo;
+      const absPath = path.resolve(__dirname, '../../photoproject', photoPath.replace(/\\/g, '/'));
+      if (fs.existsSync(absPath)) {
+        try { fs.unlinkSync(absPath); } catch (e) { /* ignore */ }
+      }
+    }
     const deleted = await Printing.destroy({ where: { id: typographyId } });
     if (deleted) {
       res.status(200).json({ success: true, message: 'Типография успешно удалена' });
