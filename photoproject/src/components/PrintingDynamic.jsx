@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import './PrintingLayFlat.css'; // Можно использовать общий стиль
+import './PrintingDynamic.css'; // Используем правильный css
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -95,9 +95,9 @@ const PrintingDynamic = () => {
   if (!printing) return <div>Типография не найдена</div>;
 
   return (
-    <div className="printing-layflat-page printing-layflat-page--responsive">
+    <div className="printing-dynamic-page printing-dynamic-page--responsive">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
-      <div className="printing-layflat-back-btn-container">
+      <div className="printing-dynamic-back-btn-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           Вернуться назад
         </button>
@@ -106,13 +106,13 @@ const PrintingDynamic = () => {
         <div className="left-section left-section--responsive">
           {printing.main_card_photo && printing.main_card_photo.startsWith('/src/components/assets/images/Printing/') ? (
             <div
-              className="layflat-image layflat-image--responsive layflat-image--mobile"
+              className="printing-dynamic-image printing-dynamic-image--responsive printing-dynamic-image--mobile"
               style={{
                 backgroundImage: `url(${printing.main_card_photo})`
               }}
             />
           ) : (
-            <div className="layflat-image layflat-image--responsive layflat-image--mobile" />
+            <div className="printing-dynamic-image printing-dynamic-image--responsive printing-dynamic-image--mobile" />
           )}
           <div className="product-description product-description--responsive">
             <h2>Описание товара</h2>
