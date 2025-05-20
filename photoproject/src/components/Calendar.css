@@ -179,12 +179,17 @@ button {
   display: flex;
   flex-direction: row;
   gap: 32px;
+  align-items: stretch; /* Исправление: растягиваем по высоте */
+  justify-content: center; /* Исправление: выравнивание по центру */
+  width: 100%;
 }
 
 @media (max-width: 900px) {
   .calendar-mobile-stack {
     flex-direction: column;
     gap: 18px;
+    align-items: stretch;
+    justify-content: flex-start;
   }
 }
 
