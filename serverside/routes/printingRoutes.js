@@ -129,8 +129,44 @@ router.put('/:id', async (req, res) => {
     // Удаляем лишние поля, которые не существуют в модели
     delete updatedData.id;
 
-    // Лог для отладки
-    console.log('Данные для обновления типографии:', updatedData);
+    // Получаем старую запись для сравнения photos_on_page
+    const oldTypography = await Printing.findByPk(typographyId);
+
+    // Получаем старые и новые массивы photos_on_page
+    const oldPhotos = Array.isArray(oldTypography.photos_on_page)
+      ? oldTypography.photos_on_page
+      : (typeof oldTypography.photos_on_page === 'string'
+          ? oldTypography.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
+          : []);
+    const newPhotos = Array.isArray(updatedData.photos_on_page)
+      ? updatedData.photos_on_page
+      : (typeof updatedData.photos_on_page === 'string'
+          ? updatedData.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
+          : []);
+
+    // Определяем какие фото были удалены
+    const deletedPhotos = oldPhotos.filter(photo => !newPhotos.includes(photo));
+
+    // Удаляем файлы с диска
+    deletedPhotos.forEach(photoPath => {
+      if (
+        typeof photoPath === 'string' &&
+        photoPath.startsWith('/src/components/assets/images/Printing/')
+      ) {
+        const absPath = path.resolve(
+          __dirname,
+          '../../photoproject',
+          photoPath.replace(/^\//, '').replace(/\\/g, '/')
+        );
+        if (fs.existsSync(absPath)) {
+          try {
+            fs.unlinkSync(absPath);
+          } catch (e) {
+            // ignore
+          }
+        }
+      }
+    });
 
     const [updated] = await Printing.update(updatedData, { where: { id: typographyId } });
     if (updated) {

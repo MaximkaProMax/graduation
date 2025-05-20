@@ -32,6 +32,8 @@ const CreateItems = () => {
   const [uploadError, setUploadError] = useState('');
   const fileInputRef = useRef(null);
   const typographyPhotoInputRef = useRef(null);
+  const photosOnPageInputRef = useRef(null);
+  const photosOnPageFileInputRef = useRef(null);
   const navigate = useNavigate();
 
   // --- Форма фотостудии ---
@@ -154,6 +156,44 @@ const CreateItems = () => {
       setUploadError('Ошибка загрузки файла');
     } finally {
       setUploading(false);
+    }
+  };
+
+  // Новый: загрузка нескольких фото для photos_on_page
+  const handlePhotosOnPageFileChange = async (e) => {
+    setUploadError('');
+    const files = Array.from(e.target.files);
+    if (!files.length) return;
+    const validFiles = files.filter(file => file.type.startsWith('image/'));
+    if (validFiles.length !== files.length) {
+      setUploadError('Можно загружать только изображения (jpg, png, jpeg, webp, gif и др.)');
+      return;
+    }
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      validFiles.forEach(file => formData.append('photos', file));
+      // Новый эндпоинт для загрузки нескольких файлов
+      const res = await axios.post('http://localhost:3001/api/photostudios/upload-printing-multi', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.data && Array.isArray(res.data.filenames)) {
+        setTypography(prev => ({
+          ...prev,
+          photos_on_page: [
+            ...(prev.photos_on_page
+              ? prev.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
+              : []),
+            ...res.data.filenames
+          ].join(', ')
+        }));
+      }
+    } catch {
+      setUploadError('Ошибка загрузки файлов');
+    } finally {
+      setUploading(false);
+      // Сброс input для повторной загрузки тех же файлов
+      if (photosOnPageFileInputRef.current) photosOnPageFileInputRef.current.value = '';
     }
   };
 
@@ -529,11 +569,40 @@ const CreateItems = () => {
             type="text"
             name="photos_on_page"
             value={typography.photos_on_page}
-            onChange={handleTypographyChange}
             placeholder="Фотографии на странице (через запятую)"
             required
-            style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
+            style={{ width: '100%', marginTop: 4, marginBottom: 8, cursor: 'pointer', background: '#fafafa' }}
+            ref={photosOnPageInputRef}
+            readOnly
+            onClick={() => photosOnPageFileInputRef.current && photosOnPageFileInputRef.current.click()}
           />
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            style={{ display: 'none' }}
+            ref={photosOnPageFileInputRef}
+            onChange={handlePhotosOnPageFileChange}
+          />
+          {/* Превью загруженных фото */}
+          {typography.photos_on_page && typography.photos_on_page.split(',').filter(Boolean).length > 0 && (
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 8 }}>
+              {typography.photos_on_page.split(',').map((photo, idx) => (
+                <img
+                  key={idx}
+                  src={photo.trim()}
+                  alt={`Фото ${idx + 1}`}
+                  style={{
+                    width: 70,
+                    height: 70,
+                    objectFit: 'cover',
+                    borderRadius: 6,
+                    background: '#eee'
+                  }}
+                />
+              ))}
+            </div>
+          )}
           <input
             type="text"
             name="product_description"

@@ -16,6 +16,7 @@ const PrintingDynamic = () => {
   const [selectedLamination, setSelectedLamination] = useState('');
   const [price, setPrice] = useState(0);
   const [spreadsError, setSpreadsError] = useState('');
+  const [currentPhotoIdx, setCurrentPhotoIdx] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,6 +57,25 @@ const PrintingDynamic = () => {
       );
     }
   }, [spreads, quantity, printing]);
+
+  // Собираем массив для галереи: сначала main_card_photo, затем photos_on_page
+  const galleryPhotos = [
+    ...(printing?.main_card_photo ? [printing.main_card_photo] : []),
+    ...(Array.isArray(printing?.photos_on_page) ? printing.photos_on_page : [])
+  ];
+
+  const handlePrevPhoto = () => {
+    if (!galleryPhotos.length) return;
+    setCurrentPhotoIdx((prev) =>
+      prev === 0 ? galleryPhotos.length - 1 : prev - 1
+    );
+  };
+  const handleNextPhoto = () => {
+    if (!galleryPhotos.length) return;
+    setCurrentPhotoIdx((prev) =>
+      prev === galleryPhotos.length - 1 ? 0 : prev + 1
+    );
+  };
 
   // --- Бронирование ---
   const handleBooking = async () => {
@@ -104,15 +124,36 @@ const PrintingDynamic = () => {
       </div>
       <div className="printing-card-mobile-stack">
         <div className="left-section left-section--responsive">
-          {printing.main_card_photo && printing.main_card_photo.startsWith('/src/components/assets/images/Printing/') ? (
-            <div
-              className="printing-dynamic-image printing-dynamic-image--responsive printing-dynamic-image--mobile"
-              style={{
-                backgroundImage: `url(${printing.main_card_photo})`
-              }}
-            />
-          ) : (
-            <div className="printing-dynamic-image printing-dynamic-image--responsive printing-dynamic-image--mobile" />
+          {/* Галерея фото (main_card_photo + photos_on_page) */}
+          {galleryPhotos.length > 0 && (
+            <div className="gallery-container">
+              <button
+                className="gallery-arrow gallery-arrow-left"
+                onClick={handlePrevPhoto}
+                aria-label="Предыдущее фото"
+                type="button"
+              >&lt;</button>
+              <img
+                src={galleryPhotos[currentPhotoIdx]}
+                alt={`Фото ${currentPhotoIdx + 1}`}
+                className="gallery-image"
+              />
+              <button
+                className="gallery-arrow gallery-arrow-right"
+                onClick={handleNextPhoto}
+                aria-label="Следующее фото"
+                type="button"
+              >&gt;</button>
+              <div className="gallery-dots">
+                {galleryPhotos.map((_, idx) => (
+                  <span
+                    key={idx}
+                    className={`gallery-dot${idx === currentPhotoIdx ? ' active' : ''}`}
+                    onClick={() => setCurrentPhotoIdx(idx)}
+                  />
+                ))}
+              </div>
+            </div>
           )}
           <div className="product-description product-description--responsive">
             <h2>Описание товара</h2>

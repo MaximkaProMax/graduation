@@ -38,6 +38,19 @@ const storagePrinting = multer.diskStorage({
 });
 const uploadPrinting = multer({ storage: storagePrinting });
 
+// Новый storage для загрузки нескольких файлов для photos_on_page
+const storagePrintingMulti = multer.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, path.join(__dirname, '../../photoproject/src/components/assets/images/Printing'));
+    },
+    filename: function (req, file, cb) {
+        const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+        const ext = path.extname(file.originalname);
+        cb(null, file.fieldname + '-' + uniqueSuffix + ext);
+    }
+});
+const uploadPrintingMulti = multer({ storage: storagePrintingMulti });
+
 // Получение всех фотостудий
 router.get('/', async (req, res) => {
     try {
@@ -151,6 +164,18 @@ router.post('/upload-printing', (req, res) => {
         const photoPath = `/src/components/assets/images/Printing/${req.file.originalname}`;
         res.json({ filename: photoPath });
     });
+});
+
+// Новый маршрут для загрузки нескольких файлов для photos_on_page
+router.post('/upload-printing-multi', uploadPrintingMulti.array('photos', 10), (req, res) => {
+    if (!req.files || !req.files.length) {
+        return res.status(400).json({ error: 'Нет файлов для загрузки' });
+    }
+    // Возвращаем массив путей для сохранения в БД
+    const filenames = req.files.map(file =>
+        '/src/components/assets/images/Printing/' + file.filename
+    );
+    res.json({ filenames });
 });
 
 module.exports = router;

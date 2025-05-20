@@ -17,6 +17,7 @@ const EditDatabase = () => {
   const [uploadError, setUploadError] = useState('');
   const [editingPhotoStudioId, setEditingPhotoStudioId] = useState(null);
   const [editingPhotoTypographyId, setEditingPhotoTypographyId] = useState(null);
+  const [editingPhotoOnPage, setEditingPhotoOnPage] = useState({ typographyId: null, photoIdx: null });
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
@@ -511,6 +512,49 @@ const EditDatabase = () => {
     setUploadError('');
   };
 
+  const handleEditPhotoOnPageClick = (typographyId, photoIdx) => {
+    setEditingPhotoOnPage({ typographyId, photoIdx });
+  };
+
+  const handleEditPhotoOnPageFileChange = async (e, typography, photoIdx) => {
+    setUploadError('');
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Можно загружать только изображения (jpg, png, jpeg, webp, gif и др.)');
+      return;
+    }
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('photos', file);
+      // Используем эндпоинт для загрузки фото для страницы
+      const res = await axios.post('http://localhost:3001/api/photostudios/upload-printing-multi', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.data && Array.isArray(res.data.filenames) && res.data.filenames[0]) {
+        // Заменяем только одну фотографию по индексу
+        const updatedPhotos = Array.isArray(typography.photos_on_page)
+          ? [...typography.photos_on_page]
+          : (typeof typography.photos_on_page === 'string'
+              ? typography.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
+              : []);
+        updatedPhotos[photoIdx] = res.data.filenames[0];
+        await axios.put(`http://localhost:3001/api/printing/${typography.id}`, {
+          ...typography,
+          photos_on_page: updatedPhotos
+        });
+        fetchTypographies();
+        setEditingPhotoOnPage({ typographyId: null, photoIdx: null });
+        setUploadError('');
+      }
+    } catch (err) {
+      setUploadError('Ошибка загрузки файла');
+    } finally {
+      setUploading(false);
+    }
+  };
+
   return (
     <div className="edit-database-container">
       <h2>Редактирование базы данных</h2>
@@ -676,6 +720,38 @@ const EditDatabase = () => {
                                 )}
                               </>
                             )}
+                          </div>
+                        ) : key === 'photos_on_page' ? (
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                            {(Array.isArray(typography.photos_on_page)
+                              ? typography.photos_on_page
+                              : (typeof typography.photos_on_page === 'string'
+                                  ? typography.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
+                                  : [])
+                            ).map((photo, idx) => (
+                              <div key={idx} style={{ position: 'relative', width: 60, height: 40, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                {photo && (
+                                  <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                )}
+                                <button
+                                  type="button"
+                                  className="edit-database-button"
+                                  style={{ position: 'absolute', bottom: 2, right: 2, fontSize: 10, padding: '1px 6px', zIndex: 2 }}
+                                  onClick={() => handleEditPhotoOnPageClick(typography.id, idx)}
+                                >
+                                  Изм. фото
+                                </button>
+                                {editingPhotoOnPage.typographyId === typography.id && editingPhotoOnPage.photoIdx === idx && (
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', zIndex: 3 }}
+                                    onChange={e => handleEditPhotoOnPageFileChange(e, typography, idx)}
+                                    onClick={e => e.stopPropagation()}
+                                  />
+                                )}
+                              </div>
+                            ))}
                           </div>
                         ) : (
                           isEditingTypography && editableTypography.id === typography.id ? (
