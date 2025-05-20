@@ -95,33 +95,33 @@ const PrintingDynamic = () => {
   if (!printing) return <div>Типография не найдена</div>;
 
   return (
-    <div className="printing-layflat-page">
+    <div className="printing-layflat-page printing-layflat-page--responsive">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <div className="printing-layflat-back-btn-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           Вернуться назад
         </button>
       </div>
-      <div className="printing-layflat-content">
-        <div className="left-section">
+      <div className="printing-card-mobile-stack">
+        <div className="left-section left-section--responsive">
           {printing.main_card_photo && printing.main_card_photo.startsWith('/src/components/assets/images/Printing/') ? (
             <div
-              className="layflat-image"
+              className="layflat-image layflat-image--responsive layflat-image--mobile"
               style={{
                 backgroundImage: `url(${printing.main_card_photo})`
               }}
             />
           ) : (
-            <div className="layflat-image" />
+            <div className="layflat-image layflat-image--responsive layflat-image--mobile" />
           )}
-          <div className="product-description">
+          <div className="product-description product-description--responsive">
             <h2>Описание товара</h2>
             <p>{printing.product_description}</p>
             <h2>Дополнительная информация</h2>
             <p>{printing.additional_information}</p>
           </div>
         </div>
-        <div className="right-section">
+        <div className="right-section right-section--responsive">
           <h2>{printing.main_album_name}</h2>
           <div className="options">
             <div className="option">
@@ -188,10 +188,10 @@ const PrintingDynamic = () => {
               />
             </div>
           </div>
-          <div className="total-price">
+          <div className="total-price booking-btn-same-height">
             Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
           </div>
-          <button className="booking-button" onClick={handleBooking}>Забронировать</button>
+          <button className="booking-button booking-btn-same-height" onClick={handleBooking}>Забронировать</button>
         </div>
       </div>
     </div>
