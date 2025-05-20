@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './PrintingLayFlat.css'; // Можно использовать общий стиль
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const PrintingDynamic = () => {
   const { id } = useParams();
@@ -73,18 +75,18 @@ const PrintingDynamic = () => {
       });
 
       if (response.data.success) {
-        alert('Бронирование успешно создано!');
+        toast.success('Бронирование успешно создано!');
       } else if (response.status === 403) {
-        alert('Для бронирования необходимо авторизоваться!');
+        toast.error('Для бронирования необходимо авторизоваться!');
       } else {
-        alert('Ошибка при создании бронирования');
+        toast.error('Ошибка при создании бронирования');
       }
     } catch (error) {
       if (error.response && error.response.status === 403) {
-        alert('Для бронирования необходимо авторизоваться!');
+        toast.error('Для бронирования необходимо авторизоваться!');
       } else {
         console.error('Ошибка при бронировании:', error);
-        alert('Ошибка при бронировании');
+        toast.error('Ошибка при бронировании');
       }
     }
   };
@@ -94,6 +96,7 @@ const PrintingDynamic = () => {
 
   return (
     <div className="printing-layflat-page">
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <div className="printing-layflat-back-btn-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           Вернуться назад
