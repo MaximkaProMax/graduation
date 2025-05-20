@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import './Booking.css';
 
 const Booking = () => {
@@ -98,13 +100,13 @@ const Booking = () => {
 
       if (response.data.success) {
         setTypographyBookings((prev) => prev.filter((booking) => booking.booking_typographie_id !== bookingId));
-        alert('Заявка на типографию успешно удалена!');
+        toast.success('Заявка на типографию успешно удалена!');
       } else {
-        alert('Ошибка при удалении заявки на типографию');
+        toast.error('Ошибка при удалении заявки на типографию');
       }
     } catch (error) {
       console.error('Ошибка при удалении заявки на типографию:', error);
-      alert('Ошибка при удалении заявки на типографию');
+      toast.error('Ошибка при удалении заявки на типографию');
     }
   };
 
@@ -116,13 +118,13 @@ const Booking = () => {
 
       if (response.data.success) {
         setStudioBookings((prev) => prev.filter((booking) => booking.booking_studio_id !== bookingId));
-        alert('Заявка на фотостудию успешно удалена!');
+        toast.success('Заявка на фотостудию успешно удалена!');
       } else {
-        alert('Ошибка при удалении заявки на фотостудию');
+        toast.error('Ошибка при удалении заявки на фотостудию');
       }
     } catch (error) {
       console.error('Ошибка при удалении заявки на фотостудию:', error);
-      alert('Ошибка при удалении заявки на фотостудию');
+      toast.error('Ошибка при удалении заявки на фотостудию');
     }
   };
 
@@ -172,6 +174,7 @@ const Booking = () => {
 
   return (
     <div className="cart">
+      <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <h2>Мои заявки</h2>
       <div className="cart-content">
         <div className="cart-items">
