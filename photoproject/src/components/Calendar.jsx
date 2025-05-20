@@ -260,7 +260,7 @@ const Calendar = () => {
         </button>
       </div>
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
-      <div style={{ display: 'flex', width: '100%' }}>
+      <div className="calendar-mobile-stack">
         <div className="left-section">
           <h2 className="aligned-header">Бронирование дат</h2>
           <div className="calendar-container">
