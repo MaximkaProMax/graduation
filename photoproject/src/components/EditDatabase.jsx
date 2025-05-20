@@ -16,10 +16,12 @@ const EditDatabase = () => {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
   const [editingPhotoStudioId, setEditingPhotoStudioId] = useState(null);
+  const [editingPhotoTypographyId, setEditingPhotoTypographyId] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const fileInputRef = useRef(null);
   const editingPhotoInputRef = useRef(null);
+  const typographyPhotoInputRef = useRef(null);
   const navigate = useNavigate();
 
   const fetchStudios = () => {
@@ -472,6 +474,43 @@ const EditDatabase = () => {
     }
   };
 
+  const handleEditTypographyPhotoFileChange = async (e, typography) => {
+    setUploadError('');
+    const file = e.target.files[0];
+    if (!file) return;
+    if (!file.type.startsWith('image/')) {
+      setUploadError('Можно загружать только изображения (jpg, png, jpeg, webp, gif и др.)');
+      return;
+    }
+    setUploading(true);
+    try {
+      const formData = new FormData();
+      formData.append('photo', file);
+      const res = await axios.post('http://localhost:3001/api/photostudios/upload-printing', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      if (res.data && res.data.filename) {
+        // Обновляем только поле main_card_photo для этой типографии
+        await axios.put(`http://localhost:3001/api/printing/${typography.id}`, {
+          ...typography,
+          main_card_photo: res.data.filename
+        });
+        fetchTypographies();
+        setEditingPhotoTypographyId(null);
+        setUploadError('');
+      }
+    } catch (err) {
+      setUploadError('Ошибка загрузки файла');
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  const handleEditTypographyPhotoClick = (typographyId) => {
+    setEditingPhotoTypographyId(typographyId);
+    setUploadError('');
+  };
+
   return (
     <div className="edit-database-container">
       <h2>Редактирование базы данных</h2>
@@ -606,16 +645,40 @@ const EditDatabase = () => {
                   {Object.keys(typography)
                     .map((key) => (
                       <td key={`${typography.id}-${key}`}>
-                        {isEditingTypography && editableTypography.id === typography.id ? (
-                          // делаем новые поля редактируемыми
-                          ([
-                            'name_on_page',
-                            'photos_on_page',
-                            'product_description',
-                            'additional_information',
-                            'price_of_spread',
-                            'copy_price'
-                          ].includes(key)) ? (
+                        {key === 'main_card_photo' ? (
+                          <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                            {typography[key] && (
+                              typography[key].startsWith('/src/components/assets/images/Printing/') ? (
+                                <img src={typography[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                              ) : (
+                                <div className={`printing-image ${typography[key]}`} style={{ width: '100%', height: '100%' }} />
+                              )
+                            )}
+                            {isEditingTypography && editableTypography.id === typography.id ? null : (
+                              <>
+                                <button
+                                  type="button"
+                                  className="edit-database-button"
+                                  style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
+                                  onClick={() => handleEditTypographyPhotoClick(typography.id)}
+                                >
+                                  Изм. фото
+                                </button>
+                                {editingPhotoTypographyId === typography.id && (
+                                  <input
+                                    type="file"
+                                    accept="image/*"
+                                    ref={typographyPhotoInputRef}
+                                    style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                                    onChange={e => handleEditTypographyPhotoFileChange(e, typography)}
+                                    onClick={e => e.stopPropagation()}
+                                  />
+                                )}
+                              </>
+                            )}
+                          </div>
+                        ) : (
+                          isEditingTypography && editableTypography.id === typography.id ? (
                             <input
                               type={['price_of_spread', 'copy_price'].includes(key) ? 'number' : 'text'}
                               name={key}
@@ -624,18 +687,10 @@ const EditDatabase = () => {
                               style={{ minWidth: 120 }}
                             />
                           ) : (
-                            <input
-                              type="text"
-                              name={key}
-                              value={editableTypography[key] || ''}
-                              onChange={(e) => handleInputChange(e, setEditableTypography)}
-                              style={{ minWidth: 120 }}
-                            />
+                            Array.isArray(typography[key])
+                              ? typography[key].join(', ')
+                              : typography[key]
                           )
-                        ) : (
-                          Array.isArray(typography[key])
-                            ? typography[key].join(', ')
-                            : typography[key]
                         )}
                       </td>
                     ))}
