@@ -55,10 +55,43 @@ const PrintingDynamic = () => {
     }
   }, [spreads, quantity, printing]);
 
+  // --- Бронирование ---
+  const handleBooking = async () => {
+    try {
+      const bookingDetails = {
+        format: selectedFormat,
+        spreads: spreads,
+        lamination: selectedLamination,
+        quantity: quantity,
+        price: price,
+        albumName: printing.main_album_name,
+      };
+
+      // Отправляем бронирование на сервер
+      const response = await axios.post('http://localhost:3001/api/bookings/add', bookingDetails, {
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        alert('Бронирование успешно создано!');
+      } else if (response.status === 403) {
+        alert('Для бронирования необходимо авторизоваться!');
+      } else {
+        alert('Ошибка при создании бронирования');
+      }
+    } catch (error) {
+      if (error.response && error.response.status === 403) {
+        alert('Для бронирования необходимо авторизоваться!');
+      } else {
+        console.error('Ошибка при бронировании:', error);
+        alert('Ошибка при бронировании');
+      }
+    }
+  };
+
   if (loading) return <div>Загрузка...</div>;
   if (!printing) return <div>Типография не найдена</div>;
 
-  // Универсальный дизайн (можно доработать под ваши нужды)
   return (
     <div className="printing-layflat-page">
       <div className="printing-layflat-back-btn-container">
@@ -155,7 +188,7 @@ const PrintingDynamic = () => {
           <div className="total-price">
             Итоговая цена: {isNaN(price) ? 'Укажите количество' : `${price}р`}
           </div>
-          <button className="booking-button" onClick={() => alert('Бронирование реализуйте по аналогии с другими страницами')}>Забронировать</button>
+          <button className="booking-button" onClick={handleBooking}>Забронировать</button>
         </div>
       </div>
     </div>
