@@ -348,6 +348,18 @@ const CreateItems = () => {
             tabIndex={-1}
           />
         </div>
+        {/* Новое поле: Фото (ссылка на изображение) */}
+        <input
+          type="text"
+          name="photo"
+          value={studio.photo}
+          onChange={handleStudioChange}
+          placeholder="Фото (ссылка на изображение)"
+          required
+          style={{ width: '100%', marginTop: 4, marginBottom: 8, cursor: 'pointer' }}
+          readOnly
+          onClick={() => fileInputRef.current && fileInputRef.current.click()}
+        />
         {uploadError && (
           <div style={{ color: 'red', textAlign: 'center', marginTop: 6 }}>{uploadError}</div>
         )}
@@ -469,21 +481,23 @@ const CreateItems = () => {
             tabIndex={-1}
           />
         </div>
+        {/* Оставляем только одно поле для ссылки на изображение */}
+        <input
+          type="text"
+          name="main_card_photo"
+          value={typography.main_card_photo}
+          onChange={handleTypographyPhotoChange}
+          onPaste={handleTypographyPhotoPaste}
+          placeholder="Фото (ссылка на изображение)"
+          required
+          style={{ width: '100%', marginTop: 4, marginBottom: 8, cursor: 'pointer' }}
+          readOnly
+          onClick={() => typographyPhotoInputRef.current && typographyPhotoInputRef.current.click()}
+        />
         {uploadError && (
           <div style={{ color: 'red', textAlign: 'center', marginTop: 6 }}>{uploadError}</div>
         )}
         <div style={{ padding: 0, display: 'flex', flexDirection: 'column', gap: 8 }}>
-          {/* Только одно поле для ссылки на изображение */}
-          <input
-            type="text"
-            name="main_card_photo"
-            value={typography.main_card_photo}
-            onChange={handleTypographyPhotoChange}
-            onPaste={handleTypographyPhotoPaste}
-            placeholder="Фото (ссылка на изображение)"
-            required
-            style={{ width: '100%', marginTop: 4, marginBottom: 8 }}
-          />
           <input
             type="text"
             name="main_album_name"
