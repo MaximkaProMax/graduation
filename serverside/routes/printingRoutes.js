@@ -187,6 +187,8 @@ router.delete('/:id', async (req, res) => {
     const typographyId = req.params.id;
     // Найти запись для получения пути к фото
     const typography = await Printing.findByPk(typographyId);
+
+    // Удаляем главное фото
     if (typography && typography.main_card_photo && typeof typography.main_card_photo === 'string') {
       let photoPath = typography.main_card_photo.startsWith('/') ? typography.main_card_photo.slice(1) : typography.main_card_photo;
       const absPath = path.resolve(__dirname, '../../photoproject', photoPath.replace(/\\/g, '/'));
@@ -194,6 +196,35 @@ router.delete('/:id', async (req, res) => {
         try { fs.unlinkSync(absPath); } catch (e) { /* ignore */ }
       }
     }
+
+    // Удаляем все фото из photos_on_page
+    if (typography && typography.photos_on_page) {
+      const photosArr = Array.isArray(typography.photos_on_page)
+        ? typography.photos_on_page
+        : (typeof typography.photos_on_page === 'string'
+            ? typography.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
+            : []);
+      photosArr.forEach(photoPath => {
+        if (
+          typeof photoPath === 'string' &&
+          photoPath.startsWith('/src/components/assets/images/Printing/')
+        ) {
+          const absPath = path.resolve(
+            __dirname,
+            '../../photoproject',
+            photoPath.replace(/^\//, '').replace(/\\/g, '/')
+          );
+          if (fs.existsSync(absPath)) {
+            try {
+              fs.unlinkSync(absPath);
+            } catch (e) {
+              // ignore
+            }
+          }
+        }
+      });
+    }
+
     const deleted = await Printing.destroy({ where: { id: typographyId } });
     if (deleted) {
       res.status(200).json({ success: true, message: 'Типография успешно удалена' });
