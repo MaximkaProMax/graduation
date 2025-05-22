@@ -17,13 +17,23 @@ const Booking = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Проверка авторизации
-    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
+    // Просто делаем запрос к защищённому эндпоинту
+    axios.get('http://localhost:3001/api/bookings/user', { withCredentials: true })
       .then(response => {
-        setIsAuthenticated(response.data.isAuthenticated);
+        setIsAuthenticated(true);
         setAuthChecked(true);
+        // Проверка авторизации
+        axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
+          .then(response => {
+            setIsAuthenticated(response.data.isAuthenticated);
+            setAuthChecked(true);
+          })
+          .catch(() => {
+            setIsAuthenticated(false);
+            setAuthChecked(true);
+          });
       })
-      .catch(() => {
+      .catch(error => {
         setIsAuthenticated(false);
         setAuthChecked(true);
       });

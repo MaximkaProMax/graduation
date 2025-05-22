@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './EditUserGroups.css';
 import { useNavigate } from 'react-router-dom';
+import { checkPageAccess } from '../utils/checkPageAccess';
 
 const EditUserGroups = () => {
   const [roles, setRoles] = useState([]);
@@ -23,24 +24,14 @@ const EditUserGroups = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
-      .then(response => {
-        console.log('Проверка роли пользователя:', response.data); // Отладочное сообщение
-        if (response.data.success && response.data.role === 'Admin') {
-          setIsAuthorized(true);
-          fetchRoles(); // Теперь вызов функции происходит после её объявления
-        } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin"
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
-        navigate('/'); // Перенаправляем на главную при ошибке
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    checkPageAccess('EditUserGroups', navigate, setIsAuthorized, setIsLoading);
   }, [navigate]);
+
+  useEffect(() => {
+    if (isAuthorized) {
+      fetchRoles();
+    }
+  }, [isAuthorized]);
 
   if (isLoading) {
     return <div>Загрузка...</div>;

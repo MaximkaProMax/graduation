@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Requests.css';
 import { useNavigate } from 'react-router-dom';
+import { checkPageAccess } from '../utils/checkPageAccess';
 
 const PhotoStudioRequests = () => {
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -15,25 +16,14 @@ const PhotoStudioRequests = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
-      .then(response => {
-        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
-          setIsAuthorized(true);
-        } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
-        }
-      })
-      .catch(() => {
-        navigate('/'); // Перенаправляем на главную при ошибке
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    checkPageAccess('photostudioRequests', navigate, setIsAuthorized, setIsLoading);
   }, [navigate]);
 
   useEffect(() => {
-    fetchStudioRequests();
-  }, []);
+    if (isAuthorized) {
+      fetchStudioRequests();
+    }
+  }, [isAuthorized]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {

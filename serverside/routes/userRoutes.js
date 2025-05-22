@@ -8,19 +8,8 @@ const Role = require('../models/Role'); // Импорт модели Role
 const crypto = require('crypto');
 const { sendPasswordResetEmail } = require('../services/emailService');
 const { Op } = require('sequelize'); // Импортируем операторы Sequelize
+const authenticateToken = require('../middleware/authenticateToken');
 const router = express.Router();
-
-// Middleware для проверки JWT токенов
-const authenticateToken = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
 
 // Маршрут для получения всех пользователей
 router.get('/', async (req, res) => {
@@ -129,6 +118,24 @@ router.post('/login', async (req, res) => {
       console.error('[LOGIN] Stack trace:', error.stack);
     }
     res.status(500).json({ success: false, message: 'Ошибка сервера', error: error.message });
+  }
+});
+
+// Маршрут для проверки кода двухфакторной аутентификации
+router.post('/verify-2fa-code', async (req, res) => {
+  const { code, email } = req.body;
+
+  if (verifyTwoFactorCode(code)) {
+    const user = await User.findOne({ where: { email } });
+    const accessToken = jwt.sign(
+      { userId: user.userId, email: user.email, roleId: user.roleId },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.cookie('token', accessToken, { httpOnly: true });
+    res.json({ success: true, message: 'Код подтвержден' });
+  } else {
+    res.status(400).json({ success: false, message: 'Неверный код' });
   }
 });
 
@@ -298,20 +305,6 @@ router.post('/send-2fa-code', async (req, res) => {
   } catch (error) {
     console.error('Ошибка при отправке кода 2FA:', error);
     res.status(500).json({ success: false, message: 'Ошибка сервера' });
-  }
-});
-
-// Маршрут для проверки кода двухфакторной аутентификации
-router.post('/verify-2fa-code', async (req, res) => {
-  const { code, email } = req.body;
-
-  if (verifyTwoFactorCode(code)) {
-    const user = await User.findOne({ where: { email } });
-    const accessToken = jwt.sign({ userId: user.userId, email: user.email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
-    res.cookie('token', accessToken, { httpOnly: true });
-    res.json({ success: true, message: 'Код подтвержден' });
-  } else {
-    res.status(400).json({ success: false, message: 'Неверный код' });
   }
 });
 

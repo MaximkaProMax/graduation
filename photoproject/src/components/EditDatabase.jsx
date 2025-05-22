@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
 import './EditDatabase.css';
 import { useNavigate } from 'react-router-dom';
+import { checkPageAccess } from '../utils/checkPageAccess';
 
 const EditDatabase = () => {
   const [studios, setStudios] = useState([]);
@@ -54,25 +55,15 @@ const EditDatabase = () => {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
-      .then(response => {
-        console.log('Проверка роли пользователя:', response.data); // Отладочное сообщение
-        if (response.data.success && response.data.role === 'Admin') {
-          setIsAuthorized(true);
-          fetchStudios();
-          fetchTypographies();
-        } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin"
-        }
-      })
-      .catch(error => {
-        console.error('Ошибка при проверке роли пользователя:', error); // Отладочное сообщение
-        navigate('/'); // Перенаправляем на главную при ошибке
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    checkPageAccess('EditDatabase', navigate, setIsAuthorized, setIsLoading);
   }, [navigate]);
+
+  useEffect(() => {
+    if (isAuthorized) {
+      fetchStudios();
+      fetchTypographies();
+    }
+  }, [isAuthorized]);
 
   if (isLoading) {
     return <div>Загрузка...</div>;

@@ -12,28 +12,18 @@ function Favourites() {
   const [authChecked, setAuthChecked] = useState(false);
 
   useEffect(() => {
-    // Проверка авторизации
-    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
+    // Просто делаем запрос к защищённому эндпоинту
+    axios.get('http://localhost:3001/api/favourites', { withCredentials: true })
       .then(response => {
-        setIsAuthenticated(response.data.isAuthenticated);
+        setIsAuthenticated(true);
         setAuthChecked(true);
+        setFavorites(response.data.filter(fav => fav !== null));
       })
-      .catch(() => {
+      .catch(error => {
         setIsAuthenticated(false);
         setAuthChecked(true);
       });
-
-    if (isAuthenticated) {
-      axios.get('http://localhost:3001/api/favourites', { withCredentials: true })
-        .then(response => {
-          console.log('Избранные элементы:', response.data);
-          setFavorites(response.data.filter(fav => fav !== null)); // Удаляем null-значения
-        })
-        .catch(error => {
-          console.error('Ошибка при загрузке избранных элементов:', error);
-        });
-    }
-  }, [isAuthenticated]);
+  }, []);
 
   const handleBookButtonClick = (studioName, address) => {
     navigate('/calendar', { state: { studio: studioName, address } });

@@ -3,25 +3,7 @@ const router = express.Router();
 const Review = require('../models/Review');
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
-
-// Middleware для проверки JWT токенов
-const authenticateToken = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) {
-    console.log('Токен отсутствует в cookies');
-    return res.status(401).json({ message: 'Неавторизованный доступ' });
-  }
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) {
-      console.log('Ошибка проверки токена:', err.message);
-      return res.status(403).json({ message: 'Недействительный токен' });
-    }
-    req.user = user;
-    console.log('Пользователь авторизован:', user);
-    next();
-  });
-};
+const authenticateToken = require('../middleware/authenticateToken');
 
 // Получение всех отзывов (доступно для всех пользователей)
 router.get('/', async (req, res) => {

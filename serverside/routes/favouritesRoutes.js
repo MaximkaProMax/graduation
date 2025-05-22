@@ -3,19 +3,7 @@ const router = express.Router();
 const Favourites = require('../models/Favourites');
 const Photostudios = require('../models/Photostudios');
 const Printing = require('../models/Printing'); // Импорт модели Printing
-const jwt = require('jsonwebtoken');
-
-// Middleware для проверки JWT токенов
-const authenticateToken = (req, res, next) => {
-  const token = req.cookies.token;
-  if (!token) return res.sendStatus(401);
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-};
+const authenticateToken = require('../middleware/authenticateToken');
 
 // Получение избранных фотостудий и типографий для пользователя
 router.get('/', authenticateToken, async (req, res) => {

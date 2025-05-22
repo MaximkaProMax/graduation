@@ -9,53 +9,20 @@ const Reviews = () => {
   const [reviews, setReviews] = useState([]);
   const [newReview, setNewReview] = useState({ photostudio: '', printing: '', rating: '', comment: '' });
   const [errorMessage, setErrorMessage] = useState('');
-  const [photostudios, setPhotostudios] = useState([]); // Состояние для списка фотостудий
-  const [printings, setPrintings] = useState([]); // Состояние для списка типографий
+  const [photostudios, setPhotostudios] = useState([]);
+  const [printings, setPrintings] = useState([]);
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchReviews = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/reviews', {
-          withCredentials: true,
-        });
-        setReviews(response.data);
-      } catch (error) {
-        console.error('Ошибка при загрузке отзывов:', error);
-        if (error.response && error.response.status === 403) {
-          setErrorMessage('Вы не авторизованы. Пожалуйста, войдите в систему, чтобы оставить отзыв.');
-        } else {
-          setErrorMessage('Не удалось загрузить отзывы. Попробуйте позже.');
-        }
-      }
-    };
+    // Загружаем отзывы всегда
+    axios.get('http://localhost:3001/api/reviews')
+      .then(res => setReviews(res.data))
+      .catch(() => setErrorMessage('Не удалось загрузить отзывы. Попробуйте позже.'));
 
-    const fetchPhotostudios = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/photostudios');
-        setPhotostudios(response.data);
-      } catch (error) {
-        console.error('Ошибка при загрузке фотостудий:', error);
-      }
-    };
-
-    const fetchPrintings = async () => {
-      try {
-        const response = await axios.get('http://localhost:3001/api/printing'); // Исправлен URL
-        console.log('Данные типографий:', response.data); // Логирование данных
-        setPrintings(response.data);
-      } catch (error) {
-        console.error('Ошибка при загрузке типографий:', error);
-      }
-    };
-
-    fetchReviews();
-    fetchPhotostudios();
-    fetchPrintings();
-
+    // Проверяем авторизацию отдельно
     axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
       .then(response => {
         setIsAuthenticated(response.data.isAuthenticated);
@@ -65,7 +32,14 @@ const Reviews = () => {
         setIsAuthenticated(false);
         setAuthChecked(true);
       });
-  }, []); // Убрано navigate из зависимостей, так как он не используется напрямую
+
+    axios.get('http://localhost:3001/api/photostudios')
+      .then(response => setPhotostudios(response.data))
+      .catch(() => {});
+    axios.get('http://localhost:3001/api/printing')
+      .then(response => setPrintings(response.data))
+      .catch(() => {});
+  }, []);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -74,7 +48,6 @@ const Reviews = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Проверка: хотя бы одно из двух полей выбрано
     if (!newReview.photostudio && !newReview.printing) {
       toast.error('Выберите фотостудию или типографию');
       return;
@@ -90,7 +63,6 @@ const Reviews = () => {
         setShowAddForm(false);
       }
     } catch (error) {
-      console.error('Ошибка при добавлении отзыва:', error);
       if (error.response && error.response.status === 401) {
         toast.error('Вы не авторизованы. Пожалуйста, войдите в систему, чтобы оставить отзыв.');
         navigate('/login');
@@ -107,11 +79,15 @@ const Reviews = () => {
       });
       if (response.status === 200) {
         toast.success('Отзыв успешно удален!');
-        setReviews((prevReviews) => prevReviews.filter((review) => review.review_id !== reviewId)); // Обновляем состояние
+        setReviews((prevReviews) => prevReviews.filter((review) => review.review_id !== reviewId));
       }
     } catch (error) {
-      console.error('Ошибка при удалении отзыва:', error);
-      toast.error('Не удалось удалить отзыв. Попробуйте позже.');
+      if (error.response && error.response.status === 401) {
+        toast.error('Вы не авторизованы. Пожалуйста, войдите в систему, чтобы удалить отзыв.');
+        navigate('/login');
+      } else {
+        toast.error('Не удалось удалить отзыв. Попробуйте позже.');
+      }
     }
   };
 
@@ -123,7 +99,11 @@ const Reviews = () => {
     <div className="reviews-container">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <h2>Отзывы о нашем сервисе</h2>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
+      {errorMessage && (
+        <p className="error-message" style={{ color: 'red', fontWeight: 600, textAlign: 'center', margin: '40px 0' }}>
+          {errorMessage}
+        </p>
+      )}
       <table>
         <thead>
           <tr>

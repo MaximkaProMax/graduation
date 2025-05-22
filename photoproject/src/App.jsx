@@ -31,6 +31,7 @@ import ResetPassword from './components/ResetPassword'; // Импортируе�
 import CreateItems from './pages/CreateItems'; // Импортируем компонент создания элементов
 import PrintingDynamic from './components/PrintingDynamic'; // Новый универсальный компонент
 import Payments from './components/Payments'; // Импортируем компонент Payments
+import AccessControl from './components/AccessControl'; // Импортируем компонент AccessControl
 import './App.css';
 import './index.css';
 
@@ -75,6 +76,7 @@ function App() {
             <Route path="/admin/edit-users" element={<EditUsers />} /> {/* Редактирование пользователей */}
             <Route path="/admin/edit-database" element={<EditDatabase />} /> {/* Редактирование БД */}
             <Route path="/admin/create-items" element={<CreateItems />} /> {/* Создание элементов */}
+            <Route path="/admin/access-control" element={<AccessControl />} /> {/* Управление правами */}
             <Route path="/manager" element={<Manager />} />  {/* Менеджер БД */}
             <Route path="/manager/requests" element={<Requests />} />
             <Route path="/manager/edit-personal-data" element={<EditPersonalData />} /> {/* Редактирование личных данных */}

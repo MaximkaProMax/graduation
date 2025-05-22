@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import './Requests.css';
 import { useNavigate } from 'react-router-dom';
+import { checkPageAccess } from '../utils/checkPageAccess';
 
 const PhoneRequests = () => {
   const [phoneBookings, setPhoneBookings] = useState([]);
@@ -30,23 +31,15 @@ const PhoneRequests = () => {
   ];
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
-      .then(response => {
-        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
-          setIsAuthorized(true);
-          fetchPhoneRequests();
-          fetchPhotostudiosAndPrintings();
-        } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
-        }
-      })
-      .catch(() => {
-        navigate('/'); // Перенаправляем на главную при ошибке
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    checkPageAccess('PhoneRequests', navigate, setIsAuthorized, setIsLoading);
   }, [navigate]);
+
+  useEffect(() => {
+    if (isAuthorized) {
+      fetchPhoneRequests();
+      fetchPhotostudiosAndPrintings();
+    }
+  }, [isAuthorized]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {

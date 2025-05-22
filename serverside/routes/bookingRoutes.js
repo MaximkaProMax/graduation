@@ -5,18 +5,7 @@ const { BookingStudio } = require('../models/BookingStudio');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const Role = require('../models/Role');
-
-// Middleware для проверки JWT токенов
-const authenticateToken = (req, res, next) => {
-  const token = req.cookies.token; // Получаем токен из cookies
-  if (!token) return res.status(401).json({ success: false, message: 'Не авторизован' });
-
-  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
-    if (err) return res.status(403).json({ success: false, message: 'Доступ запрещён' });
-    req.user = user; // Добавляем данные пользователя в запрос
-    next();
-  });
-};
+const authenticateToken = require('../middleware/authenticateToken');
 
 // Добавление нового бронирования типографии
 router.post('/add', authenticateToken, async (req, res) => {

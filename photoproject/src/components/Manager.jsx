@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Manager.css';
+import { checkPageAccess } from '../utils/checkPageAccess';
 
 const Manager = () => {
   const navigate = useNavigate();
@@ -9,20 +10,7 @@ const Manager = () => {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/users/check-role', { withCredentials: true })
-      .then(response => {
-        if (response.data.success && (response.data.role === 'Admin' || response.data.role === 'Manager')) {
-          setIsAuthorized(true);
-        } else {
-          navigate('/'); // Перенаправляем на главную, если роль не "Admin" или "Manager"
-        }
-      })
-      .catch(() => {
-        navigate('/'); // Перенаправляем на главную при ошибке
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    checkPageAccess('Manager', navigate, setIsAuthorized, setIsLoading);
   }, [navigate]);
 
   if (isLoading) {
