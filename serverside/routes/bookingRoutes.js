@@ -113,7 +113,7 @@ router.get('/typography/all', authenticateToken, async (req, res) => {
 router.put('/typography/:id', authenticateToken, async (req, res) => {
   try {
     const bookingId = req.params.id;
-     const userId = req.user.userId;
+    const userId = req.user.userId;
     const {
       status,
       format,
@@ -123,7 +123,8 @@ router.put('/typography/:id', authenticateToken, async (req, res) => {
       number_of_copies,
       address_delivery,
       final_price,
-      album_name
+      album_name,
+      payment_status
     } = req.body;
 
     // Проверка наличия обязательных полей (можно скорректировать по вашей модели)
@@ -131,18 +132,21 @@ router.put('/typography/:id', authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Не все обязательные поля заполнены' });
     }
 
+    const updateFields = {
+      status,
+      format,
+      the_basis_of_the_spread,
+      number_of_spreads,
+      lamination,
+      number_of_copies,
+      address_delivery,
+      final_price,
+      album_name
+    };
+    if (payment_status) updateFields.payment_status = payment_status;
+
     const [updated] = await BookingTypographie.update(
-      {
-        status,
-        format,
-        the_basis_of_the_spread,
-        number_of_spreads,
-        lamination,
-        number_of_copies,
-        address_delivery,
-        final_price,
-        album_name
-      },
+      updateFields,
       {
         where: { booking_typographie_id: bookingId, user: userId }
       }
@@ -259,12 +263,13 @@ router.put('/studios/:id', authenticateToken, async (req, res) => {
       time,
       end_time,
       address,
-      final_price
+      final_price,
+      payment_status
     } = req.body;
 
     // Логируем входящие данные для отладки
     console.log('PUT /studios/:id', {
-      studio_name, status, date, time, end_time, address, final_price
+      studio_name, status, date, time, end_time, address, final_price, payment_status
     });
 
     // Проверка наличия обязательных полей (делаем status и end_time не обязательными)
@@ -272,16 +277,19 @@ router.put('/studios/:id', authenticateToken, async (req, res) => {
       return res.status(400).json({ success: false, message: 'Не все обязательные поля заполнены (studio_name, date, time, address, final_price)' });
     }
 
+    const updateFields = {
+      studio_name,
+      status: status || 'В обработке',
+      date,
+      time,
+      end_time: end_time || null,
+      address,
+      final_price
+    };
+    if (payment_status) updateFields.payment_status = payment_status;
+
     const [updated] = await BookingStudio.update(
-      {
-        studio_name,
-        status: status || 'В обработке',
-        date,
-        time,
-        end_time: end_time || null,
-        address,
-        final_price
-      },
+      updateFields,
       {
         where: { booking_studio_id: bookingId, user: userId }
       }

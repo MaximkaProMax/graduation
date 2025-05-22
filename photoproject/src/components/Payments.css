@@ -1,0 +1,91 @@
+.payments-page {
+  min-height: 100vh;
+  background: #f3f3f3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.payments-form-container {
+  background: #fafafa;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  padding: 38px 32px 32px 32px;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  text-align: center;
+}
+.payments-form-container h2 {
+  margin: 18px 0 18px 0;
+  font-size: 2rem;
+  font-weight: 700;
+}
+.payments-form-container label {
+  display: block;
+  text-align: left;
+  margin: 12px 0 4px 0;
+  font-weight: 500;
+}
+.payments-form-container input {
+  width: 100%;
+  padding: 12px 10px;
+  border: 1.5px solid #f0bb29;
+  border-radius: 6px;
+  font-size: 17px;
+  margin-bottom: 8px;
+  background: #fff;
+  transition: border 0.2s;
+}
+.payments-form-container input:focus {
+  border: 2px solid #C17900;
+  outline: none;
+}
+.pay-btn {
+  width: 100%;
+  background: #f0bb29;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 12px 0;
+  font-weight: 600;
+  font-size: 18px;
+  margin-top: 12px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.pay-btn:disabled {
+  background: #e0e0e0;
+  color: #aaa;
+  cursor: not-allowed;
+}
+.payment-status {
+  margin: 12px 0 0 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+.payment-status .paid {
+  color: #2ecc40;
+}
+.payment-status .not-paid {
+  color: #e74c3c;
+}
+.payment-error {
+  color: #e74c3c;
+  margin: 8px 0;
+  font-size: 15px;
+}
+.back-btn {
+  background: #eee;
+  color: #222;
+  border: none;
+  border-radius: 6px;
+  padding: 10px 0;
+  width: 100%;
+  font-weight: 600;
+  font-size: 16px;
+  margin-top: 10px;
+  cursor: pointer;
+}
+.back-btn:hover {
+  background: #e0e0e0;
+}

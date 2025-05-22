@@ -30,6 +30,7 @@ import ForgotPassword from './components/ForgotPassword'; // Импортиру�
 import ResetPassword from './components/ResetPassword'; // Импортируем компонент ResetPassword
 import CreateItems from './pages/CreateItems'; // Импортируем компонент создания элементов
 import PrintingDynamic from './components/PrintingDynamic'; // Новый универсальный компонент
+import Payments from './components/Payments'; // Импортируем компонент Payments
 import './App.css';
 import './index.css';
 
@@ -86,6 +87,7 @@ function App() {
             <Route path="/forgot-password" element={<ForgotPassword />} /> {/* Сброс пароля */}
             <Route path="/reset-password/:token" element={<ResetPassword />} /> {/* Ввод нового пароля */}
             <Route path="/printing/:id" element={<PrintingDynamic />} /> {/* Универсальная страница типографии */}
+            <Route path="/payments" element={<Payments />} /> {/* Страница оплаты */}
           </Routes>
         </main>
         <Footer />

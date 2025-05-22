@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import './Booking.css';
 
@@ -13,6 +14,7 @@ const Booking = () => {
   const [editAddress, setEditAddress] = useState('');
   const [isEditingAddress, setIsEditingAddress] = useState(false);
   const [studiosList, setStudiosList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Проверка авторизации
@@ -221,6 +223,32 @@ const Booking = () => {
                       }
                     </span>
                   </p>
+                  {booking.status !== 'Оплачено' && (
+                    <button
+                      className="pay-btn"
+                      style={{ marginBottom: 8, background: '#f0bb29', color: '#fff', borderRadius: 6, fontWeight: 600, fontSize: 16, padding: '10px 0', width: '100%' }}
+                      onClick={() => navigate('/payments', {
+                        state: {
+                          bookingId: booking.booking_typographie_id,
+                          bookingType: 'typographie',
+                          amount: booking.final_price,
+                          status: booking.status,
+                          bookingData: {
+                            format: booking.format,
+                            the_basis_of_the_spread: booking.the_basis_of_the_spread,
+                            number_of_spreads: booking.number_of_spreads,
+                            lamination: booking.lamination,
+                            number_of_copies: booking.number_of_copies,
+                            address_delivery: booking.address_delivery,
+                            final_price: booking.final_price,
+                            album_name: booking.album_name
+                          }
+                        }
+                      })}
+                    >
+                      Оплатить
+                    </button>
+                  )}
                   <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
                     Удалить
                   </button>
@@ -303,6 +331,30 @@ const Booking = () => {
                       }
                     </span>
                   </p>
+                  {booking.status !== 'Оплачено' && (
+                    <button
+                      className="pay-btn"
+                      style={{ marginBottom: 8, background: '#f0bb29', color: '#fff', borderRadius: 6, fontWeight: 600, fontSize: 16, padding: '10px 0', width: '100%' }}
+                      onClick={() => navigate('/payments', {
+                        state: {
+                          bookingId: booking.booking_studio_id,
+                          bookingType: 'photostudio',
+                          amount: booking.final_price,
+                          status: booking.status,
+                          bookingData: {
+                            studio_name: booking.studio_name,
+                            date: booking.date,
+                            time: booking.time,
+                            end_time: booking.end_time,
+                            address: booking.address,
+                            final_price: booking.final_price
+                          }
+                        }
+                      })}
+                    >
+                      Оплатить
+                    </button>
+                  )}
                   <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
                     Удалить
                   </button>
