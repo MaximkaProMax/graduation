@@ -152,6 +152,12 @@ const Booking = () => {
     }
   };
 
+  // Разделение заявок на оплаченные и не оплаченные
+  const unpaidTypographyBookings = typographyBookings.filter(b => b.status !== 'Оплачено');
+  const paidTypographyBookings = typographyBookings.filter(b => b.status === 'Оплачено');
+  const unpaidStudioBookings = studioBookings.filter(b => b.status !== 'Оплачено');
+  const paidStudioBookings = studioBookings.filter(b => b.status === 'Оплачено');
+
   if (!authChecked) {
     return <div>Загрузка...</div>;
   }
@@ -160,12 +166,12 @@ const Booking = () => {
     return (
       <div className="cart">
         <h2>Мои заявки</h2>
-        <div style={{ color: 'red', fontWeight: 600, textAlign: 'center', margin: '40px 0' }}>
+        <div className="auth-warning">
           Для просмотра заявок необходимо авторизоваться в системе.
         </div>
-        <div style={{ textAlign: 'center', marginTop: 20 }}>
+        <div className="auth-button-container">
           <a href="/login">
-            <button style={{ padding: '10px 24px', background: '#ffcc00', border: 'none', borderRadius: 5, fontWeight: 600, fontSize: 16, cursor: 'pointer' }}>
+            <button className="login-btn">
               Войти
             </button>
           </a>
@@ -178,222 +184,320 @@ const Booking = () => {
     <div className="cart">
       <ToastContainer position="bottom-right" autoClose={3000} hideProgressBar={false} closeOnClick pauseOnHover draggable />
       <h2>Мои заявки</h2>
-      <div className="cart-content">
-        <div className="cart-items">
-          {typographyBookings.map((booking, index) => {
-            // Загрузка фотографий для типографий из CSS по классу
-            let printingImageClass = '';
-            const albumName = booking.album_name ? booking.album_name.toLowerCase() : '';
-
-            if (albumName.includes('layflat')) {
-              printingImageClass = 'layflat';
-            } else if (albumName.includes('flexbind')) {
-              printingImageClass = 'flexbind';
-            }
-
-            return (
-              <div key={index} className="cart-item">
-                <div
-                  className={`cart-image ${printingImageClass}`}
-                ></div>
-                <div className="cart-details">
-                  <h3>{booking.album_name || '-'}</h3>
-                  <p>Формат: {booking.format || '-'}</p>
-                  <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
-                  <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
-                  <p>Ламинация: {booking.lamination || '-'}</p>
-                  <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
-                  <p>Адрес доставки: {booking.address_delivery || '-'}</p>
-                  <p>Статус: {booking.status || '-'}</p>
-                  <p>
-                    <span style={{
-                      background: '#fff',
-                      padding: '10px 24px',
-                      borderRadius: '10px',
-                      fontWeight: 600,
-                      display: 'inline-block',
-                      border: '2px solid #e0e0e0',
-                      fontSize: '18px',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
-                    }}>
-                      Итоговая цена: {
-                        booking.final_price
-                          ? `${parseInt(booking.final_price, 10)}₽`
-                          : '-'
-                      }
-                    </span>
-                  </p>
-                  {booking.status !== 'Оплачено' && (
-                    <button
-                      className="pay-btn"
-                      style={{ marginBottom: 8, background: '#f0bb29', color: '#fff', borderRadius: 6, fontWeight: 600, fontSize: 16, padding: '10px 0', width: '100%' }}
-                      onClick={() => navigate('/payments', {
-                        state: {
-                          bookingId: booking.booking_typographie_id,
-                          bookingType: 'typographie',
-                          amount: booking.final_price,
-                          status: booking.status,
-                          bookingData: {
-                            format: booking.format,
-                            the_basis_of_the_spread: booking.the_basis_of_the_spread,
-                            number_of_spreads: booking.number_of_spreads,
-                            lamination: booking.lamination,
-                            number_of_copies: booking.number_of_copies,
-                            address_delivery: booking.address_delivery,
-                            final_price: booking.final_price,
-                            album_name: booking.album_name
-                          }
-                        }
-                      })}
-                    >
-                      Оплатить
-                    </button>
-                  )}
-                  <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
-                    Удалить
-                  </button>
-                </div>
-              </div>
-            );
-          })}
-          {studioBookings.map((booking, index) => {
-            // Загрузка фотографий для фотостудий из CSS по классу
-            let studioImageClass = '';
-            const studioName = booking.studio_name ? booking.studio_name.toLowerCase() : '';
-            const address = booking.address ? booking.address.toLowerCase() : '';
-
-            if (
-              studioName.includes('cozy') &&
-              (studioName.includes('replace') || address.includes('replace'))
-            ) {
-              studioImageClass = 'replace';
-            } else if (
-              studioName.includes('apart') &&
-              (studioName.includes('photo zall') || address.includes('photo zall'))
-            ) {
-              studioImageClass = 'apart';
-            } else if (
-              studioName.includes('hot yellow')
-            ) {
-              studioImageClass = 'hot-yellow';
-            } else if (
-              studioName.includes('white garden') &&
-              (studioName.includes('unicorn') || address.includes('unicorn'))
-            ) {
-              studioImageClass = 'white-garden';
-            }
-
-            // Найти студию по id или названию для получения фото
-            let studioPhoto = '';
-            if (studiosList.length > 0) {
-              // Поиск по id (предпочтительно)
-              const foundStudio = studiosList.find(
-                s => s.id === booking.studio_id || s.studio === booking.studio_name
-              );
-              if (foundStudio && foundStudio.photo && foundStudio.photo.startsWith('/src/components/assets/images/Photostudios/')) {
-                studioPhoto = foundStudio.photo;
-              }
-            }
-
-            return (
-              <div key={index} className="cart-item">
-                {studioPhoto ? (
-                  <div
-                    className="cart-image"
-                    style={{
-                      backgroundImage: `url(${studioPhoto})`
-                    }}
-                  />
+      {/* Контактные данные теперь вне cart-content и всегда сверху */}
+      <div className="contact-section contact-section-centered">
+        <div className="contact-details">
+          <h3>Контактные данные</h3>
+          {userInfo ? (
+            <div>
+              <p>ФИО: {userInfo.fullName || '-'}</p>
+              <p>Почта: {userInfo.email || '-'}</p>
+              <p>Телефон: {userInfo.phone || '-'}</p>
+              <p>
+                Адрес доставки:&nbsp;
+                {isEditingAddress ? (
+                  <>
+                    <input
+                      type="text"
+                      value={editAddress}
+                      onChange={handleAddressChange}
+                      className="address-input"
+                    />
+                    <button onClick={handleSaveAddress} className="save-btn">Сохранить</button>
+                    <button onClick={() => { setIsEditingAddress(false); setEditAddress(userInfo.address || ''); }} className="cancel-btn">Отмена</button>
+                  </>
                 ) : (
-                  <div className={`cart-image ${studioImageClass}`} />
+                  <>
+                    {userInfo.address || '-'}
+                    <button onClick={handleEditAddressClick} className="edit-btn">Изменить</button>
+                  </>
                 )}
-                <div className="cart-details">
-                  <h3>{booking.studio_name || '-'}</h3>
-                  <p>Адрес: {booking.address || '-'}</p>
-                  <p>Дата: {booking.date || '-'}</p>
-                  <p>Время: {booking.time || '-'}</p>
-                  <p>Статус: {booking.status || '-'}</p>
-                  <p>
-                    <span style={{
-                      background: '#fff',
-                      padding: '10px 24px',
-                      borderRadius: '10px',
-                      fontWeight: 600,
-                      display: 'inline-block',
-                      border: '2px solid #e0e0e0',
-                      fontSize: '18px',
-                      boxShadow: '0 2px 8px rgba(0,0,0,0.04)'
-                    }}>
-                      Итоговая цена: {
-                        booking.final_price
-                          ? `${parseInt(booking.final_price, 10)}₽`
-                          : '-'
-                      }
-                    </span>
-                  </p>
-                  {booking.status !== 'Оплачено' && (
-                    <button
-                      className="pay-btn"
-                      style={{ marginBottom: 8, background: '#f0bb29', color: '#fff', borderRadius: 6, fontWeight: 600, fontSize: 16, padding: '10px 0', width: '100%' }}
-                      onClick={() => navigate('/payments', {
-                        state: {
-                          bookingId: booking.booking_studio_id,
-                          bookingType: 'photostudio',
-                          amount: booking.final_price,
-                          status: booking.status,
-                          bookingData: {
-                            studio_name: booking.studio_name,
-                            date: booking.date,
-                            time: booking.time,
-                            end_time: booking.end_time,
-                            address: booking.address,
-                            final_price: booking.final_price
-                          }
-                        }
-                      })}
-                    >
-                      Оплатить
-                    </button>
-                  )}
-                  <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
-                    Удалить
-                  </button>
-                </div>
-              </div>
-            );
-          })}
+              </p>
+            </div>
+          ) : (
+            <p>Загрузка...</p>
+          )}
         </div>
-        <div className="contact-section">
-          <div className="contact-details">
-            <h3>Контактные данные</h3>
-            {userInfo ? (
-              <div>
-                <p>ФИО: {userInfo.fullName || '-'}</p>
-                <p>Почта: {userInfo.email || '-'}</p>
-                <p>Телефон: {userInfo.phone || '-'}</p>
-                <p>
-                  Адрес доставки:&nbsp;
-                  {isEditingAddress ? (
-                    <>
-                      <input
-                        type="text"
-                        value={editAddress}
-                        onChange={handleAddressChange}
-                        style={{ width: '70%' }}
-                      />
-                      <button onClick={handleSaveAddress} style={{ marginLeft: 8 }}>Сохранить</button>
-                      <button onClick={() => { setIsEditingAddress(false); setEditAddress(userInfo.address || ''); }} style={{ marginLeft: 4 }}>Отмена</button>
-                    </>
+      </div>
+      {/* Секции заявок теперь идут ниже и по центру */}
+      <div className="cart-content">
+        <div className="cart-items cart-items-centered">
+          {/* Не оплаченные заявки */}
+          <div>
+            <h3 className="section-title">Не оплаченные заявки</h3>
+            {unpaidTypographyBookings.map((booking, index) => {
+              let printingImageClass = '';
+              const albumName = booking.album_name ? booking.album_name.toLowerCase() : '';
+
+              if (albumName.includes('layflat')) {
+                printingImageClass = 'layflat';
+              } else if (albumName.includes('flexbind')) {
+                printingImageClass = 'flexbind';
+              }
+
+              return (
+                <div key={`unpaid-typography-${index}`} className="cart-item">
+                  <div className={`cart-image ${printingImageClass}`}></div>
+                  <div className="cart-details">
+                    <h3>{booking.album_name || '-'}</h3>
+                    <p>Формат: {booking.format || '-'}</p>
+                    <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
+                    <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
+                    <p>Ламинация: {booking.lamination || '-'}</p>
+                    <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
+                    <p>Адрес доставки: {booking.address_delivery || '-'}</p>
+                    <p>Статус: {booking.status || '-'}</p>
+                    <p>
+                      <span className="final-price-span">
+                        Итоговая цена: {
+                          booking.final_price
+                            ? `${parseInt(booking.final_price, 10)}₽`
+                            : '-'
+                        }
+                      </span>
+                    </p>
+                    {booking.status !== 'Оплачено' && (
+                      <button
+                        className="pay-btn pay-btn-custom"
+                        onClick={() => navigate('/payments', {
+                          state: {
+                            bookingId: booking.booking_typographie_id,
+                            bookingType: 'typographie',
+                            amount: booking.final_price,
+                            status: booking.status,
+                            bookingData: {
+                              format: booking.format,
+                              the_basis_of_the_spread: booking.the_basis_of_the_spread,
+                              number_of_spreads: booking.number_of_spreads,
+                              lamination: booking.lamination,
+                              number_of_copies: booking.number_of_copies,
+                              address_delivery: booking.address_delivery,
+                              final_price: booking.final_price,
+                              album_name: booking.album_name
+                            }
+                          }
+                        })}
+                      >
+                        Оплатить
+                      </button>
+                    )}
+                    <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
+                      Удалить
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+            {unpaidStudioBookings.map((booking, index) => {
+              let studioImageClass = '';
+              const studioName = booking.studio_name ? booking.studio_name.toLowerCase() : '';
+              const address = booking.address ? booking.address.toLowerCase() : '';
+
+              if (
+                studioName.includes('cozy') &&
+                (studioName.includes('replace') || address.includes('replace'))
+              ) {
+                studioImageClass = 'replace';
+              } else if (
+                studioName.includes('apart') &&
+                (studioName.includes('photo zall') || address.includes('photo zall'))
+              ) {
+                studioImageClass = 'apart';
+              } else if (
+                studioName.includes('hot yellow')
+              ) {
+                studioImageClass = 'hot-yellow';
+              } else if (
+                studioName.includes('white garden') &&
+                (studioName.includes('unicorn') || address.includes('unicorn'))
+              ) {
+                studioImageClass = 'white-garden';
+              }
+
+              let studioPhoto = '';
+              if (studiosList.length > 0) {
+                const foundStudio = studiosList.find(
+                  s => s.id === booking.studio_id || s.studio === booking.studio_name
+                );
+                if (foundStudio && foundStudio.photo && foundStudio.photo.startsWith('/src/components/assets/images/Photostudios/')) {
+                  studioPhoto = foundStudio.photo;
+                }
+              }
+
+              return (
+                <div key={`unpaid-studio-${index}`} className="cart-item">
+                  {studioPhoto ? (
+                    <div
+                      className="cart-image"
+                      style={{
+                        backgroundImage: `url(${studioPhoto})`
+                      }}
+                    />
                   ) : (
-                    <>
-                      {userInfo.address || '-'}
-                      <button onClick={handleEditAddressClick} style={{ marginLeft: 8 }}>Изменить</button>
-                    </>
+                    <div className={`cart-image ${studioImageClass}`} />
                   )}
-                </p>
-              </div>
-            ) : (
-              <p>Загрузка...</p>
+                  <div className="cart-details">
+                    <h3>{booking.studio_name || '-'}</h3>
+                    <p>Адрес: {booking.address || '-'}</p>
+                    <p>Дата: {booking.date || '-'}</p>
+                    <p>Время: {booking.time || '-'}</p>
+                    <p>Статус: {booking.status || '-'}</p>
+                    <p>
+                      <span className="final-price-span">
+                        Итоговая цена: {
+                          booking.final_price
+                            ? `${parseInt(booking.final_price, 10)}₽`
+                            : '-'
+                        }
+                      </span>
+                    </p>
+                    {booking.status !== 'Оплачено' && (
+                      <button
+                        className="pay-btn pay-btn-custom"
+                        onClick={() => navigate('/payments', {
+                          state: {
+                            bookingId: booking.booking_studio_id,
+                            bookingType: 'photostudio',
+                            amount: booking.final_price,
+                            status: booking.status,
+                            bookingData: {
+                              studio_name: booking.studio_name,
+                              date: booking.date,
+                              time: booking.time,
+                              end_time: booking.end_time,
+                              address: booking.address,
+                              final_price: booking.final_price
+                            }
+                          }
+                        })}
+                      >
+                        Оплатить
+                      </button>
+                    )}
+                    <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
+                      Удалить
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+            {unpaidTypographyBookings.length === 0 && unpaidStudioBookings.length === 0 && (
+              <div className="centered-message">Нет не оплаченных заявок</div>
+            )}
+          </div>
+          {/* Оплаченные заявки */}
+          <div className="section-spaced">
+            <h3>Оплаченные заявки</h3>
+            {paidTypographyBookings.map((booking, index) => {
+              let printingImageClass = '';
+              const albumName = booking.album_name ? booking.album_name.toLowerCase() : '';
+
+              if (albumName.includes('layflat')) {
+                printingImageClass = 'layflat';
+              } else if (albumName.includes('flexbind')) {
+                printingImageClass = 'flexbind';
+              }
+
+              return (
+                <div key={`paid-typography-${index}`} className="cart-item">
+                  <div className={`cart-image ${printingImageClass}`}></div>
+                  <div className="cart-details">
+                    <h3>{booking.album_name || '-'}</h3>
+                    <p>Формат: {booking.format || '-'}</p>
+                    <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
+                    <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
+                    <p>Ламинация: {booking.lamination || '-'}</p>
+                    <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
+                    <p>Адрес доставки: {booking.address_delivery || '-'}</p>
+                    <p>Статус: {booking.status || '-'}</p>
+                    <p>
+                      <span className="final-price-span">
+                        Итоговая цена: {
+                          booking.final_price
+                            ? `${parseInt(booking.final_price, 10)}₽`
+                            : '-'
+                        }
+                      </span>
+                    </p>
+                    <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
+                      Удалить
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+            {paidStudioBookings.map((booking, index) => {
+              let studioImageClass = '';
+              const studioName = booking.studio_name ? booking.studio_name.toLowerCase() : '';
+              const address = booking.address ? booking.address.toLowerCase() : '';
+
+              if (
+                studioName.includes('cozy') &&
+                (studioName.includes('replace') || address.includes('replace'))
+              ) {
+                studioImageClass = 'replace';
+              } else if (
+                studioName.includes('apart') &&
+                (studioName.includes('photo zall') || address.includes('photo zall'))
+              ) {
+                studioImageClass = 'apart';
+              } else if (
+                studioName.includes('hot yellow')
+              ) {
+                studioImageClass = 'hot-yellow';
+              } else if (
+                studioName.includes('white garden') &&
+                (studioName.includes('unicorn') || address.includes('unicorn'))
+              ) {
+                studioImageClass = 'white-garden';
+              }
+
+              let studioPhoto = '';
+              if (studiosList.length > 0) {
+                const foundStudio = studiosList.find(
+                  s => s.id === booking.studio_id || s.studio === booking.studio_name
+                );
+                if (foundStudio && foundStudio.photo && foundStudio.photo.startsWith('/src/components/assets/images/Photostudios/')) {
+                  studioPhoto = foundStudio.photo;
+                }
+              }
+
+              return (
+                <div key={`paid-studio-${index}`} className="cart-item">
+                  {studioPhoto ? (
+                    <div
+                      className="cart-image"
+                      style={{
+                        backgroundImage: `url(${studioPhoto})`
+                      }}
+                    />
+                  ) : (
+                    <div className={`cart-image ${studioImageClass}`} />
+                  )}
+                  <div className="cart-details">
+                    <h3>{booking.studio_name || '-'}</h3>
+                    <p>Адрес: {booking.address || '-'}</p>
+                    <p>Дата: {booking.date || '-'}</p>
+                    <p>Время: {booking.time || '-'}</p>
+                    <p>Статус: {booking.status || '-'}</p>
+                    <p>
+                      <span className="final-price-span">
+                        Итоговая цена: {
+                          booking.final_price
+                            ? `${parseInt(booking.final_price, 10)}₽`
+                            : '-'
+                        }
+                      </span>
+                    </p>
+                    <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
+                      Удалить
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+            {paidTypographyBookings.length === 0 && paidStudioBookings.length === 0 && (
+              <div className="centered-message">Нет оплаченных заявок</div>
             )}
           </div>
         </div>
