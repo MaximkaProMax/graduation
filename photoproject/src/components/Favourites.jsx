@@ -25,8 +25,8 @@ function Favourites() {
       });
   }, []);
 
-  const handleBookButtonClick = (studioName, address) => {
-    navigate('/calendar', { state: { studio: studioName, address } });
+  const handleBookButtonClick = (studioName, address, price) => {
+    navigate('/calendar', { state: { studio: studioName, address, price } });
   };
 
   const handleRemoveFavorite = (id, type) => {
@@ -75,10 +75,10 @@ function Favourites() {
       <div className="favourites-section">
         <h3>Избранные фотостудии</h3>
         <div className="studio-list">
-          {photostudios.length === 0 ? ( // Исправлено имя переменной
+          {photostudios.length === 0 ? (
             <p>Нет избранных фотостудий</p>
           ) : (
-            photostudios.map((fav) => ( // Исправлено имя переменной
+            photostudios.map((fav) => (
               <div key={fav.id} className="studio-card">
                 {fav.photo && fav.photo.startsWith('/src/components/assets/images/Photostudios/') ? (
                   <div
@@ -94,12 +94,12 @@ function Favourites() {
                   <h3>{fav.studio}</h3>
                   <p>{fav.address}</p>
                   <p>{fav.opening_hours}</p>
-                  <p>{fav.price}</p>
+                  <p>{fav.price} ₽/час</p>
                 </div>
                 <div className="action-container">
                   <button
                     className="book-button"
-                    onClick={() => handleBookButtonClick(fav.studio, fav.address)}
+                    onClick={() => handleBookButtonClick(fav.studio, fav.address, fav.price)}
                   >
                     Забронировать
                   </button>
