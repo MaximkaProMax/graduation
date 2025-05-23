@@ -29,6 +29,10 @@ function Favourites() {
     navigate('/calendar', { state: { studio: studioName, address, price } });
   };
 
+  const handleOrderPrinting = (printingId) => {
+    navigate(`/printing/${printingId}`);
+  };
+
   const handleRemoveFavorite = (id, type) => {
     console.log('Удаление из избранного:', { id, type });
     const endpoint = type === 'photostudio' ? `/${id}` : `/printing/${id}`;
@@ -143,7 +147,7 @@ function Favourites() {
                 <div className="printing-action-container">
                   <button
                     className="printing-order-button"
-                    onClick={() => toast.info('Бронирование типографий пока недоступно')}
+                    onClick={() => handleOrderPrinting(fav.id)}
                   >
                     Заказать
                   </button>
