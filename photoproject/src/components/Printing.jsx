@@ -4,6 +4,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Printing.css';
+import BookedIcon from './assets/images/Favourites/Booked.svg';
+import NotBookedIcon from './assets/images/Favourites/NotBooked.svg';
 
 const Printing = () => {
   const [printingOptions, setPrintingOptions] = useState([]);
@@ -139,7 +141,10 @@ const Printing = () => {
                             onClick={() => toggleFavorite(option.id)}
                             title={favorites.includes(option.id) ? 'Убрать из избранного' : 'В избранное'}
                           >
-                            ♡
+                            <img
+                              src={favorites.includes(option.id) ? BookedIcon : NotBookedIcon}
+                              alt={favorites.includes(option.id) ? 'В избранном' : 'В избранное'}
+                            />
                           </span>
                         </div>
                       </div>

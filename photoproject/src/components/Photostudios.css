@@ -239,11 +239,11 @@
 
 .action-inner-grid {
   display: grid !important;
-  grid-template-columns: 1fr 40px;
+  grid-template-columns: 1fr 48px;
   align-items: center;
   width: 100%;
   min-width: 0;
-  gap: 0;
+  gap: 0 12px;
   padding: 0 4px;
 }
 
@@ -299,15 +299,22 @@
 }
 
 .favorite-icon.modern {
-  font-size: 2rem;
-  margin-left: 0; /* убран лишний отступ */
-  color: #bbb;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  margin-left: 0 !important;
+  height: 48px;
+  width: 48px;
   cursor: pointer;
-  user-select: none;
-  transition: color 0.2s; /* убрана анимация transform */
-  line-height: 1;
-  display: flex;
-  align-items: center;
+  background: none;
+  border: none;
+  padding: 0;
+}
+
+.favorite-icon.modern img {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
 
 .favorite-icon.favorite {
@@ -327,6 +334,46 @@
 .favorite-icon.modern:hover {
   color: #C17900;
   /* убран transform: scale(1.18); */
+}
+
+/* Уникальные стили для страницы фотостудий */
+.studio-action-inner-grid {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  width: 100%;
+  gap: 0 8px;
+  padding: 0 4px;
+}
+
+.studio-favorite-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  width: 36px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+  transition: filter 0.15s;
+}
+
+.studio-favorite-icon img {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.studio-favorite-icon.favorite img {
+  /* Убираем drop-shadow */
+  filter: none;
+}
+
+.studio-favorite-icon:hover img {
+  /* Убираем drop-shadow при наведении */
+  filter: brightness(1.1);
 }
 
 /* Для промежуточных размеров экрана — всегда одна карточка в ряд */
@@ -480,8 +527,6 @@
 @media (max-width: 600px) { ... }
 @media (min-width: 1200px) { ... }стальные медиазапросы, которые меняют размеры карточки */
 @media (max-width: 1199px) and (min-width: 700px) { ... }
-@media (max-width: 700px) { ... }
-*/@media (max-width: 1199px) and (min-width: 700px) { ... }
 @media (max-width: 700px) { ... }
 }
 

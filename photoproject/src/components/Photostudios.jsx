@@ -4,6 +4,8 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import './Photostudios.css';
+import BookedIcon from './assets/images/Favourites/Booked.svg';
+import NotBookedIcon from './assets/images/Favourites/NotBooked.svg';
 
 function Photostudios() {
   const navigate = useNavigate();
@@ -126,7 +128,7 @@ function Photostudios() {
                         <span className="studio-price">{studio.price}</span>
                       </div>
                       <div className="action-container modern">
-                        <div className="action-inner-grid">
+                        <div className="studio-action-inner-grid">
                           <button
                             className="book-button modern"
                             onClick={() => handleBookButtonClick(studio.studio, studio.address, studio.price)}
@@ -134,11 +136,14 @@ function Photostudios() {
                             Забронировать
                           </button>
                           <span
-                            className={`favorite-icon modern${favorites.includes(studio.id) ? ' favorite' : ''}`}
+                            className={`studio-favorite-icon${favorites.includes(studio.id) ? ' favorite' : ''}`}
                             onClick={() => toggleFavorite(studio.id)}
                             title={favorites.includes(studio.id) ? 'Убрать из избранного' : 'В избранное'}
                           >
-                            ♡
+                            <img
+                              src={favorites.includes(studio.id) ? BookedIcon : NotBookedIcon}
+                              alt={favorites.includes(studio.id) ? 'В избранном' : 'В избранное'}
+                            />
                           </span>
                         </div>
                       </div>

@@ -178,16 +178,14 @@
   padding: 0;
 }
 
-/* ПК-версия: flex-контейнер без gap */
 .action-inner-grid {
-  display: flex !important;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: 1fr 48px;
   align-items: center;
   width: 100%;
   min-width: 0;
-  justify-content: flex-end;
+  gap: 0 8px;
   padding: 0 4px;
-  gap: 0; /* убираем gap */
 }
 
 .order-button {
@@ -205,23 +203,21 @@
 }
 
 .order-button.modern {
-  flex: 1 1 auto;
+  width: 100%;
   background: #F0BB29 !important;
   color: #fff;
   border: none;
   border-radius: 8px;
-  padding: 12px 0;
-  font-size: 1.08rem;
-  font-weight: 700;
+  padding: 12px 0; /* Увеличили отступы для большей кнопки */
+  font-size: 1.08rem; /* Увеличили размер шрифта */
+  font-weight: 700; /* Сделали текст жирным */
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
   box-shadow: 0 2px 8px rgba(245,185,30,0.07);
-  margin-right: 10px;
-  margin: 0 auto;
+  margin: 0;
   display: block;
-  min-width: 220px;
-  max-width: 100%;
-  flex-shrink: 0;
+  min-width: 0;
+  max-width: none;
 }
 
 .order-button:hover {
@@ -243,51 +239,73 @@
 }
 
 .favorite-icon.modern {
-  font-size: 2rem;
-  margin-left: 16px !important;
-  align-self: center !important;
   display: flex !important;
   align-items: center !important;
-  position: static;
-  height: auto;
+  justify-content: center !important;
+  height: 48px;
+  width: 48px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
-.favorite-icon.favorite {
-  color: #ff0000;
+.favorite-icon.modern img {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
 
-.favorite-icon.modern.favorite {
-  color: #ff3b3b;
-  text-shadow: 0 2px 8px rgba(255,59,59,0.08);
+/* Уникальные стили для страницы типографии */
+.printing-action-inner-grid {
+  display: grid;
+  grid-template-columns: 1fr auto; /* Кнопка и сердце на одной линии */
+  align-items: center; /* Выравнивание по вертикали */
+  gap: 0 12px; /* Увеличили gap для лучшего визуального восприятия */
+  padding: 0 4px;
 }
 
-.favorite-icon:hover {
-  color: #C17900;
+.printing-favorяite-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0; /* Убрали лишние отступы */
 }
 
-.favorite-icon.modern:hover {
-  color: #C17900;
+.printing-favorite-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
 }
 
-.search-container {
-  margin-bottom: 24px;
-  text-align: center;
+.printing-favorite-icon img {
+  width: 32px;
+  height: 32px;
+  display: block;
 }
 
-.search-input {
-  width: 100%;
-  max-width: 400px;
-  padding: 12px;
-  border: 1.5px solid #f0bb29;
-  border-radius: 8px;
-  font-size: 17px;
-  background: #fafafa;
-  transition: border 0.2s;
+.printing-favorite-icon.favorite img {
+  /* Убираем drop-shadow */
+  filter: none;
 }
 
-.search-input:focus {
-  border: 2px solid #C17900;
-  outline: none;
+.printing-favorite-icon:hover img {
+  /* Убираем drop-shadow при наведении */
+  filter: brightness(1.1);
 }
 
 @media (min-width: 769px) and (max-width: 1199px) {
@@ -366,11 +384,11 @@
   }
   .action-inner-grid {
     display: grid !important;
-    grid-template-columns: 1fr 48px;
+    grid-template-columns: 1fr auto;
     align-items: center;
     width: 100%;
     min-width: 0;
-    gap: 0 12px; /* Добавлен горизонтальный gap между кнопкой и сердечком */
+    gap: 0 4px; /* уменьшили горизонтальный gap */
     padding: 0 4px;
   }
   .printing .favorite-icon.modern {
@@ -465,5 +483,47 @@
     align-self: center;
     justify-self: end;
     margin-right: 2px; /* Добавлен небольшой отступ справа */
+  }
+}
+
+/* Мобильная версия */
+@media (max-width: 800px) {
+  .printing-action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 44px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0 8px;
+    padding: 0 2px;
+  }
+
+  .order-button.modern {
+    width: 100%;
+    min-width: 0 !important;
+    max-width: none;
+    font-size: 1rem;
+    padding: 10px 0;
+    border-radius: 8px;
+    height: 44px;
+    line-height: 44px;
+    margin: 0;
+  }
+
+  .favorite-icon.modern {
+    height: 44px;
+    width: 44px;
+    font-size: 2rem;
+    align-self: center !important;
+    justify-self: end;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .favorite-icon.modern img {
+    width: 28px;
+    height: 28px;
   }
 }
