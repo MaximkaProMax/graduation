@@ -89,3 +89,9 @@
 .back-btn:hover {
   background: #e0e0e0;
 }
+.payments-form-container img {
+  width: 80px;
+  margin: 0 auto 12px auto;
+  display: block;
+  content: url('./assets/images/sbp.png');
+}

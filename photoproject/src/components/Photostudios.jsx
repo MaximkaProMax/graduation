@@ -15,7 +15,6 @@ function Photostudios() {
     // Загрузка данных из API
     axios.get('http://localhost:3001/api/photostudios')
       .then(response => {
-        console.log('Данные фотостудий:', response.data);
         setStudios(response.data);
       })
       .catch(error => {
@@ -25,8 +24,11 @@ function Photostudios() {
     // Загрузка избранных фотостудий
     axios.get('http://localhost:3001/api/favourites', { withCredentials: true })
       .then(response => {
-        console.log('Избранные фотостудии:', response.data);
-        setFavorites(response.data.map(fav => fav.studio_id));
+        // Сохраняем только studio_id для избранных фотостудий
+        const studioIds = response.data
+          .filter(fav => fav.type === 'photostudio' && fav.id)
+          .map(fav => fav.id);
+        setFavorites(studioIds);
       })
       .catch(error => {
         console.error('Ошибка при загрузке избранных фотостудий:', error);
@@ -70,6 +72,15 @@ function Photostudios() {
     studio.studio.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Группировка карточек по 2 в ряд
+  function chunkArray(array, size) {
+    const result = [];
+    for (let i = 0; i < array.length; i += size) {
+      result.push(array.slice(i, i + size));
+    }
+    return result;
+  }
+
   return (
     <div style={{ minHeight: '100vh', background: 'transparent' }}>
       <div className="photostudios">
@@ -91,38 +102,49 @@ function Photostudios() {
           {filteredStudios.length === 0 ? (
             <p>Нет доступных фотостудий</p>
           ) : (
-            filteredStudios.map((studio) => (
-              <div key={studio.id} className="studio-card">
-                {studio.photo && studio.photo.startsWith('/src/components/assets/images/Photostudios/') ? (
-                  <div
-                    className="studio-image"
-                    style={{
-                      backgroundImage: `url(${studio.photo})`
-                    }}
-                  />
-                ) : (
-                  <div className={`studio-image ${studio.photo || ''}`} />
-                )}
-                <div className="studio-info">
-                  <h3>{studio.studio}</h3>
-                  <p>{studio.address}</p>
-                  <p>{studio.opening_hours}</p>
-                  <p>{studio.price}</p>
-                  <div className="action-container">
-                    <button
-                      className="book-button"
-                      onClick={() => handleBookButtonClick(studio.studio, studio.address, studio.price)}
-                    >
-                      Забронировать
-                    </button>
-                    <span
-                      className={`favorite-icon ${favorites.includes(studio.id) ? 'favorite' : ''}`}
-                      onClick={() => toggleFavorite(studio.id)}
-                    >
-                      ❤️
-                    </span>
+            chunkArray(filteredStudios, 2).map((row, rowIdx) => (
+              <div className="studio-row" key={rowIdx}>
+                {row.map((studio) => (
+                  <div key={studio.id} className="studio-card modern">
+                    {studio.photo && studio.photo.startsWith('/src/components/assets/images/Photostudios/') ? (
+                      <div
+                        className="studio-image"
+                        style={{
+                          backgroundImage: `url(${studio.photo})`
+                        }}
+                      />
+                    ) : (
+                      <div className={`studio-image ${studio.photo || ''}`} />
+                    )}
+                    <div className="studio-info">
+                      <div className="studio-main-info">
+                        <h3>{studio.studio}</h3>
+                        <p className="studio-address">{studio.address}</p>
+                      </div>
+                      <div className="studio-details-row">
+                        <span className="studio-hours">{studio.opening_hours}</span>
+                        <span className="studio-price">{studio.price}</span>
+                      </div>
+                      <div className="action-container modern">
+                        <div className="action-inner-grid">
+                          <button
+                            className="book-button modern"
+                            onClick={() => handleBookButtonClick(studio.studio, studio.address, studio.price)}
+                          >
+                            Забронировать
+                          </button>
+                          <span
+                            className={`favorite-icon modern${favorites.includes(studio.id) ? ' favorite' : ''}`}
+                            onClick={() => toggleFavorite(studio.id)}
+                            title={favorites.includes(studio.id) ? 'Убрать из избранного' : 'В избранное'}
+                          >
+                            ♡
+                          </span>
+                        </div>
+                      </div>
+                    </div>
                   </div>
-                </div>
+                ))}
               </div>
             ))
           )}

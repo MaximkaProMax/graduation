@@ -54,92 +54,297 @@
 }
 
 .booking-card {
-  width: 370px;
-  min-width: 270px;
-  border: 1px solid #ececec;
-  border-radius: 8px;
-  padding: 22px 22px 16px 22px;
-  background-color: #fafafa;
-  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  background: #fff;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13) !important;
+  border: none !important;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  transition: box-shadow 0.2s, border 0.2s;
+  margin: 0 auto 18px auto;
+  max-width: 420px;
+  min-width: 260px;
+  width: 100%;
+  padding: 0 !important;
+  transition: box-shadow 0.18s !important;
+  min-height: 650px;
+  height: 650px;
+  max-height: 650px;
 }
 
-.booking-card:hover {
-  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
-  border: 1.5px solid #f5b91e;
+.booking-card:hover,
+.booking-card:focus,
+.booking-card:active {
+  /* Только смена цвета тени, не меняем border, padding, margin, transform */
+  box-shadow: 0 8px 32px rgba(245,185,30,0.18), 0 2px 8px rgba(245,185,30,0.13) !important;
+  border: none !important;
 }
 
-.booking-card h3 {
-  margin: 0 0 10px 0;
-  font-size: 1.25rem;
-  color: #f5b91e;
-  font-weight: 600;
-}
-
-.booking-card-row {
+.booking-info {
+  padding: 18px 16px 16px 16px; /* чуть больше паддинги */
   display: flex;
-  justify-content: space-between;
-  width: 100%;
-  margin: 3px 0;
-  font-size: 1rem;
-  color: #333;
+  flex-direction: column;
+  gap: 7px; /* комфортный gap между полями */
+  background: transparent;
+  flex: 1 1 auto; /* занимает всё пространство внутри карточки */
+  width: 100%; /* добавлено */
+  justify-content: space-between; /* добавлено */
+  min-height: 0;
 }
 
-.booking-card-row span {
-  color: #888;
+.booking-info .booking-title,
+.booking-info p {
+  align-self: flex-start; /* Оставляем текст и заголовок слева */
 }
 
-.booking-card .delete-button {
-  margin-top: 14px;
-  padding: 10px 0;
+.booking-info .booking-title {
+  margin: 0 0 4px 0; /* чуть больше нижний отступ */
+}
+
+.booking-info p {
+  margin: 0; /* без внешних отступов */
+}
+
+.booking-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px; /* уменьшили расстояние между кнопками и ценой */
+  margin-top: auto; /* добавлено: всегда внизу карточки */
   width: 100%;
+}
+
+.booking-title {
+  margin: 0 0 4px 0;
+  font-size: 1.35rem;
+  color: #C17900;
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.booking-price {
+  color: #222;
+  font-weight: 600;
+  font-size: 1.08rem;
+  background: #FFF7E0;
+  border-radius: 7px;
+  padding: 4px 12px;
+  margin-left: 0;
+}
+
+/* Картинка карточки */
+.booking-card .cart-image {
+  width: 100%;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 180px;
+  max-height: 220px;
+  background-position: center;
+  background-size: cover;
+  border-top-left-radius: 18px;
+  border-top-right-radius: 18px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+  flex-shrink: 0;
+  margin: 0;
+}
+
+/* Кнопки */
+.pay-btn-custom {
+  margin-bottom: 0; /* убрали нижний отступ */
+  background: #f0bb29;
+  color: #fff;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  padding: 12px 0;
+  width: 100%; /* всегда 100% */
+  border: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  cursor: pointer;
+}
+.pay-btn-custom:hover {
+  background: #e0aa1e;
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+}
+
+.delete-button {
+  margin-top: 0;
+  padding: 12px 0;
+  width: 100%; /* всегда 100% */
   background-color: #ff4d4d;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
 }
 
-.booking-card .delete-button:hover {
+.delete-button:hover {
   background-color: #ff1a1a;
 }
 
+/* Итоговая цена */
+.final-price-span.booking-price {
+  background: #fff7e0;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  display: inline-block;
+  border: none;
+  font-size: 1.08rem;
+  box-shadow: none;
+  margin: 0; /* убрали верхний отступ */
+}
+
+.booking-price-label {
+  margin: 10px 0 0 0;
+  font-weight: 700;
+  color: #222;
+  font-size: 1.08rem;
+  text-align: left;
+  padding-left: 2px;
+}
+
+.booking-price-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* Новые стили для строки итоговой цены */
+.booking-price-total {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0; /* убрали лишние отступы */
+  background: #fff7e0;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  box-shadow: none;
+  width: 100%; /* теперь всегда 100% */
+  /* max-width: 320px;  убрали ограничение */
+}
+
+.booking-price-total .final-price-span.booking-price {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 700;
+  border: none;
+  font-size: 1.08rem;
+  box-shadow: none;
+  margin: 0;
+  text-align: center;
+  min-width: 80px;
+}
+
+/* Мобильная версия */
 @media (max-width: 900px) {
-  .booking-cards {
-    gap: 16px;
-    justify-content: center;
+  .booking-card,
+  .cart-item.booking-card {
+    min-height: 0 !important;
+    height: auto !important;
+    max-height: none !important;
   }
-  .booking-card {
-    width: 95vw;
+  .booking-card,
+  .cart-item {
+    display: flex;
+    flex-direction: column;
+    max-width: 420px;
     min-width: 0;
-    padding: 16px 8px 12px 8px;
+    width: 100%;
+    margin-bottom: 12px;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13) !important;
+    padding: 0 !important;
+  }
+  .booking-card .cart-image,
+  .cart-item .cart-image {
+    /* Удаляем min-height/max-height/min-width/max-width, чтобы размер не менялся */
+    width: 100%;
+    height: 180px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+    margin: 0;
+    object-fit: cover;
+  }
+  .booking-info {
+    padding: 10px 6px 8px 6px;
+    font-size: 0.98rem;
+    gap: 3px;
+    width: 100%;
+  }
+  .booking-info .booking-title {
+    font-size: 1.08rem;
+    margin-bottom: 2px;
+  }
+  .final-price-span.booking-price {
+    margin: 0;
+  }
+  .booking-actions {
+    gap: 6px;
+    margin-top: 10px;
+    width: 100%;
+  }
+  .pay-btn-custom,
+  .delete-button,
+  .booking-price-total {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
   }
 }
 
 @media (max-width: 600px) {
-  .booking-container {
-    padding: 8px 2px;
-    border-radius: 0;
-    box-shadow: none;
+  .booking-card,
+  .cart-item {
+    max-width: 100%;
+    border-radius: 14px !important;
+    margin-bottom: 8px;
   }
-  .booking-cards {
-    flex-direction: column;
-    gap: 12px;
-    align-items: center;
+  .booking-card .cart-image,
+  .cart-item .cart-image {
+    /* Удаляем min-height/max-height/min-width/max-width, чтобы размер не менялся */
+    width: 100%;
+    height: 180px;
+    border-radius: 14px 14px 0 0;
+    margin: 0;
+    object-fit: cover;
   }
-  .booking-card {
-    width: 98vw;
-    padding: 12px 4px 10px 4px;
-    font-size: 0.95rem;
+  .booking-info {
+    padding: 10px 4px 8px 4px;
+    font-size: 0.98rem;
   }
-  .booking-card h3 {
+  .booking-title {
     font-size: 1.08rem;
+  }
+  .pay-btn-custom,
+  .delete-button,
+  .booking-price-total {
+    font-size: 0.98rem;
+    padding: 8px 0;
+    border-radius: 7px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+  }
+  .final-price-span.booking-price {
+    font-size: 0.98rem;
+    padding: 6px 8px;
+    border-radius: 6px;
   }
 }
 
@@ -202,12 +407,20 @@
 
 .cart-item {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch; /* было flex-start */
   border: 1px solid #ddd;
   border-radius: 5px;
   margin-bottom: 20px;
   padding: 20px;
   background: #fafafa;
+  min-height: 600px;
+  height: 600px;
+  max-height: 600px;
+  border: none;
+  box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+  transition: box-shadow 0.18s;
+  display: flex;
+  flex-direction: column;
 }
 
 .cart-image {
@@ -252,15 +465,15 @@
 }
 
 .delete-button {
-  margin-top: 18px;
-  padding: 10px 0;
+  margin-top: 0;
+  padding: 12px 0;
   width: 100%;
   background-color: #ff4d4d;
   color: white;
   border: none;
-  border-radius: 6px;
-  font-size: 1rem;
-  font-weight: 600;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 700;
   cursor: pointer;
   transition: background 0.2s;
 }
@@ -318,8 +531,43 @@
 }
 
 .cart-items-centered {
-  max-width: 700px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 36px;
+  justify-content: center;
+  max-width: 900px;
   margin: 0 auto;
+  align-items: stretch; /* добавлено: выравнивание по высоте */
+}
+
+.cart-items-centered > .cart-item.booking-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* карточка всегда на всю высоту ряда */
+  max-width: 420px;
+  min-width: 260px;
+  margin: 0;
+}
+
+.cart-items-centered > .cart-item:only-child {
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* На экранах до 900px — карточки идут друг под другом и по центру */
+@media (max-width: 900px) {
+  .cart-items-centered {
+    flex-direction: column;
+    gap: 18px;
+    align-items: center;
+    max-width: 100vw;
+  }
+  .cart-items-centered > .cart-item {
+    max-width: 420px;
+    min-width: 0;
+    width: 100%;
+    margin: 0 auto;
+  }
 }
 
 .section-title {
@@ -347,23 +595,162 @@
 }
 
 .pay-btn-custom {
-  margin-bottom: 8px;
+  margin-bottom: 0; /* убрали нижний отступ */
   background: #f0bb29;
   color: #fff;
-  border-radius: 6px;
-  font-weight: 600;
-  font-size: 16px;
-  padding: 10px 0;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  padding: 12px 0;
+  width: 100%; /* всегда 100% */
+  border: none;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  cursor: pointer;
+}
+.pay-btn-custom:hover {
+  background: #e0aa1e;
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+}
+
+/* Итоговая цена */
+.final-price-span.booking-price {
+  background: #fff7e0;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  display: inline-block;
+  border: none;
+  font-size: 1.08rem;
+  box-shadow: none;
+  margin: 0; /* убрали верхний отступ */
+}
+
+.booking-price-label {
+  margin: 10px 0 0 0;
+  font-weight: 700;
+  color: #222;
+  font-size: 1.08rem;
+  text-align: left;
+  padding-left: 2px;
+}
+
+.booking-price-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* Новые стили для строки итоговой цены */
+.booking-price-total {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0; /* убрали лишние отступы */
+  background: #fff7e0;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  box-shadow: none;
+  width: 100%; /* теперь всегда 100% */
+  /* max-width: 320px;  убрали ограничение */
+}
+
+.booking-price-total .final-price-span.booking-price {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 700;
+  border: none;
+  font-size: 1.08rem;
+  box-shadow: none;
+  margin: 0;
+  text-align: center;
+  min-width: 80px;
+}
+
+.booking-info {
+  padding: 18px 16px 16px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  background: transparent;
+  flex: 1 1 auto; /* занимает всё пространство внутри карточки */
+  width: 100%; /* добавлено */
+  justify-content: space-between; /* добавлено */
+  min-height: 0;
+}
+
+.booking-info .booking-title,
+.booking-info p {
+  align-self: flex-start;
+}
+
+.booking-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px; /* уменьшили расстояние между кнопками и ценой */
+  margin-top: auto; /* добавлено: всегда внизу карточки */
   width: 100%;
 }
 
-.final-price-span {
-  background: #fff;
-  padding: 10px 24px;
-  border-radius: 10px;
-  font-weight: 600;
-  display: inline-block;
-  border: 2px solid #e0e0e0;
-  font-size: 18px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+.booking-price-total {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin: 0; /* убрали лишние отступы */
+  background: #fff7e0;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.08rem;
+  box-shadow: none;
+  width: 100%; /* теперь всегда 100% */
+  /* max-width: 320px;  убрали ограничение */
+}
+
+.booking-price-total .final-price-span.booking-price {
+  background: transparent;
+  padding: 0;
+  border-radius: 0;
+  font-weight: 700;
+  border: none;
+  font-size: 1.08rem;
+  box-shadow: none;
+  margin: 0;
+  text-align: center;
+  min-width: 80px;
+}
+
+.delete-button {
+  margin-top: 0;
+  padding: 12px 0;
+  width: 100%; /* всегда 100% */
+  background-color: #ff4d4d;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s;
+  /* max-width: 320px; убрали ограничение */
+}
+
+.delete-button:hover {
+  background-color: #ff1a1a;
+}
+
+/* Удаляем лишнее */
+.booking-info .booking-price-total,
+.booking-info .delete-button {
+  /* align-self: center; */
 }

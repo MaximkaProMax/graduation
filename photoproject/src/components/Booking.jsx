@@ -231,10 +231,10 @@ const Booking = () => {
       </div>
       {/* Секции заявок теперь идут ниже и по центру */}
       <div className="cart-content">
-        <div className="cart-items cart-items-centered">
-          {/* Не оплаченные заявки */}
-          <div>
-            <h3 className="section-title">Не оплаченные заявки</h3>
+        {/* Не оплаченные заявки */}
+        <div>
+          <h3 className="section-title">Не оплаченные заявки</h3>
+          <div className="cart-items cart-items-centered">
             {unpaidTypographyBookings.map((booking, index) => {
               let printingImageClass = '';
               const albumName = booking.album_name ? booking.album_name.toLowerCase() : '';
@@ -246,10 +246,10 @@ const Booking = () => {
               }
 
               return (
-                <div key={`unpaid-typography-${index}`} className="cart-item">
+                <div key={`unpaid-typography-${index}`} className="cart-item booking-card">
                   <div className={`cart-image ${printingImageClass}`}></div>
-                  <div className="cart-details">
-                    <h3>{booking.album_name || '-'}</h3>
+                  <div className="cart-details booking-info">
+                    <h3 className="booking-title">{booking.album_name || '-'}</h3>
                     <p>Формат: {booking.format || '-'}</p>
                     <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
                     <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
@@ -257,43 +257,42 @@ const Booking = () => {
                     <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
                     <p>Адрес доставки: {booking.address_delivery || '-'}</p>
                     <p>Статус: {booking.status || '-'}</p>
-                    <p>
-                      <span className="final-price-span">
-                        Итоговая цена: {
-                          booking.final_price
-                            ? `${parseInt(booking.final_price, 10)}₽`
-                            : '-'
-                        }
-                      </span>
-                    </p>
-                    {booking.status !== 'Оплачено' && (
-                      <button
-                        className="pay-btn pay-btn-custom"
-                        onClick={() => navigate('/payments', {
-                          state: {
-                            bookingId: booking.booking_typographie_id,
-                            bookingType: 'typographie',
-                            amount: booking.final_price,
-                            status: booking.status,
-                            bookingData: {
-                              format: booking.format,
-                              the_basis_of_the_spread: booking.the_basis_of_the_spread,
-                              number_of_spreads: booking.number_of_spreads,
-                              lamination: booking.lamination,
-                              number_of_copies: booking.number_of_copies,
-                              address_delivery: booking.address_delivery,
-                              final_price: booking.final_price,
-                              album_name: booking.album_name
+                    <div className="booking-actions">
+                      <div className="booking-price-total">
+                        Итоговая цена:
+                        <span className="final-price-span booking-price">
+                          {booking.final_price ? `${parseInt(booking.final_price, 10)}₽` : '-'}
+                        </span>
+                      </div>
+                      {booking.status !== 'Оплачено' && (
+                        <button
+                          className="pay-btn pay-btn-custom"
+                          onClick={() => navigate('/payments', {
+                            state: {
+                              bookingId: booking.booking_typographie_id,
+                              bookingType: 'typographie',
+                              amount: booking.final_price,
+                              status: booking.status,
+                              bookingData: {
+                                format: booking.format,
+                                the_basis_of_the_spread: booking.the_basis_of_the_spread,
+                                number_of_spreads: booking.number_of_spreads,
+                                lamination: booking.lamination,
+                                number_of_copies: booking.number_of_copies,
+                                address_delivery: booking.address_delivery,
+                                final_price: booking.final_price,
+                                album_name: booking.album_name
+                              }
                             }
-                          }
-                        })}
-                      >
-                        Оплатить
+                          })}
+                        >
+                          Оплатить
+                        </button>
+                      )}
+                      <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
+                        Удалить
                       </button>
-                    )}
-                    <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
-                      Удалить
-                    </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -335,7 +334,7 @@ const Booking = () => {
               }
 
               return (
-                <div key={`unpaid-studio-${index}`} className="cart-item">
+                <div key={`unpaid-studio-${index}`} className="cart-item booking-card">
                   {studioPhoto ? (
                     <div
                       className="cart-image"
@@ -346,47 +345,46 @@ const Booking = () => {
                   ) : (
                     <div className={`cart-image ${studioImageClass}`} />
                   )}
-                  <div className="cart-details">
-                    <h3>{booking.studio_name || '-'}</h3>
+                  <div className="cart-details booking-info">
+                    <h3 className="booking-title">{booking.studio_name || '-'}</h3>
                     <p>Адрес: {booking.address || '-'}</p>
                     <p>Дата: {booking.date || '-'}</p>
                     <p>Время: {booking.time || '-'}</p>
                     <p>Статус: {booking.status || '-'}</p>
-                    <p>
-                      <span className="final-price-span">
-                        Итоговая цена: {
-                          booking.final_price
-                            ? `${parseInt(booking.final_price, 10)}₽`
-                            : '-'
-                        }
-                      </span>
-                    </p>
-                    {booking.status !== 'Оплачено' && (
-                      <button
-                        className="pay-btn pay-btn-custom"
-                        onClick={() => navigate('/payments', {
-                          state: {
-                            bookingId: booking.booking_studio_id,
-                            bookingType: 'photostudio',
-                            amount: booking.final_price,
-                            status: booking.status,
-                            bookingData: {
-                              studio_name: booking.studio_name,
-                              date: booking.date,
-                              time: booking.time,
-                              end_time: booking.end_time,
-                              address: booking.address,
-                              final_price: booking.final_price
+                    <div className="booking-actions">
+                      <div className="booking-price-total">
+                        Итоговая цена:
+                        <span className="final-price-span booking-price">
+                          {booking.final_price ? `${parseInt(booking.final_price, 10)}₽` : '-'}
+                        </span>
+                      </div>
+                      {booking.status !== 'Оплачено' && (
+                        <button
+                          className="pay-btn pay-btn-custom"
+                          onClick={() => navigate('/payments', {
+                            state: {
+                              bookingId: booking.booking_studio_id,
+                              bookingType: 'photostudio',
+                              amount: booking.final_price,
+                              status: booking.status,
+                              bookingData: {
+                                studio_name: booking.studio_name,
+                                date: booking.date,
+                                time: booking.time,
+                                end_time: booking.end_time,
+                                address: booking.address,
+                                final_price: booking.final_price
+                              }
                             }
-                          }
-                        })}
-                      >
-                        Оплатить
+                          })}
+                        >
+                          Оплатить
+                        </button>
+                      )}
+                      <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
+                        Удалить
                       </button>
-                    )}
-                    <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
-                      Удалить
-                    </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -395,9 +393,11 @@ const Booking = () => {
               <div className="centered-message">Нет не оплаченных заявок</div>
             )}
           </div>
-          {/* Оплаченные заявки */}
-          <div className="section-spaced">
-            <h3>Оплаченные заявки</h3>
+        </div>
+        {/* Оплаченные заявки */}
+        <div className="section-spaced">
+          <h3>Оплаченные заявки</h3>
+          <div className="cart-items cart-items-centered">
             {paidTypographyBookings.map((booking, index) => {
               let printingImageClass = '';
               const albumName = booking.album_name ? booking.album_name.toLowerCase() : '';
@@ -409,10 +409,10 @@ const Booking = () => {
               }
 
               return (
-                <div key={`paid-typography-${index}`} className="cart-item">
+                <div key={`paid-typography-${index}`} className="cart-item booking-card">
                   <div className={`cart-image ${printingImageClass}`}></div>
-                  <div className="cart-details">
-                    <h3>{booking.album_name || '-'}</h3>
+                  <div className="cart-details booking-info">
+                    <h3 className="booking-title">{booking.album_name || '-'}</h3>
                     <p>Формат: {booking.format || '-'}</p>
                     <p>Основа разворота: {booking.the_basis_of_the_spread || '-'}</p>
                     <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
@@ -420,18 +420,17 @@ const Booking = () => {
                     <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
                     <p>Адрес доставки: {booking.address_delivery || '-'}</p>
                     <p>Статус: {booking.status || '-'}</p>
-                    <p>
-                      <span className="final-price-span">
-                        Итоговая цена: {
-                          booking.final_price
-                            ? `${parseInt(booking.final_price, 10)}₽`
-                            : '-'
-                        }
-                      </span>
-                    </p>
-                    <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
-                      Удалить
-                    </button>
+                    <div className="booking-actions">
+                      <div className="booking-price-total">
+                        Итоговая цена:
+                        <span className="final-price-span booking-price">
+                          {booking.final_price ? `${parseInt(booking.final_price, 10)}₽` : '-'}
+                        </span>
+                      </div>
+                      <button onClick={() => handleDeleteTypographyBooking(booking.booking_typographie_id)} className="delete-button">
+                        Удалить
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
@@ -473,7 +472,7 @@ const Booking = () => {
               }
 
               return (
-                <div key={`paid-studio-${index}`} className="cart-item">
+                <div key={`paid-studio-${index}`} className="cart-item booking-card">
                   {studioPhoto ? (
                     <div
                       className="cart-image"
@@ -484,24 +483,23 @@ const Booking = () => {
                   ) : (
                     <div className={`cart-image ${studioImageClass}`} />
                   )}
-                  <div className="cart-details">
-                    <h3>{booking.studio_name || '-'}</h3>
+                  <div className="cart-details booking-info">
+                    <h3 className="booking-title">{booking.studio_name || '-'}</h3>
                     <p>Адрес: {booking.address || '-'}</p>
                     <p>Дата: {booking.date || '-'}</p>
                     <p>Время: {booking.time || '-'}</p>
                     <p>Статус: {booking.status || '-'}</p>
-                    <p>
-                      <span className="final-price-span">
-                        Итоговая цена: {
-                          booking.final_price
-                            ? `${parseInt(booking.final_price, 10)}₽`
-                            : '-'
-                        }
-                      </span>
-                    </p>
-                    <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
-                      Удалить
-                    </button>
+                    <div className="booking-actions">
+                      <div className="booking-price-total">
+                        Итоговая цена:
+                        <span className="final-price-span booking-price">
+                          {booking.final_price ? `${parseInt(booking.final_price, 10)}₽` : '-'}
+                        </span>
+                      </div>
+                      <button onClick={() => handleDeleteStudioBooking(booking.booking_studio_id)} className="delete-button">
+                        Удалить
+                      </button>
+                    </div>
                   </div>
                 </div>
               );

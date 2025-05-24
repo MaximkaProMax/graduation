@@ -27,12 +27,20 @@
 
 .printing-list {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 24px 16px;
+  flex-direction: column;
+  gap: 36px;
   width: 100%;
   box-sizing: border-box;
-  align-items: stretch; /* Все карточки по высоте */
+  align-items: center;
+}
+
+.printing-row {
+  display: flex;
+  flex-direction: row;
+  gap: 36px;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
 }
 
 .printing-card {
@@ -52,6 +60,30 @@
   overflow: hidden;
   height: 100%; /* Для выравнивания по высоте */
   min-height: 570px; /* Минимальная высота для одинаковых карточек */
+}
+
+.printing-card.modern,
+.printing-card.modern:hover {
+  background: #fff;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s !important;
+  border: none !important;
+  min-width: 260px;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.printing-card.modern:hover,
+.printing-card.modern:focus,
+.printing-card.modern:active {
+  box-shadow: 0 8px 32px rgba(245,185,30,0.18), 0 2px 8px rgba(245,185,30,0.13) !important;
 }
 
 .printing-card:hover {
@@ -82,29 +114,53 @@
 }
 
 .printing-info {
-  padding: 22px 18px 18px 18px;
-  text-align: center;
+  padding: 22px 22px 18px 22px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  color: #222;
-  flex: 1 1 auto; /* Растягиваем инфо-блок */
-  justify-content: flex-start;
+  gap: 10px;
+  background: transparent;
+  flex: 1 1 auto;
 }
 
-.printing-info h3 {
-  margin: 10px 0 5px 0;
-  min-height: 48px;
-  line-height: 1.2;
-  font-size: 1.25rem;
+.printing-main-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.35rem;
   color: #C17900;
   font-weight: 700;
+  text-align: left;
+  line-height: 1.2;
 }
 
-.printing-info p {
-  margin: 5px 0;
-  color: #222;
+.printing-description {
+  color: #223F4A;
+  font-size: 1.02rem;
+  margin-bottom: 0;
+  text-align: left;
+  opacity: 0.85;
+}
+
+.printing-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   font-size: 1.05rem;
+  margin: 8px 0 0 0;
+}
+
+.printing-formats {
+  color: #888;
+  font-size: 0.98rem;
+  font-weight: bold;
+}
+
+.printing-price {
+  color: #222;
+  font-weight: 600;
+  font-size: 1.08rem;
+  background: #FFF7E0;
+  border-radius: 7px;
+  padding: 4px 12px;
+  margin-left: 8px;
 }
 
 .action-container {
@@ -115,6 +171,23 @@
   margin-top: auto; /* Прижимаем к низу карточки */
   gap: 10px;
   min-height: 56px; /* Минимальная высота для выравнивания кнопок */
+}
+
+.action-container.modern {
+  margin-top: 18px;
+  padding: 0;
+}
+
+/* ПК-версия: flex-контейнер без gap */
+.action-inner-grid {
+  display: flex !important;
+  flex-direction: row;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  justify-content: flex-end;
+  padding: 0 4px;
+  gap: 0; /* убираем gap */
 }
 
 .order-button {
@@ -131,8 +204,33 @@
   margin-right: 0;
 }
 
+.order-button.modern {
+  flex: 1 1 auto;
+  background: #F0BB29 !important;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0;
+  font-size: 1.08rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  margin-right: 10px;
+  margin: 0 auto;
+  display: block;
+  min-width: 220px;
+  max-width: 100%;
+  flex-shrink: 0;
+}
+
 .order-button:hover {
   background-color: #e0aa1e;
+}
+
+.order-button.modern:hover {
+  background: #e0aa1e !important;
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
 }
 
 .favorite-icon {
@@ -144,11 +242,30 @@
   position: static;
 }
 
+.favorite-icon.modern {
+  font-size: 2rem;
+  margin-left: 16px !important;
+  align-self: center !important;
+  display: flex !important;
+  align-items: center !important;
+  position: static;
+  height: auto;
+}
+
 .favorite-icon.favorite {
   color: #ff0000;
 }
 
+.favorite-icon.modern.favorite {
+  color: #ff3b3b;
+  text-shadow: 0 2px 8px rgba(255,59,59,0.08);
+}
+
 .favorite-icon:hover {
+  color: #C17900;
+}
+
+.favorite-icon.modern:hover {
   color: #C17900;
 }
 
@@ -195,47 +312,73 @@
     align-items: center;
     gap: 18px;
   }
-  .printing-card {
+  .printing-row {
+    flex-direction: column;
+    gap: 18px;
+    max-width: 100%;
     width: 100%;
-    max-width: 360px;
-    min-width: 0;
-    margin-bottom: 20px;
-    min-height: 480px;
+    align-items: center;
+  }
+  .printing-card,
+  .printing-card.modern {
+    width: 100% !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin-bottom: 18px;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+    padding: 0 !important;
+    min-height: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
   }
   .printing-image {
     width: 100%;
     min-height: 180px;
+    max-height: 220px;
     height: 180px;
-    max-height: 180px;
-    border-top-left-radius: 12px;
-    border-top-right-radius: 12px;
-  }
-}
-
-@media (max-width: 768px) {
-  .printing-list {
-    flex-direction: column;
-    align-items: center;
-    gap: 18px;
-  }
-  .printing-card {
-    width: 100%;
-    max-width: 360px;
-    margin-bottom: 20px;
-  }
-  .printing-image {
-    width: 100%;
-    height: 200px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
   }
   .printing-info {
-    padding: 15px;
+    padding: 22px 22px 18px 22px;
+    font-size: 1rem;
   }
-  .order-button {
+  .order-button.modern {
     width: 100%;
-    margin-right: 0;
+    font-size: 1.08rem;
+    padding: 12px 0;
+    min-width: 0;
+    border-radius: 8px;
   }
-  .favorite-icon {
-    margin-left: 10px;
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
+  }
+  .printing-details-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    margin: 8px 0 0 0;
+    justify-content: space-between;
+  }
+  .action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 48px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0 12px; /* Добавлен горизонтальный gap между кнопкой и сердечком */
+    padding: 0 4px;
+  }
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
+    justify-self: end;
+    margin-right: 4px; /* Добавлен небольшой отступ справа */
   }
 }
 
@@ -248,53 +391,79 @@
     margin-bottom: 8px !important;
   }
   .printing-list {
-    flex-direction: column;
-    align-items: center;
     gap: 10px;
     width: 100%;
     padding-left: 3vw;
     padding-right: 3vw;
     box-sizing: border-box;
   }
-  .printing-card {
-    width: 94vw; /* Было 98vw, уменьшено для пространства */
-    max-width: 360px;
-    min-width: 0;
+  .printing-row {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    max-width: 100%;
+  }
+  .printing-card,
+  .printing-card.modern {
+    width: 100% !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
     margin-bottom: 10px;
-    border-radius: 8px;
+    border-radius: 18px !important;
     padding: 0;
-    min-height: 340px;
+    min-height: 220px;
     margin-left: auto;
     margin-right: auto;
     box-sizing: border-box;
-    /* Добавим тень для визуального отделения */
-    box-shadow: 0 2px 8px rgba(245,185,30,0.10);
+    box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
     background: #fff;
   }
   .printing-image {
     width: 100%;
-    min-height: 80px;
-    height: 48vw;
+    min-height: 120px;
+    height: 120px;
     max-height: 140px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
   }
   .printing-info {
-    padding: 10px 6px 10px 6px;
+    padding: 14px 10px 14px 10px;
     font-size: 0.98rem;
   }
-  .order-button {
+  .order-button.modern {
     width: 100%;
-    font-size: 14px;
-    padding: 8px 0;
+    font-size: 1rem;
+    padding: 10px 0;
+    min-width: 0;
+    border-radius: 8px;
   }
-  .favorite-icon {
-    font-size: 20px;
-    margin-left: 8px;
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
   }
-}
-
-.printing,
-.printing-list {
-  overflow-x: hidden;
+  .printing-details-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    margin: 8px 0 0 0;
+    justify-content: space-between;
+  }
+  .action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 44px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0 10px; /* Добавлен горизонтальный gap между кнопкой и сердечком */
+    padding: 0 2px;
+  }
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
+    justify-self: end;
+    margin-right: 2px; /* Добавлен небольшой отступ справа */
+  }
 }
