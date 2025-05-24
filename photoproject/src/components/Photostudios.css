@@ -201,7 +201,7 @@
 }
 
 .studio-hours {
-  color: #888;
+  color: #222; /* было #888, теперь чёрный */
   font-size: 0.98rem;
   font-weight: bold; /* выделено жирным */
 }
