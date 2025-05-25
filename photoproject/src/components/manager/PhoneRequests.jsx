@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/Requests.css';
+import '../styles/Requests.css';
 import { useNavigate } from 'react-router-dom';
-import { checkPageAccess } from '../utils/checkPageAccess';
+import { checkPageAccess } from '../../utils/checkPageAccess';
 
 const PhoneRequests = () => {
   const [phoneBookings, setPhoneBookings] = useState([]);

@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './styles/Admin.css';
-import { checkPageAccess } from '../utils/checkPageAccess';
+import '../styles/Admin.css';
+import { checkPageAccess } from '../../utils/checkPageAccess';
 
 const Admin = () => {
   const navigate = useNavigate();

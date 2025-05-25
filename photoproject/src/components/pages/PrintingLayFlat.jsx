@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import './styles/PrintingFlexBind.css';
-import axios from 'axios';
+import '../styles/PrintingLayFlat.css';
+import axios from 'axios'; // Импортируем axios
 import { useNavigate } from 'react-router-dom';
 
-const PrintingFlexBind = () => {
+const PrintingLayFlat = () => {
   const [format, setFormat] = useState([]);
   const [selectedFormat, setSelectedFormat] = useState('');
+  const [base, setBase] = useState([]);
+  const [selectedBase, setSelectedBase] = useState('');
   const [spreads, setSpreads] = useState('2'); // Устанавливаем значение по умолчанию в 2
   const [lamination, setLamination] = useState([]);
   const [selectedLamination, setSelectedLamination] = useState('');
@@ -25,18 +27,18 @@ const PrintingFlexBind = () => {
         console.log('Полученные данные:', data); // Лог полученных данных
 
         if (Array.isArray(data)) {
-          const flexBindOption = data.find(option => option.id === 2);
-          setPrintingOptions(flexBindOption);
-          setFormat(flexBindOption.format);
-          setSpreads('2'); // Устанавливаем значение по умолчанию в 2
+          const layFlatOption = data.find(option => option.main_album_name === 'LayFlat');
+          setPrintingOptions(layFlatOption);
+          setFormat(layFlatOption.format);
+          setBase(layFlatOption.basis_for_spread.split(', '));
           // Исправлено: lamination теперь всегда массив уникальных значений, разделённых по /
           let laminationArr = [];
-          if (Array.isArray(flexBindOption.lamination)) {
-            laminationArr = flexBindOption.lamination
+          if (Array.isArray(layFlatOption.lamination)) {
+            laminationArr = layFlatOption.lamination
               .flatMap(l => l.split('/').map(x => x.trim()))
               .filter(Boolean);
-          } else if (typeof flexBindOption.lamination === 'string') {
-            laminationArr = flexBindOption.lamination
+          } else if (typeof layFlatOption.lamination === 'string') {
+            laminationArr = layFlatOption.lamination
               .split('/')
               .map(l => l.trim())
               .filter(Boolean);
@@ -44,12 +46,13 @@ const PrintingFlexBind = () => {
           // Удаляем дубликаты
           laminationArr = [...new Set(laminationArr)];
           setLamination(laminationArr);
-          setPhotoClass(flexBindOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
-          setPrice(flexBindOption.price_of_spread * 2 + flexBindOption.copy_price * 1);
-          setAlbumName(flexBindOption.name_on_page); // Устанавливаем название альбома из базы данных
+          setPhotoClass(layFlatOption.photos_on_page[0]); // Устанавливаем класс изображения из массива
+          setPrice(layFlatOption.price_of_spread * spreads + layFlatOption.copy_price * quantity);
+          setAlbumName(layFlatOption.name_on_page); // Устанавливаем название альбома из базы данных
 
           // Устанавливаем значения по умолчанию
-          setSelectedFormat(flexBindOption.format[0]);
+          setSelectedFormat(layFlatOption.format[0]);
+          setSelectedBase(layFlatOption.basis_for_spread.split(', ')[0]);
           setSelectedLamination(laminationArr[0]);
         } else {
           console.error('Полученные данные не являются массивом:', data);
@@ -70,6 +73,10 @@ const PrintingFlexBind = () => {
 
   const handleFormatChange = (event) => {
     setSelectedFormat(event.target.value);
+  };
+
+  const handleBaseChange = (event) => {
+    setSelectedBase(event.target.value);
   };
 
   const handleSpreadsChange = (event) => {
@@ -101,6 +108,7 @@ const PrintingFlexBind = () => {
   const handleAddToCart = () => {
     const cartItem = {
       format: selectedFormat,
+      base: selectedBase,
       spreads: spreads,
       lamination: selectedLamination,
       quantity: quantity,
@@ -114,6 +122,7 @@ const PrintingFlexBind = () => {
     try {
       const bookingDetails = {
         format: selectedFormat,
+        base: selectedBase,
         spreads: spreads,
         lamination: selectedLamination,
         quantity: quantity,
@@ -146,15 +155,15 @@ const PrintingFlexBind = () => {
   };
 
   return (
-    <div className="printing-flexbind-page">
-      <div className="printing-flexbind-back-btn-container">
+    <div className="printing-layflat-page">
+      <div className="printing-layflat-back-btn-container">
         <button className="back-button" onClick={() => navigate(-1)}>
           Вернуться назад
         </button>
       </div>
-      <div className="printing-flexbind-content">
+      <div className="printing-layflat-content">
         <div className="left-section">
-          <div className={`flexbind-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
+          <div className={`layflat-image ${photoClass}`}></div> {/* Используем класс для отображения изображения */}
           <div className="product-description">
             <h2>Описание товара</h2>
             <p>{printingOptions.product_description}</p>
@@ -174,13 +183,21 @@ const PrintingFlexBind = () => {
               </select>
             </div>
             <div className="option">
+              <label>Основа разворота</label>
+              <select value={selectedBase} onChange={handleBaseChange}>
+                {base.map((b, index) => (
+                  <option key={index} value={b}>{b}</option>
+                ))}
+              </select>
+            </div>
+            <div className="option">
               <label>Кол-во разворотов</label>
               <input
                 type="number"
                 value={spreads}
                 onChange={handleSpreadsChange}
                 min="2"
-                max="25"
+                max="15"
                 inputMode="numeric"
                 onKeyPress={handleKeyPress}
               />
@@ -216,4 +233,4 @@ const PrintingFlexBind = () => {
   );
 };
 
-export default PrintingFlexBind;
+export default PrintingLayFlat;

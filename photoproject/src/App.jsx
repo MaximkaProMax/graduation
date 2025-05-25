@@ -2,36 +2,36 @@ import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import axios from 'axios';
 import Header from './components/Header';
-import Photostudios from './components/Photostudios';
-import Printing from './components/Printing';
-import Booking from './components/Booking';
-import Home from './components/Home';
-import Login from './components/Login'; // Импортируем компонент Login
-import Registration from './components/Registration'; // Импортируем компонент Registration
+import Photostudios from './components/pages/Photostudios';
+import Printing from './components/pages/Printing';
+import Booking from './components/pages/Booking';
+import Home from './components/pages/Home';
+import Login from './components/auth/Login'; // Импортируем компонент Login
+import Registration from './components/auth/Registration'; // Импортируем компонент Registration
 import Footer from './components/Footer'; // Импортируем компонент Footer
-import PrintingLayFlat from './components/PrintingLayFlat'; // Импортируем компонент PrintingLayFlat
-import PrintingFlexBind from './components/PrintingFlexBind';
-import Calendar from './components/Calendar'; // Импортируем компонент Calendar
-import Reviews from './components/Reviews'; // Импорт компонента Reviews
-import Admin from './components/Admin'; // Импорт компонента Admin
-import EditUserGroups from './components/EditUserGroups'; // Импорт компонента EditUserGroups
-import EditDatabase from './components/EditDatabase';
-import EditUsers from './components/EditUsers';
-import Manager from './components/Manager';
-import Requests from './components/Requests';
-import EditPersonalData from './components/EditPersonalData'; // Импортируем компонент EditPersonalData
-import Favourites from './components/Favourites'; // Импортируем компонент Favourites
-import Contacts from './components/Contacts'; // Импортируем компонент Contacts
-import PrivacyPolicy from './components/PrivacyPolicy'; // Импортируем компонент PrivacyPolicy
-import PhotoStudioRequests from './components/PhotoStudioRequests';
-import PrintingHouseRequests from './components/PrintingHouseRequests';
-import PhoneRequests from './components/PhoneRequests'; // Импортируем компонент PhoneRequests
-import ForgotPassword from './components/ForgotPassword'; // Импортируем компонент ForgotPassword
-import ResetPassword from './components/ResetPassword'; // Импортируем компонент ResetPassword
-import CreateItems from './components/CreateItems'; // Импортируем компонент создания элементов
-import PrintingDynamic from './components/PrintingDynamic'; // Новый универсальный компонент
-import Payments from './components/Payments'; // Импортируем компонент Payments
-import AccessControl from './components/AccessControl'; // Импортируем компонент AccessControl
+import PrintingLayFlat from './components/pages/PrintingLayFlat'; // Импортируем компонент PrintingLayFlat
+import PrintingFlexBind from './components/pages/PrintingFlexBind';
+import Calendar from './components/pages/Calendar'; // Импортируем компонент Calendar
+import Reviews from './components/pages/Reviews'; // Импорт компонента Reviews
+import Admin from './components/admin/Admin'; // Импорт компонента Admin
+import EditUserGroups from './components/admin/EditUserGroups'; // Импорт компонента EditUserGroups
+import EditDatabase from './components/admin/EditDatabase';
+import EditUsers from './components/admin/EditUsers';
+import Manager from './components/manager/Manager';
+import Requests from './components/manager/Requests';
+import EditPersonalData from './components/admin/EditPersonalData'; // Импортируем компонент EditPersonalData
+import Favourites from './components/pages/Favourites'; // Импортируем компонент Favourites
+import Contacts from './components/pages/Contacts'; // Импортируем компонент Contacts
+import PrivacyPolicy from './components/pages/PrivacyPolicy'; // Импортируем компонент PrivacyPolicy
+import PhotoStudioRequests from './components/manager/PhotoStudioRequests';
+import PrintingHouseRequests from './components/manager/PrintingHouseRequests';
+import PhoneRequests from './components/manager/PhoneRequests'; // Импортируем компонент PhoneRequests
+import ForgotPassword from './components/auth/ForgotPassword'; // Импортируем компонент ForgotPassword
+import ResetPassword from './components/auth/ResetPassword'; // Импортируем компонент ResetPassword
+import CreateItems from './components/admin/CreateItems'; // Импортируем компонент создания элементов
+import PrintingDynamic from './components/pages/PrintingDynamic'; // Новый универсальный компонент
+import Payments from './components/pages/Payments'; // Импортируем компонент Payments
+import AccessControl from './components/admin/AccessControl'; // Импортируем компонент AccessControl
 import './App.css';
 import './index.css';
 

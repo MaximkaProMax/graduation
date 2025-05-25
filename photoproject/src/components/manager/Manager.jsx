@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './styles/Manager.css';
-import { checkPageAccess } from '../utils/checkPageAccess';
+import '../styles/Manager.css';
+import { checkPageAccess } from '../../utils/checkPageAccess';
 
 const Manager = () => {
   const navigate = useNavigate();

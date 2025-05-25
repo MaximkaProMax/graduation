@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './styles/EditUsers.css';
+import '../styles/EditUsers.css';
 import { useNavigate } from 'react-router-dom';
-import { checkPageAccess } from '../utils/checkPageAccess';
+import { checkPageAccess } from '../../utils/checkPageAccess';
 
 const EditUsers = () => {
   const [users, setUsers] = useState([]);
@@ -22,7 +22,7 @@ const EditUsers = () => {
     axios.get('http://localhost:3001/api/users')
       .then(response => {
         if (Array.isArray(response.data)) {
-          // Сортировка по userId от меньшего к большему
+          // Сортировка по userId от меньшего к большому
           const sorted = [...response.data].sort((a, b) => a.userId - b.userId);
           setUsers(sorted);
         }

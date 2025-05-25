@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './styles/Reviews.css';
+import '../styles/Reviews.css';
 
 const Reviews = () => {
   const [reviews, setReviews] = useState([]);

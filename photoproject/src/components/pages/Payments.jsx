@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './styles/Payments.css';
+import '../styles/Payments.css';
 import axios from 'axios';
 
 const Payments = () => {
@@ -77,7 +77,7 @@ const Payments = () => {
   return (
     <div className="payments-page">
       <div className="payments-form-container">
-        <img src="/src/components/assets/images/sbp-logo.svg" alt="СБП" style={{ width: 80, margin: '0 auto', display: 'block' }} />
+        <div className="payment-logo"></div>
         <h2>Оплата</h2>
         <form onSubmit={handlePay}>
           <label>Номер карты</label>

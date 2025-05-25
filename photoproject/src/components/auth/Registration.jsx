@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './styles/Registration.css';
+import '../styles/Registration.css';
 
 const Registration = () => {
   const [name, setName] = useState(''); // Переименовано с fullName на name

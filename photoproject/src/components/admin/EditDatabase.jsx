@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import './styles/EditDatabase.css';
+import '../styles/EditDatabase.css';
 import { useNavigate } from 'react-router-dom';
-import { checkPageAccess } from '../utils/checkPageAccess';
+import { checkPageAccess } from '../../utils/checkPageAccess';
 
 const EditDatabase = () => {
   const [studios, setStudios] = useState([]);

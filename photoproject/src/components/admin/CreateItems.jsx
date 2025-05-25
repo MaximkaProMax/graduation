@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import './styles/CreateItems.css';
+import '../styles/CreateItems.css';
 
 const CreateItems = () => {
   const [studio, setStudio] = useState({
