@@ -388,149 +388,141 @@
     gap: 24px;
     max-width: 100%;
     width: 100%;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    width: 100% !important;
     margin: 0 auto !important;
-  };
-  .action-inner-grid { min-width: 0 !important;
-    display: flex !important;tant;
-    flex-direction: row;;
+  }
+  .action-inner-grid {
+    min-width: 0 !important;
+    display: flex !important;
+    flex-direction: row;
     align-items: center !important;
     justify-content: flex-end;
     width: 100%;
-    min-width: 0;on: row;
-    gap: 0;center !important;
-    padding: 0 4px;-content: flex-end;
+    gap: 0;
+    padding: 0 4px;
   }
-  .book-button.modern { min-width: 0;
+  .book-button.modern {
     min-width: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
     display: block;
-    text-align: center;mportant;
-    font-size: 1.08rem;portant;
-    padding: 12px 0;ant;
-    margin: 0;
-    flex: 1 1 auto;: center;
-    align-self: center;rem;
-  }
-  .favorite-icon.modern { margin: 0;
-    margin-left: 16px !important;
-    align-self: center !important;
-    display: flex !important;
-    align-items: center !important;
-    font-size: 2rem;
-    position: static;er !important;
-    height: auto;portant;
-  }center !important;
-} font-size: 2rem;
-   position: static;
-/* На мобильных и планшетах — карточки друг под другом, но форма не меняется */    height: auto;
-@media (max-width: 1100px) {
-  .studio-list {
-    flex-direction: column;
-    align-items: center; — карточки друг под другом, но форма не меняется */
-    gap: 18px;x) {
-  } {
-} flex-direction: column;
-   align-items: center;
-/* На мобильных — одна карточка в ряд */    gap: 18px;
-@media (max-width: 800px) {
-  .photostudios {
-    max-width: 100vw;
-    padding-left: 4vw;а карточка в ряд */
-    padding-right: 4vw;px) {
-  }
-  .studio-list { max-width: 100vw;
-    gap: 24px;: 4vw;
-  }ght: 4vw;
-  .studio-row {
-    flex-direction: column;{
-    gap: 24px;
-    max-width: 100%;
-    width: 100%;
-    align-items: center;on: column;
-  }
-  .studio-card { max-width: 100%;
-    max-width: 100% !important;
-    min-width: 0 !important;
-    width: 100% !important;
-    margin: 0 auto !important;
-  };
-  .action-inner-grid { min-width: 0 !important;
-    display: flex !important;tant;
-    flex-direction: row;;
-    align-items: center !important;
-    justify-content: flex-end;
-    width: 100%;
-    min-width: 0;on: row;
-    gap: 0;center !important;
-    padding: 0 4px;-content: flex-end;
-  }
-  .book-button.modern { min-width: 0;
-    min-width: 0;
-    width: 100%;x;
-    max-width: 100%;
-    margin: 0;n {
-    display: block; 0;
     text-align: center;
+    font-size: 1.08rem;
+    padding: 12px 0;
+    margin: 0;
     flex: 1 1 auto;
     align-self: center;
   }
-  .favorite-icon.modern { text-align: center;
+  .favorite-icon.modern {
     margin-left: 16px !important;
     align-self: center !important;
     display: flex !important;
     align-items: center !important;
     font-size: 2rem;
-    position: static;er !important;
-    height: auto;portant;
-  }center !important;
-} font-size: 2rem;
-   position: static;
-/* Для диапазона ширины 769px–800px: мобильный стиль кнопки и корректное расположение */    height: auto;
+    position: static;
+    height: auto;
+  }
+}
+
+/* Удаляем дублирующиеся и некорректные медиа-запросы */
+/* Оставляем только нужные медиа-запросы */
+@media (max-width: 800px) {
+  .photostudios {
+    max-width: 100vw;
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
+  .studio-list {
+    gap: 24px;
+  }
+  .studio-row {
+    flex-direction: column;
+    gap: 24px;
+    max-width: 100%;
+    width: 100%;
+    align-items: center;
+  }
+  .studio-card {
+    max-width: 100% !important;
+    min-width: 0 !important;
+    width: 100% !important;
+    margin: 0 auto !important;
+  }
+  .action-inner-grid {
+    display: flex !important;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    gap: 12px;
+    padding: 0 4px;
+    min-height: 56px;
+  }
+  .book-button.modern {
+    min-width: 160px !important;
+    max-width: 100%;
+    width: auto !important;
+    flex: 1 1 auto;
+    display: block;
+    text-align: center;
+    font-size: 1.08rem;
+    padding: 12px 0;
+    margin: 0;
+    align-self: center;
+    height: 48px;
+    line-height: 48px;
+    box-sizing: border-box;
+  }
+  .favorite-icon.modern {
+    margin: 0 !important;
+    align-self: center !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center;
+    font-size: 2rem;
+    height: 48px;
+    width: 48px;
+    line-height: 48px;
+    box-sizing: border-box;
+    background: none;
+    border: none;
+    padding: 0;
+  }
+}
+
+/* Для диапазона ширины 769px–800px: мобильный стиль кнопки и корректное расположение */
 @media (max-width: 800px) and (min-width: 769px) {
   .action-inner-grid {
     display: flex !important;
-    flex-direction: row;–800px: мобильный стиль кнопки и корректное расположение */
-    align-items: center;) and (min-width: 769px) {
+    flex-direction: row;
+    align-items: center;
     justify-content: space-between;
     width: 100%;
-    min-width: 0;on: row;
-    gap: 0;center;
-    padding: 0 4px;-content: space-between;
+    gap: 0;
+    padding: 0 4px;
   }
-  .book-button.modern { min-width: 0;
+  .book-button.modern {
     min-width: 0 !important;
     max-width: 100% !important;
     width: 100% !important;
     display: block;
-    text-align: center;mportant;
-    font-size: 1.08rem;portant;
-    padding: 12px 0;ant;
+    text-align: center;
+    font-size: 1.08rem;
+    padding: 12px 0;
     margin: 0;
-    flex: 1 1 auto;: center;
-  }rem;
-  .favorite-icon.modern { padding: 12px 0;
+    flex: 1 1 auto;
+    align-self: center;
+  }
+  .favorite-icon.modern {
+    padding: 12px 0;
     margin-left: 12px;
     justify-self: flex-end;
     align-self: center;
-    font-size: 2rem; {
-    position: static;x;
-  }x-end;
-} align-self: center;
-   font-size: 2rem;
-/* Удалить/закомментировать все остальные медиазапросы, которые меняют размеры карточки */    position: static;
-/*
-@media (max-width: 900px) { ... }
-@media (max-width: 600px) { ... }
-@media (min-width: 1200px) { ... }стальные медиазапросы, которые меняют размеры карточки */
-@media (max-width: 1199px) and (min-width: 700px) { ... }
-@media (max-width: 700px) { ... }
+    font-size: 2rem;
+    position: static;
+  }
 }
 
-/* Для мобильных: flex-контейнер для кнопки и сердечка */
+/* Для мобильных устройств */
 @media (max-width: 800px) {
   .action-inner-grid {
     display: flex !important;
