@@ -33,7 +33,7 @@ body {
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url('./assets/images/photostudio.jpg'); /* Путь к файлу в папке components/assets/images */
+  background-image: url('../assets/images/photostudio.jpg'); /* Исправленный путь */
   background-size: cover;
   background-position: center;
   filter: brightness(80%); /* Затемнение фона на 20% */

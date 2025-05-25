@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import './Admin.css';
+import './styles/Admin.css';
 import { checkPageAccess } from '../utils/checkPageAccess';
 
 const Admin = () => {

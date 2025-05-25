@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { toast, ToastContainer } from 'react-toastify';
 import axios from 'axios';
 import 'react-toastify/dist/ReactToastify.css';
-import './Calendar.css';
+import './styles/Calendar.css';
 
 const Calendar = () => {
   const location = useLocation();

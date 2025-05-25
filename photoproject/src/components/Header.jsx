@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import './Header.css';
+import './styles/Header.css';
 import axios from 'axios';
 
 function Header() {

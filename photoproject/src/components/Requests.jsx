@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './Requests.css';
+import './styles/Requests.css';
 import { useNavigate } from 'react-router-dom';
 
 const TYPOGRAPHY_STATUSES = [

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import './Payments.css';
+import './styles/Payments.css';
 import axios from 'axios';
 
 const Payments = () => {

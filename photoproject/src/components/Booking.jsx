@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import './Booking.css';
+import './styles/Booking.css';
 
 const Booking = () => {
   const [typographyBookings, setTypographyBookings] = useState([]);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import './PrintingLayFlat.css';
+import './styles/PrintingLayFlat.css';
 import axios from 'axios'; // Импортируем axios
 import { useNavigate } from 'react-router-dom';
 

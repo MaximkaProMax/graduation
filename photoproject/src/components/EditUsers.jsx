@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './EditUsers.css';
+import './styles/EditUsers.css';
 import { useNavigate } from 'react-router-dom';
 import { checkPageAccess } from '../utils/checkPageAccess';
 

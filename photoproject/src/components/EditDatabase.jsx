@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import axios from 'axios';
-import './EditDatabase.css';
+import './styles/EditDatabase.css';
 import { useNavigate } from 'react-router-dom';
 import { checkPageAccess } from '../utils/checkPageAccess';
 

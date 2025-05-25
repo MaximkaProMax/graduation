@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Favourites.css';
+import './styles/Favourites.css';
 
 function Favourites() {
   const navigate = useNavigate();

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom'; // Импорт useNavigate
-import './Login.css'; // Подключаем стили Login.css
+import './styles/Login.css'; // Подключаем стили Login.css
 
 const ResetPassword = () => {
   const { token } = useParams();

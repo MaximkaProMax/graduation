@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import './Printing.css';
+import './styles/Printing.css';
 import BookedIcon from './assets/images/Favourites/Booked.svg';
 import NotBookedIcon from './assets/images/Favourites/NotBooked.svg';
 

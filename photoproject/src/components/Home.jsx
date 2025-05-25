@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ToastContainer, toast } from 'react-toastify';
 import { useLocation } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
-import './Home.css';
+import './styles/Home.css';
 
 function Home() {
   const [isModalOpen, setIsModalOpen] = useState(false);
