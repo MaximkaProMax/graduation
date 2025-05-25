@@ -28,7 +28,7 @@ import PrintingHouseRequests from './components/PrintingHouseRequests';
 import PhoneRequests from './components/PhoneRequests'; // Импортируем компонент PhoneRequests
 import ForgotPassword from './components/ForgotPassword'; // Импортируем компонент ForgotPassword
 import ResetPassword from './components/ResetPassword'; // Импортируем компонент ResetPassword
-import CreateItems from './pages/CreateItems'; // Импортируем компонент создания элементов
+import CreateItems from './components/CreateItems'; // Импортируем компонент создания элементов
 import PrintingDynamic from './components/PrintingDynamic'; // Новый универсальный компонент
 import Payments from './components/Payments'; // Импортируем компонент Payments
 import AccessControl from './components/AccessControl'; // Импортируем компонент AccessControl
