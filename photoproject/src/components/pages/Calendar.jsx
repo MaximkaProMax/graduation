@@ -19,11 +19,46 @@ const Calendar = () => {
   const [startTime, setStartTime] = useState('09:00');
   const [endTime, setEndTime] = useState('10:00');
   const [totalCost, setTotalCost] = useState(0);
+  const [bookedIntervals, setBookedIntervals] = useState([]); // список занятых интервалов
   const navigate = useNavigate();
 
   useEffect(() => {
     calculateTotalCost();
   }, [startTime, endTime, numericPrice]);
+
+  // Вынесем fetchBooked наружу, чтобы можно было вызывать вручную
+  const fetchBooked = async () => {
+    if (!studio || !address || !year || !month || !selectedDate) {
+      setBookedIntervals([]);
+      return;
+    }
+    const dateStr = formatDateForDb(selectedDate, month, year);
+    try {
+      const res = await axios.get('http://localhost:3001/api/bookings/studios/booked', {
+        params: { name: studio, date: dateStr, address },
+        withCredentials: true
+      });
+      if (res.data.success) {
+        setBookedIntervals(
+          res.data.bookings.map(b => {
+            // Ожидаем, что b.time = "09:00-10:00"
+            const [start, end] = (b.time || '').split('-');
+            return { start, end };
+          })
+        );
+      } else {
+        setBookedIntervals([]);
+      }
+    } catch {
+      setBookedIntervals([]);
+    }
+  };
+
+  // Загружаем занятые интервалы при изменении даты/студии/адреса
+  useEffect(() => {
+    fetchBooked();
+    // eslint-disable-next-line
+  }, [studio, address, year, month, selectedDate]);
 
   const calculateTotalCost = () => {
     const [startHour] = startTime.split(':').map(Number);
@@ -112,11 +147,19 @@ const Calendar = () => {
       return;
     }
 
+    // Проверка: выбранный интервал не должен пересекаться с занятыми
+    const start = startTime.slice(0, 5);
+    const end = endTime.slice(0, 5);
+    const overlap = bookedIntervals.some(b => start < b.end && end > b.start);
+    if (overlap) {
+      toast.error('Выбранное время уже занято!');
+      return;
+    }
+
     const bookingDetails = {
       name: studio,
-      date: formatDateForDb(selectedDate, month, year), // исправлено
-      startTime: startTime,
-      endTime: endTime,
+      date: formatDateForDb(selectedDate, month, year),
+      time: `${startTime}-${endTime}`, // Сохраняем диапазон в одном поле
       address: address,
       totalCost: totalCost,
     };
@@ -131,6 +174,7 @@ const Calendar = () => {
 
       if (response.data.success) {
         toast.success('Бронирование успешно добавлено!');
+        await fetchBooked(); // <-- обновляем интервалы после бронирования
       } else {
         toast.error('Ошибка при добавлении бронирования');
       }
@@ -229,11 +273,25 @@ const Calendar = () => {
     return days;
   };
 
-  const generateTimeOptions = (start, end) => {
+  // Генерация опций времени с учётом занятых интервалов
+  const generateTimeOptions = (start, end, isEnd = false) => {
     const options = [];
     for (let hour = start; hour <= end; hour++) {
       const time = `${String(hour).padStart(2, '0')}:00`;
-      options.push(<option key={time} value={time}>{time}</option>);
+      // Для времени начала: не показывать если этот час уже занят
+      let disabled = false;
+      if (!isEnd && bookedIntervals.some(b => time >= b.start && time < b.end)) {
+        disabled = true;
+      }
+      // Для времени конца: не показывать если этот час уже занят (кроме если совпадает с концом предыдущего)
+      if (isEnd && bookedIntervals.some(b => time > b.start && time <= b.end)) {
+        disabled = true;
+      }
+      options.push(
+        <option key={time} value={time} disabled={disabled}>
+          {time}{disabled ? ' (занято)' : ''}
+        </option>
+      );
     }
     return options;
   };
@@ -289,6 +347,20 @@ const Calendar = () => {
               {renderDays()}
             </div>
           </div>
+          {/* Новый блок: отображение занятых интервалов */}
+          {bookedIntervals.length > 0 && (
+            <div className="booked-intervals-block">
+              <div className="booked-intervals-title">
+                <span className="intervals-icon">⏰</span>
+                Занятые интервалы:
+              </div>
+              <ul className="booked-intervals-list">
+                {bookedIntervals.map((b, idx) => (
+                  <li key={idx}>{b.start} — {b.end}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <div className="right-section">
           <div className="booking-form">
@@ -305,13 +377,13 @@ const Calendar = () => {
               <div className="input-group">
                 <label>Время с</label>
                 <select name="startTime" value={startTime} onChange={handleStartTimeChange} required>
-                  {generateTimeOptions(9, 20)}
+                  {generateTimeOptions(9, 20, false)}
                 </select>
               </div>
               <div className="input-group">
                 <label>Время до</label>
                 <select name="endTime" value={endTime} onChange={handleEndTimeChange} required>
-                  {generateTimeOptions(10, 21)}
+                  {generateTimeOptions(10, 21, true)}
                 </select>
               </div>
               <div className="input-group">

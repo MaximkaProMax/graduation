@@ -191,12 +191,27 @@ button {
     align-items: stretch;
     justify-content: flex-start;
   }
+  .booked-intervals-block {
+    max-width: 95vw;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
 }
 
 @media (max-width: 600px) {
   .calendar-mobile-stack {
     flex-direction: column;
     gap: 10px;
+  }
+  .booked-intervals-block {
+    max-width: 99vw;
+    width: 100%;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    font-size: 15px;
   }
 }
 
@@ -221,4 +236,61 @@ button {
   .right-section {
     order: 2; /* Раздел "Добавить бронирование" отображается под календарем */
   }
+}
+
+/* Стили для блока занятых интервалов */
+.booked-intervals-block {
+  background: #fff8e1;
+  border: 1.5px solid #ffc107;
+  border-radius: 8px;
+  padding: 16px 8px 10px 8px; /* уменьшили отступы слева и справа */
+  margin: 18px auto 0 auto;   /* центрирование по горизонтали */
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.08);
+  font-size: 16px;
+  max-width: 320px;           /* чуть меньше ширина */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.booked-intervals-title {
+  font-weight: 600;
+  color: #b00;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 17px;
+  justify-content: center; /* Центрирование текста и иконки */
+}
+
+.booked-intervals-title .intervals-icon {
+  font-size: 20px;
+  color: #C17900;
+}
+
+.booked-intervals-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центрирование элементов списка */
+}
+
+.booked-intervals-list li {
+  padding: 4px 0 4px 0;
+  color: #333;
+  font-weight: 500;
+  border-bottom: 1px dashed #ffe082;
+  font-size: 15px;
+  width: 100%;
+  text-align: center; /* Центрирование текста интервала */
+}
+
+.booked-intervals-list li:last-child {
+  border-bottom: none;
 }

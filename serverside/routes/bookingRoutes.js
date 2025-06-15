@@ -152,14 +152,59 @@ router.put('/typography/:id', authenticateToken, async (req, res) => {
   }
 });
 
+// Новый эндпоинт: получить все брони по студии и дате
+router.get('/studios/booked', authenticateToken, async (req, res) => {
+  try {
+    const { name, date, address } = req.query;
+    if (!name || !date) {
+      return res.status(400).json({ success: false, message: 'Не указаны студия или дата' });
+    }
+    const bookings = await BookingStudio.findAll({
+      where: {
+        studio_name: name,
+        date: date,
+        ...(address ? { address } : {})
+      },
+      attributes: ['time']
+    });
+    res.json({ success: true, bookings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Ошибка при получении занятых интервалов' });
+  }
+});
+
 // Добавление нового бронирования фотостудии
 router.post('/studios/add', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.userId; // Получаем ID пользователя из токена
-    const { name, date, startTime, endTime, address, totalCost } = req.body;
+    const userId = req.user.userId;
+    const { name, date, time, address, totalCost } = req.body;
 
-    if (!name || !date || !startTime || !endTime || !address || !totalCost) {
+    if (!name || !date || !time || !address || !totalCost) {
       return res.status(400).json({ success: false, message: 'Все поля должны быть заполнены' });
+    }
+
+    // Парсим диапазон времени
+    const [start, end] = (time || '').split('-');
+    if (!start || !end) {
+      return res.status(400).json({ success: false, message: 'Некорректный формат времени' });
+    }
+
+    // Проверка на пересечение времени среди всех заявок
+    const existingBookings = await BookingStudio.findAll({
+      where: {
+        studio_name: name,
+        date: date,
+        address: address
+      }
+    });
+
+    const isOverlap = existingBookings.some(b => {
+      const [bStart, bEnd] = (b.time || '').split('-');
+      return start < bEnd && end > bStart;
+    });
+
+    if (isOverlap) {
+      return res.status(409).json({ success: false, message: 'Выбранное время уже занято' });
     }
 
     const newBooking = await BookingStudio.create({
@@ -167,8 +212,7 @@ router.post('/studios/add', authenticateToken, async (req, res) => {
       user: userId,
       status: 'В обработке',
       date,
-      time: startTime,
-      end_time: endTime, // сохраняем endTime, если есть такое поле в модели
+      time, // Сохраняем диапазон, например "09:00-10:00"
       address,
       final_price: totalCost,
     });

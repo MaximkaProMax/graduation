@@ -27,8 +27,9 @@ const BookingStudio = sequelize.define(
       allowNull: false,
     },
     time: {
-      type: DataTypes.TIME,
+      type: DataTypes.STRING, // Изменено с DataTypes.TIME на DataTypes.STRING
       allowNull: false,
+      // Теперь здесь будет храниться диапазон, например "09:00-10:00"
     },
     address: {
       type: DataTypes.TEXT,
@@ -46,6 +47,7 @@ const BookingStudio = sequelize.define(
       type: DataTypes.DATE,
       defaultValue: DataTypes.NOW,
     },
+    // Поле end_time было удалено
   },
   {
     tableName: 'booking_photostudios',
