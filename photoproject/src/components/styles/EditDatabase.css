@@ -21,10 +21,12 @@
 .edit-database-table-container {
   overflow-x: auto;
   margin-bottom: 20px;
+  width: 100%;
 }
 
 .edit-database-table {
   width: 100%;
+  min-width: 700px; /* Не даём таблице сжиматься слишком сильно */
   border-collapse: collapse;
   background: #fff; /* Белый фон для таблицы */
 }
@@ -138,4 +140,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .edit-database-table {
+    min-width: 600px;
+  }
 }

@@ -168,3 +168,20 @@
 .back-button:hover {
   background-color: #5a6268;
 }
+
+/* Обёртка для горизонтальной прокрутки таблицы на мобильных устройствах */
+.edit-users-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+}
+
+@media (max-width: 768px) {
+  .edit-users-table-wrapper {
+    -webkit-overflow-scrolling: touch;
+    overflow-x: auto;
+    margin-bottom: 16px;
+  }
+  .edit-users-table {
+    min-width: 600px;
+  }
+}
