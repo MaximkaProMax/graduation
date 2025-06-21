@@ -123,41 +123,43 @@ const EditUserGroups = () => {
                   role.roleName
                 )}
               </td>
-              <td>
-                {editingRoleId === role.roleId ? (
-                  <>
-                    <button
-                      className="edit-user-groups-button edit"
-                      onClick={() => handleSaveRole(role.roleId)}
-                    >
-                      Сохранить
-                    </button>
-                    <button
-                      className="edit-user-groups-button"
-                      onClick={() => {
-                        setEditingRoleId(null);
-                        setEditingRoleName('');
-                      }}
-                    >
-                      Отмена
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <button
-                      className="edit-user-groups-button edit"
-                      onClick={() => handleEditRole(role.roleId, role.roleName)}
-                    >
-                      Редактировать
-                    </button>
-                    <button
-                      className="edit-user-groups-button delete"
-                      onClick={() => handleDeleteRole(role.roleId)}
-                    >
-                      Удалить
-                    </button>
-                  </>
-                )}
+              <td className="actions-cell">
+                <div className="edit-user-groups-actions">
+                  {editingRoleId === role.roleId ? (
+                    <>
+                      <button
+                        className="edit-user-groups-button edit"
+                        onClick={() => handleSaveRole(role.roleId)}
+                      >
+                        Сохранить
+                      </button>
+                      <button
+                        className="edit-user-groups-button"
+                        onClick={() => {
+                          setEditingRoleId(null);
+                          setEditingRoleName('');
+                        }}
+                      >
+                        Отмена
+                      </button>
+                    </>
+                  ) : (
+                    <>
+                      <button
+                        className="edit-user-groups-button edit"
+                        onClick={() => handleEditRole(role.roleId, role.roleName)}
+                      >
+                        Редактировать
+                      </button>
+                      <button
+                        className="edit-user-groups-button delete"
+                        onClick={() => handleDeleteRole(role.roleId)}
+                      >
+                        Удалить
+                      </button>
+                    </>
+                  )}
+                </div>
               </td>
             </tr>
           ))}

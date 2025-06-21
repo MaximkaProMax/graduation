@@ -34,13 +34,20 @@
   background-color: #f9f9f9;
 }
 
+.edit-user-groups-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .edit-user-groups-button {
   padding: 8px 12px;
   border: none;
   border-radius: 5px;
   font-weight: bold;
   cursor: pointer;
-  margin-right: 5px;
+  margin-right: 0;
+  margin-bottom: 0;
   transition: background 0.2s;
 }
 
@@ -91,4 +98,27 @@
 
 .back-button:hover {
   background-color: #5a6268;
+}
+
+@media (max-width: 768px) {
+  .actions-cell {
+    text-align: center !important;
+    vertical-align: middle !important;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .edit-user-groups-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+  }
+  .edit-user-groups-actions .edit-user-groups-button {
+    width: 100%;
+    box-sizing: border-box;
+    text-align: center;
+  }
 }
