@@ -195,8 +195,7 @@ const Requests = () => {
       const payload = {
         name: newStudio.studio_name,
         date: newStudio.date,
-        startTime: normalizeTime(newStudio.time),
-        endTime: normalizeTime(newStudio.end_time),
+        time: `${newStudio.time}-${newStudio.end_time}`,
         address: newStudio.address,
         totalCost: newStudio.final_price,
       };
