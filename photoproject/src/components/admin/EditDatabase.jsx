@@ -552,8 +552,8 @@ const EditDatabase = () => {
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
 
       <h3>Фотостудии</h3>
-      <div className="edit-database-table-container" style={{ overflowX: 'auto', width: '100%' }}>
-        <table className="edit-database-table" style={{ minWidth: 1200 }}>
+      <div className="edit-database-table-container">
+        <table className="edit-database-table">
           <thead>
             <tr>
               {studios.length > 0 &&
@@ -660,8 +660,8 @@ const EditDatabase = () => {
         </table>
       </div>
       <h3>Типографии</h3>
-      <div className="edit-database-table-container" style={{ overflowX: 'auto', width: '100%' }}>
-        <table className="edit-database-table" style={{ minWidth: 1400 }}>
+      <div className="edit-database-table-container">
+        <table className="edit-database-table">
           <thead>
             <tr>
               {typographies.length > 0 &&
