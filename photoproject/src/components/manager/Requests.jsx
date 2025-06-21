@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import "../styles/Requests.css";
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import Modal from 'react-modal';
 
 const TYPOGRAPHY_STATUSES = [
   "Новый заказ",
@@ -43,6 +46,7 @@ const Requests = () => {
   const [selectedTypographyId, setSelectedTypographyId] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({ open: false, id: null, type: null });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -79,25 +83,30 @@ const Requests = () => {
     }
   };
 
-  const handleDeleteStudio = async (id) => {
-    if (!window.confirm('Удалить заявку?')) return;
+  const openDeleteModal = (id, type) => setDeleteModal({ open: true, id, type });
+  const closeDeleteModal = () => setDeleteModal({ open: false, id: null, type: null });
+
+  const confirmDelete = async () => {
+    if (!deleteModal.id || !deleteModal.type) return closeDeleteModal();
     try {
-      await axios.delete(`http://localhost:3001/api/bookings/studios/${id}`, { withCredentials: true });
-      setStudioBookings(studioBookings.filter(b => b.booking_studio_id !== id));
+      if (deleteModal.type === 'studio') {
+        await axios.delete(`http://localhost:3001/api/bookings/studios/${deleteModal.id}`, { withCredentials: true });
+        setStudioBookings(studioBookings.filter(b => b.booking_studio_id !== deleteModal.id));
+        toast.success('Заявка на фотостудию успешно удалена!');
+      } else if (deleteModal.type === 'typography') {
+        await axios.delete(`http://localhost:3001/api/bookings/typography/${deleteModal.id}`, { withCredentials: true });
+        setTypographyBookings(typographyBookings.filter(b => b.booking_typographie_id !== deleteModal.id));
+        toast.success('Заявка на типографию успешно удалена!');
+      }
     } catch (error) {
-      alert('Ошибка при удалении');
+      toast.error('Ошибка при удалении');
+    } finally {
+      closeDeleteModal();
     }
   };
 
-  const handleDeleteTypography = async (id) => {
-    if (!window.confirm('Удалить заявку?')) return;
-    try {
-      await axios.delete(`http://localhost:3001/api/bookings/typography/${id}`, { withCredentials: true });
-      setTypographyBookings(typographyBookings.filter(b => b.booking_typographie_id !== id));
-    } catch (error) {
-      alert('Ошибка при удалении');
-    }
-  };
+  const handleDeleteStudio = (id) => openDeleteModal(id, 'studio');
+  const handleDeleteTypography = (id) => openDeleteModal(id, 'typography');
 
   const handleEditStudio = (booking) => setEditingStudio({ ...booking });
   const handleStudioChange = (e) => setEditingStudio({ ...editingStudio, [e.target.name]: e.target.value });
@@ -201,12 +210,12 @@ const Requests = () => {
       };
       console.log('Отправка данных бронирования фотостудии:', payload);
       await axios.post('http://localhost:3001/api/bookings/studios/add', payload, { withCredentials: true });
-      alert('Заявка на фотостудию успешно создана!');
+      toast.success('Заявка на фотостудию успешно создана!');
       setNewStudio({ studio_name: '', date: '', time: '', end_time: '', address: '', final_price: '' });
       fetchAllRequests();
     } catch (err) {
       console.error('Ошибка при добавлении заявки на фотостудию:', err);
-      alert('Ошибка при добавлении');
+      toast.error('Ошибка при добавлении');
     }
   };
 
@@ -233,12 +242,12 @@ const Requests = () => {
       };
       console.log('Отправка данных бронирования типографии:', payload);
       await axios.post('http://localhost:3001/api/bookings/add', payload, { withCredentials: true });
-      alert('Заявка на типографию успешно создана!');
+      toast.success('Заявка на типографию успешно создана!');
       setNewTypography({ format: '', the_basis_of_the_spread: '', number_of_spreads: '', lamination: '', number_of_copies: '', address_delivery: '', final_price: '', album_name: '' });
       fetchAllRequests();
     } catch (err) {
       console.error('Ошибка при добавлении заявки на типографию:', err);
-      alert('Ошибка при добавлении');
+      toast.error('Ошибка при добавлении');
     }
   };
 
@@ -266,6 +275,22 @@ const Requests = () => {
 
   return (
     <div className="requests-container">
+      <ToastContainer position="top-center" autoClose={3000} />
+      <Modal
+        isOpen={deleteModal.open}
+        onRequestClose={closeDeleteModal}
+        className="modal"
+        overlayClassName="overlay"
+        ariaHideApp={false}
+      >
+        <h2>Подтвердите удаление</h2>
+        <p>Вы уверены, что хотите удалить эту заявку?</p>
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 24 }}>
+          <button className="submit-button" style={{ minWidth: 120 }} onClick={confirmDelete}>Удалить</button>
+          <button className="submit-button" style={{ minWidth: 120, background: '#ccc', color: '#222' }} onClick={closeDeleteModal}>Отмена</button>
+        </div>
+      </Modal>
+
       <h2 style={{ fontSize: 'clamp(18px, 4vw, 28px)' }}>Все заказы пользователей</h2>
       <button className="back-button" style={{ margin: '16px 0 24px 0' }} onClick={() => navigate(-1)}>
         Вернуться назад
