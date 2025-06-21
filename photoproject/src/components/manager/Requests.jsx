@@ -112,27 +112,17 @@ const Requests = () => {
   const handleStudioChange = (e) => setEditingStudio({ ...editingStudio, [e.target.name]: e.target.value });
   const handleSaveStudio = async () => {
     try {
-      // Валидация времени (разрешаем HH:MM и HH:MM:SS)
-      const timePattern = /^\d{2}:\d{2}(:\d{2})?$/;
-      const normalizeTime = (val) => {
-        if (!val) return '';
-        if (/^\d{2}:\d{2}$/.test(val)) return val + ':00';
-        return val;
-      };
-      if (!timePattern.test(editingStudio.time)) {
-        alert('Время начала должно быть в формате HH:MM или HH:MM:SS');
-        return;
-      }
-      if (editingStudio.end_time && !timePattern.test(editingStudio.end_time)) {
-        alert('Время конца должно быть в формате HH:MM или HH:MM:SS');
+      // Разрешаем диапазон времени вида HH:MM-HH:MM или HH:MM:SS-HH:MM:SS
+      const timeRangePattern = /^\d{2}:\d{2}(:\d{2})?-\d{2}:\d{2}(:\d{2})?$/;
+      if (!timeRangePattern.test(editingStudio.time)) {
+        alert('Время должно быть в формате HH:MM-HH:MM или HH:MM:SS-HH:MM:SS');
         return;
       }
       const payload = {
         studio_name: editingStudio.studio_name,
         status: editingStudio.status || 'В обработке',
         date: editingStudio.date,
-        time: normalizeTime(editingStudio.time),
-        end_time: normalizeTime(editingStudio.end_time),
+        time: editingStudio.time,
         address: editingStudio.address,
         final_price: editingStudio.final_price
       };
@@ -291,319 +281,322 @@ const Requests = () => {
         </div>
       </Modal>
 
-      <h2 style={{ fontSize: 'clamp(18px, 4vw, 28px)' }}>Все заказы пользователей</h2>
       <button className="back-button" style={{ margin: '16px 0 24px 0' }} onClick={() => navigate(-1)}>
         Вернуться назад
       </button>
 
-      <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на фотостудию</h3>
-      <form onSubmit={handleAddStudio} className="add-form">
-        <input
-          name="studio_name"
-          value={newStudio.studio_name}
-          onChange={handleNewStudioChange}
-          placeholder="Название студии"
-          required
-          type="text"
-          maxLength={255}
-        />
-        <input
-          name="date"
-          value={newStudio.date}
-          onChange={handleNewStudioChange}
-          placeholder="Дата (YYYY-MM-DD)"
-          required
-          type="date"
-        />
-        <input
-          name="time"
-          value={newStudio.time}
-          onChange={handleNewStudioChange}
-          placeholder="Время начала (HH:MM)"
-          required
-          type="time"
-        />
-        <input
-          name="end_time"
-          value={newStudio.end_time}
-          onChange={handleNewStudioChange}
-          placeholder="Время конца (HH:MM)"
-          required
-          type="time"
-        />
-        <input
-          name="address"
-          value={newStudio.address}
-          onChange={handleNewStudioChange}
-          placeholder="Адрес"
-          required
-          type="text"
-        />
-        <input
-          name="final_price"
-          value={newStudio.final_price}
-          onChange={handleNewStudioChange}
-          placeholder="Цена"
-          required
-          type="number"
-          step="0.01"
-        />
-        <button type="submit">Добавить</button>
-      </form>
+      <div className="requests-add-card">
+        <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на типографию</h3>
+        <form onSubmit={handleAddTypography} className="add-form">
+          <input
+            name="format"
+            value={newTypography.format}
+            onChange={handleNewTypographyChange}
+            placeholder="Формат"
+            required
+            type="text"
+            maxLength={50}
+          />
+          <input
+            name="the_basis_of_the_spread"
+            value={newTypography.the_basis_of_the_spread}
+            onChange={handleNewTypographyChange}
+            placeholder="Основа разворота"
+            type="text"
+            maxLength={100}
+          />
+          <input
+            name="number_of_spreads"
+            value={newTypography.number_of_spreads}
+            onChange={handleNewTypographyChange}
+            placeholder="Кол-во разворотов"
+            required
+            type="number"
+            min="1"
+            step="1"
+          />
+          <input
+            name="lamination"
+            value={newTypography.lamination}
+            onChange={handleNewTypographyChange}
+            placeholder="Ламинация"
+            required
+            type="text"
+            maxLength={50}
+          />
+          <input
+            name="number_of_copies"
+            value={newTypography.number_of_copies}
+            onChange={handleNewTypographyChange}
+            placeholder="Кол-во копий"
+            required
+            type="number"
+            min="1"
+            step="1"
+          />
+          <input
+            name="address_delivery"
+            value={newTypography.address_delivery}
+            onChange={handleNewTypographyChange}
+            placeholder="Адрес доставки"
+            type="text"
+          />
+          <input
+            name="final_price"
+            value={newTypography.final_price}
+            onChange={handleNewTypographyChange}
+            placeholder="Цена"
+            required
+            type="number"
+            step="0.01"
+          />
+          <input
+            name="album_name"
+            value={newTypography.album_name}
+            onChange={handleNewTypographyChange}
+            placeholder="Название альбома"
+            required
+            type="text"
+            maxLength={255}
+          />
+          <button type="submit">Добавить</button>
+        </form>
 
-      <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на типографию</h3>
-      <form onSubmit={handleAddTypography} className="add-form">
-        <input
-          name="format"
-          value={newTypography.format}
-          onChange={handleNewTypographyChange}
-          placeholder="Формат"
-          required
-          type="text"
-          maxLength={50}
-        />
-        <input
-          name="the_basis_of_the_spread"
-          value={newTypography.the_basis_of_the_spread}
-          onChange={handleNewTypographyChange}
-          placeholder="Основа разворота"
-          type="text"
-          maxLength={100}
-        />
-        <input
-          name="number_of_spreads"
-          value={newTypography.number_of_spreads}
-          onChange={handleNewTypographyChange}
-          placeholder="Кол-во разворотов"
-          required
-          type="number"
-          min="1"
-          step="1"
-        />
-        <input
-          name="lamination"
-          value={newTypography.lamination}
-          onChange={handleNewTypographyChange}
-          placeholder="Ламинация"
-          required
-          type="text"
-          maxLength={50}
-        />
-        <input
-          name="number_of_copies"
-          value={newTypography.number_of_copies}
-          onChange={handleNewTypographyChange}
-          placeholder="Кол-во копий"
-          required
-          type="number"
-          min="1"
-          step="1"
-        />
-        <input
-          name="address_delivery"
-          value={newTypography.address_delivery}
-          onChange={handleNewTypographyChange}
-          placeholder="Адрес доставки"
-          type="text"
-        />
-        <input
-          name="final_price"
-          value={newTypography.final_price}
-          onChange={handleNewTypographyChange}
-          placeholder="Цена"
-          required
-          type="number"
-          step="0.01"
-        />
-        <input
-          name="album_name"
-          value={newTypography.album_name}
-          onChange={handleNewTypographyChange}
-          placeholder="Название альбома"
-          required
-          type="text"
-          maxLength={255}
-        />
-        <button type="submit">Добавить</button>
-      </form>
-
-      <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Заказы на типографию</h3>
-      <div className="table-container" style={{ maxWidth: '100vw', overflowX: 'auto' }}>
-        <table className="requests-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Пользователь</th>
-              <th>Статус</th>
-              <th>Формат</th>
-              <th>Основа разворота</th>
-              <th>Количество разворотов</th>
-              <th>Ламинация</th>
-              <th>Количество копий</th>
-              <th>Адрес доставки</th>
-              <th>Итоговая цена</th>
-              <th>Название альбома</th>
-              <th>Дата создания</th>
-              <th>Дата обновления</th>
-            </tr>
-          </thead>
-          <tbody>
-            {typographyBookings.map((booking) =>
-              editingTypography && editingTypography.booking_typographie_id === booking.booking_typographie_id ? (
-                <tr key={booking.booking_typographie_id}>
-                  <td>{booking.booking_typographie_id}</td>
-                  <td>{booking.user}</td>
-                  <td>
-                    <select
-                      name="status"
-                      value={editingTypography.status || ''}
-                      onChange={handleTypographyChange}
-                      style={{ minWidth: 120 }}
-                    >
-                      <option value="">Выберите статус</option>
-                      {TYPOGRAPHY_STATUSES.map(status => (
-                        <option key={status} value={status}>{status}</option>
-                      ))}
-                    </select>
-                  </td>
-                  <td><input name="format" value={editingTypography.format} onChange={handleTypographyChange} /></td>
-                  <td><input name="the_basis_of_the_spread" value={editingTypography.the_basis_of_the_spread} onChange={handleTypographyChange} /></td>
-                  <td><input name="number_of_spreads" value={editingTypography.number_of_spreads} onChange={handleTypographyChange} /></td>
-                  <td><input name="lamination" value={editingTypography.lamination} onChange={handleTypographyChange} /></td>
-                  <td><input name="number_of_copies" value={editingTypography.number_of_copies} onChange={handleTypographyChange} /></td>
-                  <td><input name="address_delivery" value={editingTypography.address_delivery} onChange={handleTypographyChange} /></td>
-                  <td><input name="final_price" value={editingTypography.final_price} onChange={handleTypographyChange} /></td>
-                  <td><input name="album_name" value={editingTypography.album_name} onChange={handleTypographyChange} /></td>
-                  <td>{new Date(booking.created_at).toLocaleDateString()}</td>
-                  <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                </tr>
-              ) : (
-                <tr
-                  key={booking.booking_typographie_id}
-                  className={selectedTypographyId === booking.booking_typographie_id ? 'selected-row' : ''}
-                  onClick={() => setSelectedTypographyId(booking.booking_typographie_id)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <td>{booking.booking_typographie_id}</td>
-                  <td>{booking.user}</td>
-                  <td>{booking.status}</td>
-                  <td>{booking.format}</td>
-                  <td>{booking.the_basis_of_the_spread}</td>
-                  <td>{booking.number_of_spreads}</td>
-                  <td>{booking.lamination}</td>
-                  <td>{booking.number_of_copies}</td>
-                  <td>{booking.address_delivery}</td>
-                  <td>{booking.final_price}</td>
-                  <td>{booking.album_name}</td>
-                  <td>{new Date(booking.created_at).toLocaleDateString()}</td>
-                  <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-        {/* Кнопки действий оставляем вне таблицы */}
-        {selectedTypographyId && !editingTypography && (
-          <div className="action-buttons">
-            <button onClick={() => handleEditTypography(typographyBookings.find(b => b.booking_typographie_id === selectedTypographyId))}>
-              Редактировать
-            </button>
-            <button onClick={() => handleDeleteTypography(selectedTypographyId)}>
-              Удалить
-            </button>
-          </div>
-        )}
-        {editingTypography && (
-          <div className="action-buttons">
-            <button onClick={handleSaveTypography}>Сохранить</button>
-            <button onClick={() => setEditingTypography(null)}>Отмена</button>
-          </div>
-        )}
+        <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на фотостудию</h3>
+        <form onSubmit={handleAddStudio} className="add-form">
+          <input
+            name="studio_name"
+            value={newStudio.studio_name}
+            onChange={handleNewStudioChange}
+            placeholder="Название студии"
+            required
+            type="text"
+            maxLength={255}
+          />
+          <input
+            name="date"
+            value={newStudio.date}
+            onChange={handleNewStudioChange}
+            placeholder="Дата (YYYY-MM-DD)"
+            required
+            type="date"
+          />
+          <input
+            name="time"
+            value={newStudio.time}
+            onChange={handleNewStudioChange}
+            placeholder="Время начала (HH:MM)"
+            required
+            type="time"
+          />
+          <input
+            name="end_time"
+            value={newStudio.end_time}
+            onChange={handleNewStudioChange}
+            placeholder="Время конца (HH:MM)"
+            required
+            type="time"
+          />
+          <input
+            name="address"
+            value={newStudio.address}
+            onChange={handleNewStudioChange}
+            placeholder="Адрес"
+            required
+            type="text"
+          />
+          <input
+            name="final_price"
+            value={newStudio.final_price}
+            onChange={handleNewStudioChange}
+            placeholder="Цена"
+            required
+            type="number"
+            step="0.01"
+          />
+          <button type="submit">Добавить</button>
+        </form>
       </div>
 
-      <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Заказы на фотостудии</h3>
-      <div className="table-container" style={{ maxWidth: '100vw', overflowX: 'auto' }}>
-        <table className="requests-table">
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Пользователь</th>
-              <th>Название студии</th>
-              <th>Статус</th>
-              <th>Дата</th>
-              <th>Время</th>
-              <th>Адрес</th>
-              <th>Итоговая цена</th>
-              <th>Дата создания</th>
-              <th>Дата обновления</th>
-            </tr>
-          </thead>
-          <tbody>
-            {studioBookings.map((booking) =>
-              editingStudio && editingStudio.booking_studio_id === booking.booking_studio_id ? (
-                <tr key={booking.booking_studio_id}>
-                  <td>{booking.booking_studio_id}</td>
-                  <td>{booking.user}</td>
-                  <td><input name="studio_name" value={editingStudio.studio_name} onChange={handleStudioChange} /></td>
-                  <td>
-                    <select
-                      name="status"
-                      value={editingStudio.status || ''}
-                      onChange={handleStudioChange}
-                      style={{ minWidth: 120 }}
-                    >
-                      <option value="">Выберите статус</option>
-                      {STUDIO_STATUSES.map(status => (
-                        <option key={status} value={status}>{status}</option>
-                      ))}
-                    </select>
-                  </td>
-                  <td><input name="date" value={editingStudio.date} onChange={handleStudioChange} /></td>
-                  <td><input name="time" value={editingStudio.time} onChange={handleStudioChange} /></td>
-                  <td><input name="address" value={editingStudio.address} onChange={handleStudioChange} /></td>
-                  <td><input name="final_price" value={editingStudio.final_price} onChange={handleStudioChange} /></td>
-                  <td>{new Date(booking.created_at).toLocaleDateString()}</td>
-                  <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                </tr>
-              ) : (
-                <tr
-                  key={booking.booking_studio_id}
-                  className={selectedStudioId === booking.booking_studio_id ? 'selected-row' : ''}
-                  onClick={() => setSelectedStudioId(booking.booking_studio_id)}
-                  style={{ cursor: 'pointer' }}
-                >
-                  <td>{booking.booking_studio_id}</td>
-                  <td>{booking.user}</td>
-                  <td>{booking.studio_name}</td>
-                  <td>{booking.status}</td>
-                  <td>{booking.date}</td>
-                  <td>{booking.time}</td>
-                  <td>{booking.address}</td>
-                  <td>{booking.final_price}</td>
-                  <td>{new Date(booking.created_at).toLocaleDateString()}</td>
-                  <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                </tr>
-              )
-            )}
-          </tbody>
-        </table>
-        {/* Кнопки действий оставляем вне таблицы */}
-        {selectedStudioId && !editingStudio && (
-          <div className="action-buttons">
-            <button onClick={() => handleEditStudio(studioBookings.find(b => b.booking_studio_id === selectedStudioId))}>
-              Редактировать
-            </button>
-            <button onClick={() => handleDeleteStudio(selectedStudioId)}>
-              Удалить
-            </button>
-          </div>
-        )}
-        {editingStudio && (
-          <div className="action-buttons">
-            <button onClick={handleSaveStudio}>Сохранить</button>
-            <button onClick={() => setEditingStudio(null)}>Отмена</button>
-          </div>
-        )}
+      <div className="requests-orders-card">
+        <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Заказы на типографию</h3>
+        <div className="table-container" style={{ maxWidth: '100vw', overflowX: 'auto' }}>
+          <table className="requests-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Пользователь</th>
+                <th>Статус</th>
+                <th>Формат</th>
+                <th>Основа разворота</th>
+                <th>Количество разворотов</th>
+                <th>Ламинация</th>
+                <th>Количество копий</th>
+                <th>Адрес доставки</th>
+                <th>Итоговая цена</th>
+                <th>Название альбома</th>
+                <th>Дата создания</th>
+                <th>Дата обновления</th>
+              </tr>
+            </thead>
+            <tbody>
+              {typographyBookings.map((booking) =>
+                editingTypography && editingTypography.booking_typographie_id === booking.booking_typographie_id ? (
+                  <tr key={booking.booking_typographie_id}>
+                    <td>{booking.booking_typographie_id}</td>
+                    <td>{booking.user}</td>
+                    <td>
+                      <select
+                        name="status"
+                        value={editingTypography.status || ''}
+                        onChange={handleTypographyChange}
+                        style={{ minWidth: 120 }}
+                      >
+                        <option value="">Выберите статус</option>
+                        {TYPOGRAPHY_STATUSES.map(status => (
+                          <option key={status} value={status}>{status}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td><input name="format" value={editingTypography.format} onChange={handleTypographyChange} /></td>
+                    <td><input name="the_basis_of_the_spread" value={editingTypography.the_basis_of_the_spread} onChange={handleTypographyChange} /></td>
+                    <td><input name="number_of_spreads" value={editingTypography.number_of_spreads} onChange={handleTypographyChange} /></td>
+                    <td><input name="lamination" value={editingTypography.lamination} onChange={handleTypographyChange} /></td>
+                    <td><input name="number_of_copies" value={editingTypography.number_of_copies} onChange={handleTypographyChange} /></td>
+                    <td><input name="address_delivery" value={editingTypography.address_delivery} onChange={handleTypographyChange} /></td>
+                    <td><input name="final_price" value={editingTypography.final_price} onChange={handleTypographyChange} /></td>
+                    <td><input name="album_name" value={editingTypography.album_name} onChange={handleTypographyChange} /></td>
+                    <td>{new Date(booking.created_at).toLocaleDateString()}</td>
+                    <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
+                  </tr>
+                ) : (
+                  <tr
+                    key={booking.booking_typographie_id}
+                    className={selectedTypographyId === booking.booking_typographie_id ? 'selected-row' : ''}
+                    onClick={() => setSelectedTypographyId(booking.booking_typographie_id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <td>{booking.booking_typographie_id}</td>
+                    <td>{booking.user}</td>
+                    <td>{booking.status}</td>
+                    <td>{booking.format}</td>
+                    <td>{booking.the_basis_of_the_spread}</td>
+                    <td>{booking.number_of_spreads}</td>
+                    <td>{booking.lamination}</td>
+                    <td>{booking.number_of_copies}</td>
+                    <td>{booking.address_delivery}</td>
+                    <td>{booking.final_price}</td>
+                    <td>{booking.album_name}</td>
+                    <td>{new Date(booking.created_at).toLocaleDateString()}</td>
+                    <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+          {/* Кнопки действий оставляем вне таблицы */}
+          {selectedTypographyId && !editingTypography && (
+            <div className="action-buttons">
+              <button onClick={() => handleEditTypography(typographyBookings.find(b => b.booking_typographie_id === selectedTypographyId))}>
+                Редактировать
+              </button>
+              <button onClick={() => handleDeleteTypography(selectedTypographyId)}>
+                Удалить
+              </button>
+            </div>
+          )}
+          {editingTypography && (
+            <div className="action-buttons">
+              <button onClick={handleSaveTypography}>Сохранить</button>
+              <button onClick={() => setEditingTypography(null)}>Отмена</button>
+            </div>
+          )}
+        </div>
+
+        <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Заказы на фотостудии</h3>
+        <div className="table-container" style={{ maxWidth: '100vw', overflowX: 'auto' }}>
+          <table className="requests-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Пользователь</th>
+                <th>Название студии</th>
+                <th>Статус</th>
+                <th>Дата</th>
+                <th>Время</th>
+                <th>Адрес</th>
+                <th>Итоговая цена</th>
+                <th>Дата создания</th>
+                <th>Дата обновления</th>
+              </tr>
+            </thead>
+            <tbody>
+              {studioBookings.map((booking) =>
+                editingStudio && editingStudio.booking_studio_id === booking.booking_studio_id ? (
+                  <tr key={booking.booking_studio_id}>
+                    <td>{booking.booking_studio_id}</td>
+                    <td>{booking.user}</td>
+                    <td><input name="studio_name" value={editingStudio.studio_name} onChange={handleStudioChange} /></td>
+                    <td>
+                      <select
+                        name="status"
+                        value={editingStudio.status || ''}
+                        onChange={handleStudioChange}
+                        style={{ minWidth: 120 }}
+                      >
+                        <option value="">Выберите статус</option>
+                        {STUDIO_STATUSES.map(status => (
+                          <option key={status} value={status}>{status}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td><input name="date" value={editingStudio.date} onChange={handleStudioChange} /></td>
+                    <td><input name="time" value={editingStudio.time} onChange={handleStudioChange} placeholder="01:00-02:00" /></td>
+                    <td><input name="address" value={editingStudio.address} onChange={handleStudioChange} /></td>
+                    <td><input name="final_price" value={editingStudio.final_price} onChange={handleStudioChange} /></td>
+                    <td>{new Date(booking.created_at).toLocaleDateString()}</td>
+                    <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
+                  </tr>
+                ) : (
+                  <tr
+                    key={booking.booking_studio_id}
+                    className={selectedStudioId === booking.booking_studio_id ? 'selected-row' : ''}
+                    onClick={() => setSelectedStudioId(booking.booking_studio_id)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <td>{booking.booking_studio_id}</td>
+                    <td>{booking.user}</td>
+                    <td>{booking.studio_name}</td>
+                    <td>{booking.status}</td>
+                    <td>{booking.date}</td>
+                    <td>{booking.time}</td>
+                    <td>{booking.address}</td>
+                    <td>{booking.final_price}</td>
+                    <td>{new Date(booking.created_at).toLocaleDateString()}</td>
+                    <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </table>
+          {/* Кнопки действий оставляем вне таблицы */}
+          {selectedStudioId && !editingStudio && (
+            <div className="action-buttons">
+              <button onClick={() => handleEditStudio(studioBookings.find(b => b.booking_studio_id === selectedStudioId))}>
+                Редактировать
+              </button>
+              <button onClick={() => handleDeleteStudio(selectedStudioId)}>
+                Удалить
+              </button>
+            </div>
+          )}
+          {editingStudio && (
+            <div className="action-buttons">
+              <button onClick={handleSaveStudio}>Сохранить</button>
+              <button onClick={() => setEditingStudio(null)}>Отмена</button>
+            </div>
+          )}
+        </div>
       </div>
     </div>
   );

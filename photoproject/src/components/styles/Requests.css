@@ -189,6 +189,21 @@ h2, h3 {
   margin-bottom: 20px;
 }
 
+.requests-add-card {
+  background: #f9f7f2;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(240,187,41,0.08);
+  padding: 32px 24px 24px 24px;
+  margin-bottom: 32px;
+}
+
+.requests-orders-card {
+  background: #f4f6fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 32px 24px 24px 24px;
+}
+
 @media (max-width: 900px) {
   .add-form input {
     min-width: 120px;
@@ -197,6 +212,44 @@ h2, h3 {
   .requests-table th, .requests-table td {
     font-size: 13px;
     padding: 7px 6px;
+  }
+}
+
+@media (max-width: 769px) {
+  .table-container {
+    padding: 0;
+    margin-bottom: 16px;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+    overflow-x: auto;
+  }
+  .requests-orders-card {
+    padding: 0;
+    background: none;
+    box-shadow: none;
+  }
+  .requests-table {
+    min-width: 700px;
+    font-size: 12px;
+  }
+  .requests-table th, .requests-table td {
+    padding: 6px 4px;
+    font-size: 12px;
+  }
+  .action-buttons {
+    flex-direction: column;
+    gap: 8px;
+    margin: 12px 0 8px 0;
+    width: 100%;
+    align-items: stretch;
+  }
+  .action-buttons button {
+    min-width: 0;
+    width: 100%;
+    font-size: 15px;
+    padding: 10px 0;
+    color: #fff;
   }
 }
 
