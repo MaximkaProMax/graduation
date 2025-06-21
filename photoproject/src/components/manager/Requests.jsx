@@ -421,7 +421,6 @@ const Requests = () => {
               <th>Название альбома</th>
               <th>Дата создания</th>
               <th>Дата обновления</th>
-              <th>Действия</th>
             </tr>
           </thead>
           <tbody>
@@ -453,9 +452,6 @@ const Requests = () => {
                   <td><input name="album_name" value={editingTypography.album_name} onChange={handleTypographyChange} /></td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                   <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                  <td>
-                    <span style={{ color: "#888" }}>Редактируется</span>
-                  </td>
                 </tr>
               ) : (
                 <tr
@@ -477,14 +473,12 @@ const Requests = () => {
                   <td>{booking.album_name}</td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                   <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                  <td>
-                    {/* Пусто, кнопки вынесены вниз */}
-                  </td>
                 </tr>
               )
             )}
           </tbody>
         </table>
+        {/* Кнопки действий оставляем вне таблицы */}
         {selectedTypographyId && !editingTypography && (
           <div className="action-buttons">
             <button onClick={() => handleEditTypography(typographyBookings.find(b => b.booking_typographie_id === selectedTypographyId))}>
@@ -518,7 +512,6 @@ const Requests = () => {
               <th>Итоговая цена</th>
               <th>Дата создания</th>
               <th>Дата обновления</th>
-              <th>Действия</th>
             </tr>
           </thead>
           <tbody>
@@ -543,14 +536,10 @@ const Requests = () => {
                   </td>
                   <td><input name="date" value={editingStudio.date} onChange={handleStudioChange} /></td>
                   <td><input name="time" value={editingStudio.time} onChange={handleStudioChange} /></td>
-                  <td><input name="end_time" value={editingStudio.end_time} onChange={handleStudioChange} /></td>
                   <td><input name="address" value={editingStudio.address} onChange={handleStudioChange} /></td>
                   <td><input name="final_price" value={editingStudio.final_price} onChange={handleStudioChange} /></td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                   <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                  <td>
-                    <span style={{ color: "#888" }}>Редактируется</span>
-                  </td>
                 </tr>
               ) : (
                 <tr
@@ -565,19 +554,16 @@ const Requests = () => {
                   <td>{booking.status}</td>
                   <td>{booking.date}</td>
                   <td>{booking.time}</td>
-                  <td>{booking.end_time}</td>
                   <td>{booking.address}</td>
                   <td>{booking.final_price}</td>
                   <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                   <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
-                  <td>
-                    {/* Пусто, кнопки вынесены вниз */}
-                  </td>
                 </tr>
               )
             )}
           </tbody>
         </table>
+        {/* Кнопки действий оставляем вне таблицы */}
         {selectedStudioId && !editingStudio && (
           <div className="action-buttons">
             <button onClick={() => handleEditStudio(studioBookings.find(b => b.booking_studio_id === selectedStudioId))}>

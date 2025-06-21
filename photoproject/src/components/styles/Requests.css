@@ -52,7 +52,7 @@ h2, h3 {
   flex: 1 1 100%;
   padding: 8px 16px;
   background-color: #F0BB29;
-  color: black;
+  color: #fff;
   font-weight: bold;
   font-size: 18px;
   border: none;
@@ -135,7 +135,7 @@ h2, h3 {
 
 .requests-table button {
   background: #f5b91e;
-  color: #222;
+  color: #fff;
   border: none;
   border-radius: 5px;
   padding: 7px 16px;
@@ -172,7 +172,7 @@ h2, h3 {
   background-color: #F0BB29;
   border: none;
   border-radius: 5px;
-  color: black;
+  color: #fff;
   font-weight: bold;
   cursor: pointer;
   transition: background 0.2s, box-shadow 0.2s;
@@ -258,5 +258,6 @@ h2, h3 {
     width: 100%;
     font-size: 15px;
     padding: 10px 0;
+    color: #fff;
   }
 }
