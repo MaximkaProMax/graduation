@@ -636,6 +636,7 @@ const EditDatabase = () => {
                       </td>
                     ))}
                   <td key={`${studio.id}-actions`}>
+                    <div className="edit-database-actions">
                     {isEditingStudio && editableStudio.id === studio.id ? (
                       <>
                         <button
@@ -653,6 +654,7 @@ const EditDatabase = () => {
                         <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.id)}>Удалить</button>
                       </>
                     )}
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -762,6 +764,7 @@ const EditDatabase = () => {
                       </td>
                     ))}
                   <td>
+                    <div className="edit-database-actions">
                     {isEditingTypography && editableTypography.id === typography.id ? (
                       <>
                         <button className="edit-database-button" onClick={handleSaveTypography}>Сохранить</button>
@@ -773,6 +776,7 @@ const EditDatabase = () => {
                         <button className="edit-database-button delete" onClick={() => handleDeleteTypography(typography.id)}>Удалить</button>
                       </>
                     )}
+                    </div>
                   </td>
                 </tr>
               ))}
