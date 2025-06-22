@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import '../styles/Registration.css';
+import Modal from 'react-modal'; // Добавлено для модального окна
 
 const Registration = () => {
   const [name, setName] = useState(''); // Переименовано с fullName на name
@@ -9,12 +10,14 @@ const Registration = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [email, setEmail] = useState('');
+  const [address, setAddress] = useState(''); // Новое состояние для адреса
   const [error, setError] = useState('');
+  const [successModalOpen, setSuccessModalOpen] = useState(false); // Модальное окно
   const navigate = useNavigate();
 
   const handleRegister = async (e) => {
     e.preventDefault();
-    const userData = { name, login, phone, email, password, role: 'user' }; // Переименовано с fullName на name
+    const userData = { name, login, phone, email, password, address, role: 'user' }; // добавили address
 
     try {
       console.log('Отправка данных на сервер:', userData);
@@ -22,8 +25,7 @@ const Registration = () => {
       console.log('Ответ от сервера:', response.data);
 
       if (response.data.success) {
-        alert('Регистрация успешна!');
-        navigate('/login');
+        setSuccessModalOpen(true); // Открываем модальное окно
       } else {
         setError(response.data.error || 'Ошибка регистрации. Пожалуйста, попробуйте ещё раз.');
       }
@@ -35,6 +37,28 @@ const Registration = () => {
 
   return (
     <div className="registration-wrapper">
+      <Modal
+        isOpen={successModalOpen}
+        onRequestClose={() => {
+          setSuccessModalOpen(false);
+          navigate('/login');
+        }}
+        className="modal"
+        overlayClassName="overlay"
+        ariaHideApp={false}
+      >
+        <h2>Регистрация успешна!</h2>
+        <p>Вы успешно зарегистрированы. Теперь вы можете войти в систему.</p>
+        <button
+          className="submit-button"
+          onClick={() => {
+            setSuccessModalOpen(false);
+            navigate('/login');
+          }}
+        >
+          Перейти к авторизации
+        </button>
+      </Modal>
       <div className="registration-container">
         <h2>Регистрация</h2>
         <form onSubmit={handleRegister}>
@@ -59,9 +83,23 @@ const Registration = () => {
           <div className="input-group">
             <label>Телефон</label>
             <input
-              type="tel"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={e => {
+                const onlyDigits = e.target.value.replace(/\D/g, '');
+                setPhone(onlyDigits);
+              }}
+              required
+            />
+          </div>
+          <div className="input-group">
+            <label>Адрес</label>
+            <input
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
               required
             />
           </div>

@@ -44,17 +44,18 @@ router.post('/', async (req, res) => {
 
 // Регистрация пользователя
 router.post('/register', async (req, res) => {
-  const { name, login, phone, email, password, role } = req.body;
+  const { name, login, phone, email, password, role, address } = req.body; // добавили address
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
       name,
       login,
-      phone,
+      telephone: phone,
       email,
       password: hashedPassword,
-      role
+      role,
+      address: address || ''
     });
 
     res.json({ success: true, message: 'Пользователь успешно зарегистрирован' });
