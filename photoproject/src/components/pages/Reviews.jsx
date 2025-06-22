@@ -14,6 +14,7 @@ const Reviews = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(true);
   const [showAddForm, setShowAddForm] = useState(false);
   const [authChecked, setAuthChecked] = useState(false);
+  const [currentUserId, setCurrentUserId] = useState(null); // Новый стейт для userId
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,10 +28,19 @@ const Reviews = () => {
       .then(response => {
         setIsAuthenticated(response.data.isAuthenticated);
         setAuthChecked(true);
+        // Если авторизован — получаем userId
+        if (response.data.isAuthenticated) {
+          axios.get('http://localhost:3001/api/users/user', { withCredentials: true })
+            .then(res => setCurrentUserId(res.data.userId))
+            .catch(() => setCurrentUserId(null));
+        } else {
+          setCurrentUserId(null);
+        }
       })
       .catch(() => {
         setIsAuthenticated(false);
         setAuthChecked(true);
+        setCurrentUserId(null);
       });
 
     axios.get('http://localhost:3001/api/photostudios')
@@ -104,39 +114,45 @@ const Reviews = () => {
           {errorMessage}
         </p>
       )}
-      <table>
-        <thead>
-          <tr>
-            <th>Пользователь</th>
-            <th>Оценка</th>
-            <th>Отзыв</th>
-            <th>Студия</th>
-            <th>Типография</th>
-            {isAuthenticated && <th>Действие</th>}
-          </tr>
-        </thead>
-        <tbody>
-          {reviews.map((review, index) => (
-            <tr key={index}>
-              <td>{review.User?.name || 'Не указано'}</td>
-              <td>{review.rating || 'Не указано'}</td>
-              <td>{review.comment || 'Не указано'}</td>
-              <td>{review.photostudio || 'Не указано'}</td>
-              <td>{review.printing || 'Не указано'}</td>
-              {isAuthenticated && (
-                <td>
-                  <button
-                    onClick={() => handleDelete(review.review_id)}
-                    className="delete-button"
-                  >
-                    Удалить
-                  </button>
-                </td>
-              )}
+      {/* Карточка для таблицы отзывов */}
+      <div className="requests-orders-card">
+        <table className="reviews-table">
+          <thead>
+            <tr>
+              <th>Пользователь</th>
+              <th>Оценка</th>
+              <th>Отзыв</th>
+              <th>Студия</th>
+              <th>Типография</th>
+              {isAuthenticated && <th>Действие</th>}
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {reviews.map((review, index) => (
+              <tr key={index}>
+                <td>{review.User?.name || 'Не указано'}</td>
+                <td>{review.rating || 'Не указано'}</td>
+                <td>{review.comment || 'Не указано'}</td>
+                <td>{review.photostudio || 'Не указано'}</td>
+                <td>{review.printing || 'Не указано'}</td>
+                {isAuthenticated && (
+                  <td>
+                    {/* Кнопка "Удалить" только для владельца */}
+                    {currentUserId && review.user_id === currentUserId && (
+                      <button
+                        onClick={() => handleDelete(review.review_id)}
+                        className="delete-button"
+                      >
+                        Удалить
+                      </button>
+                    )}
+                  </td>
+                )}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
 
       {!isAuthenticated && (
         <div>
