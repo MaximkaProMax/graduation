@@ -82,7 +82,7 @@ const EditUsers = () => {
   };
 
   const handleSaveUser = () => {
-    const { userId, name, login, telephone, email, roleId, password } = editableUser;
+    const { userId, name, login, telephone, email, address, roleId, password } = editableUser;
 
     if (userId === null) {
       // Добавление нового пользователя
@@ -97,6 +97,7 @@ const EditUsers = () => {
         telephone,
         email,
         password,
+        address, // <--- добавлено!
         roleId: parseInt(roleId, 10)
       })
         .then(response => {
@@ -129,6 +130,7 @@ const EditUsers = () => {
         login,
         telephone,
         email,
+        address, // <--- добавлено!
         roleId: parseInt(roleId, 10), // Преобразуем roleId в число
         currentPassword,
         newPassword,
@@ -211,7 +213,7 @@ const EditUsers = () => {
   };
 
   const handleAddUser = () => {
-    setEditableUser({ userId: null, name: '', login: '', telephone: '', email: '', password: '', roleId: '' });
+    setEditableUser({ userId: null, name: '', login: '', telephone: '', email: '', address: '', password: '', roleId: '' });
     setIsEditing(true);
   };
 
@@ -252,6 +254,7 @@ const EditUsers = () => {
                 <th>Логин</th>
                 <th>Телефон</th>
                 <th>Email</th>
+                <th>Адрес</th>
                 <th>Роль</th>
                 <th>Действия</th>
               </tr>
@@ -287,10 +290,14 @@ const EditUsers = () => {
                   <td>
                     {isEditing && editableUser.userId === user.userId ? (
                       <input
-                        type="text"
+                        type="number"
                         name="telephone"
                         value={editableUser.telephone || ''}
-                        onChange={handleInputChange}
+                        onChange={e => {
+                          // Оставляем только цифры
+                          const onlyDigits = e.target.value.replace(/\D/g, '');
+                          setEditableUser({ ...editableUser, telephone: onlyDigits });
+                        }}
                       />
                     ) : (
                       user.telephone
@@ -306,6 +313,18 @@ const EditUsers = () => {
                       />
                     ) : (
                       user.email
+                    )}
+                  </td>
+                  <td>
+                    {isEditing && editableUser.userId === user.userId ? (
+                      <input
+                        type="text"
+                        name="address"
+                        value={editableUser.address || ''}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      user.address
                     )}
                   </td>
                   <td>
@@ -372,10 +391,14 @@ const EditUsers = () => {
           <div className="input-group">
             <label>Телефон</label>
             <input
-              type="text"
+              type="number"
               name="telephone"
               value={editableUser.telephone}
-              onChange={handleInputChange}
+              onChange={e => {
+                // Оставляем только цифры
+                const onlyDigits = e.target.value.replace(/\D/g, '');
+                setEditableUser({ ...editableUser, telephone: onlyDigits });
+              }}
             />
           </div>
           <div className="input-group">
@@ -384,6 +407,15 @@ const EditUsers = () => {
               type="email"
               name="email"
               value={editableUser.email}
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="input-group">
+            <label>Адрес</label>
+            <input
+              type="text"
+              name="address"
+              value={editableUser.address || ''}
               onChange={handleInputChange}
             />
           </div>

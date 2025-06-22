@@ -24,7 +24,7 @@ router.get('/', async (req, res) => {
 
 // Маршрут для добавления нового пользователя
 router.post('/', async (req, res) => {
-  const { name, login, telephone, email, password, address } = req.body;
+  const { name, login, telephone, email, password, address, roleId } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
@@ -33,7 +33,8 @@ router.post('/', async (req, res) => {
       telephone,
       email,
       password: hashedPassword,
-      address: address || ''
+      address: address || '',
+      roleId: roleId || 2
     });
     res.json({ success: true, message: 'Пользователь успешно добавлен' });
   } catch (error) {
