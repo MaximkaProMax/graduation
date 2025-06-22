@@ -3,6 +3,9 @@ import axios from 'axios';
 import '../styles/EditDatabase.css';
 import { useNavigate } from 'react-router-dom';
 import { checkPageAccess } from '../../utils/checkPageAccess';
+import Modal from 'react-modal';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditDatabase = () => {
   const [studios, setStudios] = useState([]);
@@ -21,6 +24,7 @@ const EditDatabase = () => {
   const [editingPhotoOnPage, setEditingPhotoOnPage] = useState({ typographyId: null, photoIdx: null });
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({ open: false, id: null, type: null });
   const fileInputRef = useRef(null);
   const editingPhotoInputRef = useRef(null);
   const typographyPhotoInputRef = useRef(null);
@@ -315,31 +319,26 @@ const EditDatabase = () => {
     setEditableTypography({});
   };
 
-  const handleDeleteStudio = (studioId) => {
-    if (window.confirm('Вы уверены, что хотите удалить эту фотостудию?')) {
-      axios.delete(`http://localhost:3001/api/photostudios/${studioId}`)
-        .then(() => {
-          fetchStudios();
-        })
-        .catch(error => {
-          console.error('Ошибка при удалении фотостудии:', error);
-        });
-    }
-  };
+  // Заменяем handleDeleteStudio и handleDeleteTypography на открытие модалки
+  const openDeleteModal = (id, type) => setDeleteModal({ open: true, id, type });
+  const closeDeleteModal = () => setDeleteModal({ open: false, id: null, type: null });
 
-  const handleDeleteTypography = (typographyId) => {
-    if (!typographyId) {
-      alert('Ошибка: не удалось определить идентификатор типографии для удаления.');
-      return;
-    }
-    if (window.confirm('Вы уверены, что хотите удалить эту типографию?')) {
-      axios.delete(`http://localhost:3001/api/printing/${typographyId}`)
-        .then(() => {
-          fetchTypographies();
-        })
-        .catch(error => {
-          console.error('Ошибка при удалении типографии:', error);
-        });
+  const confirmDelete = async () => {
+    if (!deleteModal.id || !deleteModal.type) return closeDeleteModal();
+    try {
+      if (deleteModal.type === 'studio') {
+        await axios.delete(`http://localhost:3001/api/photostudios/${deleteModal.id}`);
+        fetchStudios();
+        toast.success('Фотостудия успешно удалена!');
+      } else if (deleteModal.type === 'typography') {
+        await axios.delete(`http://localhost:3001/api/printing/${deleteModal.id}`);
+        fetchTypographies();
+        toast.success('Типография успешно удалена!');
+      }
+    } catch (error) {
+      toast.error('Ошибка при удалении');
+    } finally {
+      closeDeleteModal();
     }
   };
 
@@ -498,11 +497,6 @@ const EditDatabase = () => {
     }
   };
 
-  const handleEditTypographyPhotoClick = (typographyId) => {
-    setEditingPhotoTypographyId(typographyId);
-    setUploadError('');
-  };
-
   const handleEditPhotoOnPageClick = (typographyId, photoIdx) => {
     setEditingPhotoOnPage({ typographyId, photoIdx });
   };
@@ -548,6 +542,24 @@ const EditDatabase = () => {
 
   return (
     <div className="edit-database-container">
+      <ToastContainer position="top-center" autoClose={3000} />
+      <Modal
+        isOpen={deleteModal.open}
+        onRequestClose={closeDeleteModal}
+        className="modal"
+        overlayClassName="overlay"
+        ariaHideApp={false}
+      >
+        <h2>Подтвердите удаление</h2>
+        <p>
+          {deleteModal.type === 'studio' && 'Вы уверены, что хотите удалить эту фотостудию?'}
+          {deleteModal.type === 'typography' && 'Вы уверены, что хотите удалить эту типографию?'}
+        </p>
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 24 }}>
+          <button className="submit-button" style={{ minWidth: 120 }} onClick={confirmDelete}>Удалить</button>
+          <button className="submit-button" style={{ minWidth: 120, background: '#ccc', color: '#222' }} onClick={closeDeleteModal}>Отмена</button>
+        </div>
+      </Modal>
       <h2>Редактирование базы данных</h2>
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
 
@@ -674,7 +686,7 @@ const EditDatabase = () => {
                       ) : (
                         <>
                           <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
-                          <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.id)}>Удалить</button>
+                          <button className="edit-database-button delete" onClick={() => openDeleteModal(studio.id, 'studio')}>Удалить</button>
                         </>
                       )}
                       </div>
@@ -842,7 +854,7 @@ const EditDatabase = () => {
                     ) : (
                       <>
                         <button className="edit-database-button" onClick={() => handleEditTypography(typography)}>Редактировать</button>
-                        <button className="edit-database-button delete" onClick={() => handleDeleteTypography(typography.id)}>Удалить</button>
+                        <button className="edit-database-button delete" onClick={() => openDeleteModal(typography.id, 'typography')}>Удалить</button>
                       </>
                     )}
                     </div>
