@@ -31,6 +31,32 @@ const STUDIO_STATUSES = [
   "Неявка"
 ];
 
+const FORMAT_OPTIONS = [
+  "20x30",
+  "23x23",
+  "30x23",
+  "30x30"
+];
+
+const BASIS_OPTIONS = [
+  "С основой",
+  "Без основы"
+];
+
+const LAMINATION_OPTIONS = [
+  "Матовый",
+  "Глянец"
+];
+
+const ALBUM_NAME_OPTIONS = [
+  "LayFlat",
+  "FlexBind"
+];
+
+const MIN_SPREADS = 2;
+const SPREAD_PRICE = 130;
+const ALBUM_PRICE = 600;
+
 const Requests = () => {
   const [typographyBookings, setTypographyBookings] = useState([]);
   const [studioBookings, setStudioBookings] = useState([]);
@@ -209,9 +235,24 @@ const Requests = () => {
     }
   };
 
-  const handleNewTypographyChange = (e) => setNewTypography({ ...newTypography, [e.target.name]: e.target.value });
+  const handleNewTypographyChange = (e) => {
+    const { name, value } = e.target;
+    // Для number_of_spreads — не даём ввести меньше 2
+    if (name === "number_of_spreads") {
+      let val = Number(value);
+      if (val < MIN_SPREADS) val = MIN_SPREADS;
+      setNewTypography({ ...newTypography, [name]: val });
+    } else {
+      setNewTypography({ ...newTypography, [name]: value });
+    }
+  };
   const handleAddTypography = async (e) => {
     e.preventDefault();
+    // Проверка обязательных select-полей
+    if (!newTypography.format) return alert('Выберите формат');
+    if (!newTypography.the_basis_of_the_spread) return alert('Выберите основу разворота');
+    if (!newTypography.lamination) return alert('Выберите ламинацию');
+    if (!newTypography.album_name) return alert('Выберите название альбома');
     // Проверка типов
     if (!newTypography.format.trim()) return alert('Формат обязателен');
     if (newTypography.the_basis_of_the_spread && typeof newTypography.the_basis_of_the_spread !== 'string') return alert('Основа разворота должна быть строкой');
@@ -255,6 +296,20 @@ const Requests = () => {
     };
   }, []);
 
+  // Автоматический расчет итоговой суммы для заявки на типографию
+  useEffect(() => {
+    const spreads = Math.max(Number(newTypography.number_of_spreads) || 0, MIN_SPREADS);
+    const copies = Number(newTypography.number_of_copies) || 0;
+    if (spreads && copies) {
+      // Новая формула: (развороты * 130) + (копий * 600)
+      const total = (spreads * SPREAD_PRICE) + (copies * ALBUM_PRICE);
+      setNewTypography(nt => ({ ...nt, final_price: total }));
+    } else {
+      setNewTypography(nt => ({ ...nt, final_price: '' }));
+    }
+  // eslint-disable-next-line
+  }, [newTypography.number_of_spreads, newTypography.number_of_copies]);
+
   if (isLoading) {
     return <div>Загрузка...</div>;
   }
@@ -288,23 +343,45 @@ const Requests = () => {
       <div className="requests-add-card">
         <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на типографию</h3>
         <form onSubmit={handleAddTypography} className="add-form">
-          <input
+          {/* Формат (обязательный select) */}
+          <select
             name="format"
             value={newTypography.format}
             onChange={handleNewTypographyChange}
-            placeholder="Формат"
             required
-            type="text"
-            maxLength={50}
-          />
-          <input
+            style={{ minWidth: 220, maxWidth: 220 }}
+          >
+            <option value="" disabled>Формат</option>
+            {FORMAT_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+          {/* Основа разворота (обязательный select) */}
+          <select
             name="the_basis_of_the_spread"
             value={newTypography.the_basis_of_the_spread}
             onChange={handleNewTypographyChange}
-            placeholder="Основа разворота"
-            type="text"
-            maxLength={100}
-          />
+            required
+            style={{ minWidth: 220, maxWidth: 220 }}
+          >
+            <option value="" disabled>Основа разворота</option>
+            {BASIS_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
+          {/* Ламинация (обязательный select) */}
+          <select
+            name="lamination"
+            value={newTypography.lamination}
+            onChange={handleNewTypographyChange}
+            required
+            style={{ minWidth: 220, maxWidth: 220 }}
+          >
+            <option value="" disabled>Ламинация</option>
+            {LAMINATION_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
           <input
             name="number_of_spreads"
             value={newTypography.number_of_spreads}
@@ -312,17 +389,8 @@ const Requests = () => {
             placeholder="Кол-во разворотов"
             required
             type="number"
-            min="1"
+            min={MIN_SPREADS}
             step="1"
-          />
-          <input
-            name="lamination"
-            value={newTypography.lamination}
-            onChange={handleNewTypographyChange}
-            placeholder="Ламинация"
-            required
-            type="text"
-            maxLength={50}
           />
           <input
             name="number_of_copies"
@@ -341,24 +409,29 @@ const Requests = () => {
             placeholder="Адрес доставки"
             type="text"
           />
+          {/* Итоговая сумма (только для чтения) */}
           <input
             name="final_price"
             value={newTypography.final_price}
-            onChange={handleNewTypographyChange}
+            readOnly
             placeholder="Цена"
-            required
             type="number"
-            step="0.01"
+            style={{ background: "#f9f9f9", fontWeight: "bold" }}
+            tabIndex={-1}
           />
-          <input
+          {/* Название альбома (обязательный select) */}
+          <select
             name="album_name"
             value={newTypography.album_name}
             onChange={handleNewTypographyChange}
-            placeholder="Название альбома"
             required
-            type="text"
-            maxLength={255}
-          />
+            style={{ minWidth: 220, maxWidth: 220 }}
+          >
+            <option value="" disabled>Название альбома</option>
+            {ALBUM_NAME_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
           <button type="submit">Добавить</button>
         </form>
 
