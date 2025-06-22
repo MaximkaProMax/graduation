@@ -24,8 +24,7 @@ router.get('/', async (req, res) => {
 
 // Маршрут для добавления нового пользователя
 router.post('/', async (req, res) => {
-  const { name, login, telephone, email, password } = req.body;
-
+  const { name, login, telephone, email, password, address } = req.body;
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await User.create({
@@ -33,9 +32,9 @@ router.post('/', async (req, res) => {
       login,
       telephone,
       email,
-      password: hashedPassword
+      password: hashedPassword,
+      address: address || ''
     });
-
     res.json({ success: true, message: 'Пользователь успешно добавлен' });
   } catch (error) {
     console.error('Ошибка при добавлении пользователя:', error);
@@ -159,7 +158,7 @@ router.get('/user', authenticateToken, async (req, res) => {
 // Обновить данные авторизованного пользователя
 router.put('/user', async (req, res) => {
   let userId = req.session.userId; // Предполагаем, что идентификатор пользователя хранится в сессии
-  const { name, login, telephone, email, password } = req.body;
+  const { name, login, telephone, email, password, address } = req.body;
 
   console.log('Обновление данных пользователя. Session: ', req.session);
 
@@ -178,7 +177,7 @@ router.put('/user', async (req, res) => {
 
   try {
     const [updatedRows] = await User.update(
-      { name, login, telephone, email, password },
+      { name, login, telephone, email, password, address },
       { where: { userId } }
     );
     if (updatedRows === 0) {
@@ -195,7 +194,7 @@ router.put('/user', async (req, res) => {
 
 // Обновить пароль пользователя
 router.put('/update-password', authenticateToken, async (req, res) => {
-  const { name, login, telephone, email, currentPassword, newPassword } = req.body;
+  const { name, login, telephone, email, currentPassword, newPassword, address } = req.body;
 
   try {
     const user = await User.findOne({ where: { email: req.user.email } });
@@ -213,6 +212,7 @@ router.put('/update-password', authenticateToken, async (req, res) => {
     user.login = login;
     user.telephone = telephone;
     user.email = email;
+    user.address = address;
 
     if (newPassword) {
       user.password = await bcrypt.hash(newPassword, 10);
@@ -230,7 +230,7 @@ router.put('/update-password', authenticateToken, async (req, res) => {
 // Маршрут для обновления существующего пользователя
 router.put('/:userId', async (req, res) => {
   const { userId } = req.params;
-  const { name, login, telephone, email, currentPassword, newPassword, roleId } = req.body;
+  const { name, login, telephone, email, currentPassword, newPassword, roleId, address } = req.body;
 
   try {
     // Проверяем, существует ли roleId в таблице Roles
@@ -258,7 +258,7 @@ router.put('/:userId', async (req, res) => {
     user.telephone = telephone;
     user.email = email;
     user.roleId = roleId; // Обновляем роль
-
+    user.address = address;
     await user.save();
 
     res.json({ success: true, message: 'Пользователь успешно обновлен' });
@@ -346,7 +346,7 @@ router.get('/profile', authenticateToken, async (req, res) => {
         fullName: user.name || '',
         email: user.email || '',
         phone: user.telephone || '',
-        address: user.address || '', // если поле address есть в модели, иначе ''
+        address: user.address || '',
       }
     });
   } catch (error) {

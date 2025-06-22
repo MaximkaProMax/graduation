@@ -49,14 +49,15 @@ const EditPersonalData = () => {
   };
 
   const handleSaveUser = () => {
-    const { name, login, telephone, email } = editableUser;
+    const { name, login, telephone, email, address } = editableUser;
 
-    if (name && login && telephone && email) {
+    if (name && login && telephone && email && address !== undefined) {
       const updateData = {
         name,
         login,
         telephone,
         email,
+        address,
         currentPassword,
         newPassword,
       };
@@ -85,6 +86,7 @@ const EditPersonalData = () => {
             if (user.login !== login) toast.success('Логин успешно изменён!');
             if (user.telephone !== telephone) toast.success('Телефон успешно изменён!');
             if (user.email !== email) toast.success('Email успешно изменён!');
+            if (user.address !== address) toast.success('Адрес успешно изменён!');
             if (currentPassword && newPassword) toast.success('Пароль успешно изменён!');
           } else {
             setErrorMessage(response.data.message || 'Ошибка при обновлении данных пользователя');
@@ -142,6 +144,7 @@ const EditPersonalData = () => {
               <th>Логин</th>
               <th>Телефон</th>
               <th>Email</th>
+              <th>Адрес</th>
             </tr>
           </thead>
           <tbody>
@@ -178,6 +181,15 @@ const EditPersonalData = () => {
                   type="email"
                   name="email"
                   value={editableUser.email || ''}
+                  onChange={handleInputChange}
+                  disabled={!isEditing}
+                />
+              </td>
+              <td>
+                <input
+                  type="text"
+                  name="address"
+                  value={editableUser.address || ''}
                   onChange={handleInputChange}
                   disabled={!isEditing}
                 />
