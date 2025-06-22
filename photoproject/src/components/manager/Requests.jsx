@@ -53,6 +53,13 @@ const ALBUM_NAME_OPTIONS = [
   "FlexBind"
 ];
 
+const STUDIO_NAME_OPTIONS = [
+  "Зал Hot Yellow с песком и циклорамой",
+  "Зал Cozy в фотостудии Replace",
+  "Зал APART в фотостудии PHOTO ZALL",
+  "Зал White Garden в фотостудии UNICORN STUDIOS"
+];
+
 const MIN_SPREADS = 2;
 const SPREAD_PRICE = 130;
 const ALBUM_PRICE = 600;
@@ -437,15 +444,19 @@ const Requests = () => {
 
         <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на фотостудию</h3>
         <form onSubmit={handleAddStudio} className="add-form">
-          <input
+          {/* Выпадающий список для названия студии */}
+          <select
             name="studio_name"
             value={newStudio.studio_name}
             onChange={handleNewStudioChange}
-            placeholder="Название студии"
             required
-            type="text"
-            maxLength={255}
-          />
+            style={{ minWidth: 220, maxWidth: 220 }}
+          >
+            <option value="" disabled>Название студии</option>
+            {STUDIO_NAME_OPTIONS.map(opt => (
+              <option key={opt} value={opt}>{opt}</option>
+            ))}
+          </select>
           <input
             name="date"
             value={newStudio.date}
