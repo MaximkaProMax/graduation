@@ -552,30 +552,14 @@ const EditDatabase = () => {
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
 
       <h3>Фотостудии</h3>
-      <div className="edit-database-table-container">
-        <table className="edit-database-table">
-          <thead>
-            <tr>
-              {studios.length > 0 &&
-                Object.keys(studios[0])
-                  .filter(
-                    key =>
-                      key !== 'contact_information' &&
-                      key !== 'description' &&
-                      key !== 'booking'
-                  )
-                  .map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-              <th>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...studios]
-              .sort((a, b) => (a.id || 0) - (b.id || 0))
-              .map((studio) => (
-                <tr key={studio.id}>
-                  {Object.keys(studio)
+      {/* Карточка для таблицы фотостудий */}
+      <div className="requests-orders-card">
+        <div className="edit-database-table-container">
+          <table className="edit-database-table requests-table">
+            <thead>
+              <tr>
+                {studios.length > 0 &&
+                  Object.keys(studios[0])
                     .filter(
                       key =>
                         key !== 'contact_information' &&
@@ -583,186 +567,208 @@ const EditDatabase = () => {
                         key !== 'booking'
                     )
                     .map((key) => (
-                      <td key={`${studio.id}-${key}`}>
-                        {key === 'photo' ? (
-                          <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                            {studio[key] && (
-                              studio[key].startsWith('/src/components/assets/images/Photostudios/') ? (
-                                <img src={studio[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              ) : (
-                                <div className={`studio-image ${studio[key]}`} style={{ width: '100%', height: '100%' }} />
-                              )
-                            )}
-                            {isEditingStudio && editableStudio.id === studio.id ? null : (
-                              <>
-                                <button
-                                  type="button"
-                                  className="edit-database-button"
-                                  style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
-                                  onClick={() => handleEditPhotoClick(studio.id)}
-                                >
-                                  Изм. фото
-                                </button>
-                                {editingPhotoStudioId === studio.id && (
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    ref={editingPhotoInputRef}
-                                    style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
-                                    onChange={e => handleEditPhotoFileChange(e, studio)}
-                                    onClick={e => e.stopPropagation()}
-                                  />
-                                )}
-                              </>
-                            )}
-                          </div>
-                        ) : (
-                          isEditingStudio && editableStudio.id === studio.id ? (
-                            <input
-                              type="text"
-                              name={key}
-                              value={editableStudio[key] || ''}
-                              onChange={(e) => handleInputChange(e, setEditableStudio)}
-                              style={{ minWidth: 120 }}
-                            />
-                          ) : (
-                            Array.isArray(studio[key])
-                              ? studio[key].join(', ')
-                              : typeof studio[key] === 'object' && studio[key] !== null
-                                ? JSON.stringify(studio[key])
-                                : studio[key]
-                          )
-                        )}
-                      </td>
+                      <th key={key}>{key}</th>
                     ))}
-                  <td key={`${studio.id}-actions`}>
-                    <div className="edit-database-actions">
-                    {isEditingStudio && editableStudio.id === studio.id ? (
-                      <>
-                        <button
-                          className="edit-database-button"
-                          onClick={handleSaveStudio}
-                          disabled={savingStudio}
-                        >
-                          Сохранить
-                        </button>
-                        <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
-                      </>
-                    ) : (
-                      <>
-                        <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
-                        <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.id)}>Удалить</button>
-                      </>
-                    )}
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...studios]
+                .sort((a, b) => (a.id || 0) - (b.id || 0))
+                .map((studio) => (
+                  <tr key={studio.id}>
+                    {Object.keys(studio)
+                      .filter(
+                        key =>
+                          key !== 'contact_information' &&
+                          key !== 'description' &&
+                          key !== 'booking'
+                      )
+                      .map((key) => (
+                        <td key={`${studio.id}-${key}`}>
+                          {key === 'photo' ? (
+                            <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                              {studio[key] && (
+                                studio[key].startsWith('/src/components/assets/images/Photostudios/') ? (
+                                  <img src={studio[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                  <div className={`studio-image ${studio[key]}`} style={{ width: '100%', height: '100%' }} />
+                                )
+                              )}
+                              {isEditingStudio && editableStudio.id === studio.id ? null : (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="edit-database-button"
+                                    style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
+                                    onClick={() => handleEditPhotoClick(studio.id)}
+                                  >
+                                    Изм. фото
+                                  </button>
+                                  {editingPhotoStudioId === studio.id && (
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      ref={editingPhotoInputRef}
+                                      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                                      onChange={e => handleEditPhotoFileChange(e, studio)}
+                                      onClick={e => e.stopPropagation()}
+                                    />
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          ) : (
+                            isEditingStudio && editableStudio.id === studio.id ? (
+                              <input
+                                type="text"
+                                name={key}
+                                value={editableStudio[key] || ''}
+                                onChange={(e) => handleInputChange(e, setEditableStudio)}
+                                style={{ minWidth: 120 }}
+                              />
+                            ) : (
+                              Array.isArray(studio[key])
+                                ? studio[key].join(', ')
+                                : typeof studio[key] === 'object' && studio[key] !== null
+                                  ? JSON.stringify(studio[key])
+                                  : studio[key]
+                            )
+                          )}
+                        </td>
+                      ))}
+                    <td key={`${studio.id}-actions`}>
+                      <div className="edit-database-actions">
+                      {isEditingStudio && editableStudio.id === studio.id ? (
+                        <>
+                          <button
+                            className="edit-database-button"
+                            onClick={handleSaveStudio}
+                            disabled={savingStudio}
+                          >
+                            Сохранить
+                          </button>
+                          <button className="edit-database-button" onClick={handleCancelEdit}>Отмена</button>
+                        </>
+                      ) : (
+                        <>
+                          <button className="edit-database-button" onClick={() => handleEditStudio(studio)}>Редактировать</button>
+                          <button className="edit-database-button delete" onClick={() => handleDeleteStudio(studio.id)}>Удалить</button>
+                        </>
+                      )}
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
+
       <h3>Типографии</h3>
-      <div className="edit-database-table-container">
-        <table className="edit-database-table">
-          <thead>
-            <tr>
-              {typographies.length > 0 &&
-                Object.keys(typographies[0])
-                  .map((key) => (
-                    <th key={key}>{key}</th>
-                  ))}
-              <th>Действия</th>
-            </tr>
-          </thead>
-          <tbody>
-            {[...typographies]
-              .sort((a, b) => (a.id || 0) - (b.id || 0))
-              .map((typography) => (
-                <tr key={typography.id}>
-                  {Object.keys(typography)
+      {/* Карточка для таблицы типографий */}
+      <div className="requests-orders-card">
+        <div className="edit-database-table-container">
+          <table className="edit-database-table requests-table">
+            <thead>
+              <tr>
+                {typographies.length > 0 &&
+                  Object.keys(typographies[0])
                     .map((key) => (
-                      <td key={`${typography.id}-${key}`}>
-                        {key === 'main_card_photo' ? (
-                          <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
-                            {typography[key] && (
-                              typography[key].startsWith('/src/components/assets/images/Printing/') ? (
-                                <img src={typography[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                              ) : (
-                                <div className={`printing-image ${typography[key]}`} style={{ width: '100%', height: '100%' }} />
-                              )
-                            )}
-                            {isEditingTypography && editableTypography.id === typography.id ? null : (
-                              <>
-                                <button
-                                  type="button"
-                                  className="edit-database-button"
-                                  style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
-                                  onClick={() => handleEditTypographyPhotoClick(typography.id)}
-                                >
-                                  Изм. фото
-                                </button>
-                                {editingPhotoTypographyId === typography.id && (
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    ref={typographyPhotoInputRef}
-                                    style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
-                                    onChange={e => handleEditTypographyPhotoFileChange(e, typography)}
-                                    onClick={e => e.stopPropagation()}
-                                  />
-                                )}
-                              </>
-                            )}
-                          </div>
-                        ) : key === 'photos_on_page' ? (
-                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
-                            {(Array.isArray(typography.photos_on_page)
-                              ? typography.photos_on_page
-                              : (typeof typography.photos_on_page === 'string'
-                                  ? typography.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
-                                  : [])
-                            ).map((photo, idx) => (
-                              <div key={idx} style={{ position: 'relative', width: 60, height: 40, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                                {photo && (
-                                  <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                )}
-                                <button
-                                  type="button"
-                                  className="edit-database-button"
-                                  style={{ position: 'absolute', bottom: 2, right: 2, fontSize: 10, padding: '1px 6px', zIndex: 2 }}
-                                  onClick={() => handleEditPhotoOnPageClick(typography.id, idx)}
-                                >
-                                  Изм. фото
-                                </button>
-                                {editingPhotoOnPage.typographyId === typography.id && editingPhotoOnPage.photoIdx === idx && (
-                                  <input
-                                    type="file"
-                                    accept="image/*"
-                                    style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', zIndex: 3 }}
-                                    onChange={e => handleEditPhotoOnPageFileChange(e, typography, idx)}
-                                    onClick={e => e.stopPropagation()}
-                                  />
-                                )}
-                              </div>
-                            ))}
-                          </div>
-                        ) : (
-                          isEditingTypography && editableTypography.id === typography.id ? (
-                            <input
-                              type={['price_of_spread', 'copy_price'].includes(key) ? 'number' : 'text'}
-                              name={key}
-                              value={editableTypography[key] || ''}
-                              onChange={(e) => handleInputChange(e, setEditableTypography)}
-                              style={{ minWidth: 120 }}
-                            />
-                          ) : (
-                            Array.isArray(typography[key])
-                              ? typography[key].join(', ')
-                              : typography[key]
-                          )
-                        )}
-                      </td>
+                      <th key={key}>{key}</th>
                     ))}
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...typographies]
+                .sort((a, b) => (a.id || 0) - (b.id || 0))
+                .map((typography) => (
+                  <tr key={typography.id}>
+                    {Object.keys(typography)
+                      .map((key) => (
+                        <td key={`${typography.id}-${key}`}>
+                          {key === 'main_card_photo' ? (
+                            <div style={{ width: 90, height: 60, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center', position: 'relative' }}>
+                              {typography[key] && (
+                                typography[key].startsWith('/src/components/assets/images/Printing/') ? (
+                                  <img src={typography[key]} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                ) : (
+                                  <div className={`printing-image ${typography[key]}`} style={{ width: '100%', height: '100%' }} />
+                                )
+                              )}
+                              {isEditingTypography && editableTypography.id === typography.id ? null : (
+                                <>
+                                  <button
+                                    type="button"
+                                    className="edit-database-button"
+                                    style={{ position: 'absolute', bottom: 4, right: 4, fontSize: 12, padding: '2px 8px' }}
+                                    onClick={() => handleEditTypographyPhotoClick(typography.id)}
+                                  >
+                                    Изм. фото
+                                  </button>
+                                  {editingPhotoTypographyId === typography.id && (
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      ref={typographyPhotoInputRef}
+                                      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }}
+                                      onChange={e => handleEditTypographyPhotoFileChange(e, typography)}
+                                      onClick={e => e.stopPropagation()}
+                                    />
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          ) : key === 'photos_on_page' ? (
+                            <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap', alignItems: 'center' }}>
+                              {(Array.isArray(typography.photos_on_page)
+                                ? typography.photos_on_page
+                                : (typeof typography.photos_on_page === 'string'
+                                    ? typography.photos_on_page.split(',').map(f => f.trim()).filter(Boolean)
+                                    : [])
+                              ).map((photo, idx) => (
+                                <div key={idx} style={{ position: 'relative', width: 60, height: 40, background: '#eee', borderRadius: 6, overflow: 'hidden', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                                  {photo && (
+                                    <img src={photo} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+                                  )}
+                                  <button
+                                    type="button"
+                                    className="edit-database-button"
+                                    style={{ position: 'absolute', bottom: 2, right: 2, fontSize: 10, padding: '1px 6px', zIndex: 2 }}
+                                    onClick={() => handleEditPhotoOnPageClick(typography.id, idx)}
+                                  >
+                                    Изм. фото
+                                  </button>
+                                  {editingPhotoOnPage.typographyId === typography.id && editingPhotoOnPage.photoIdx === idx && (
+                                    <input
+                                      type="file"
+                                      accept="image/*"
+                                      style={{ position: 'absolute', left: 0, top: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer', zIndex: 3 }}
+                                      onChange={e => handleEditPhotoOnPageFileChange(e, typography, idx)}
+                                      onClick={e => e.stopPropagation()}
+                                    />
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          ) : (
+                            isEditingTypography && editableTypography.id === typography.id ? (
+                              <input
+                                type={['price_of_spread', 'copy_price'].includes(key) ? 'number' : 'text'}
+                                name={key}
+                                value={editableTypography[key] || ''}
+                                onChange={(e) => handleInputChange(e, setEditableTypography)}
+                                style={{ minWidth: 120 }}
+                              />
+                            ) : (
+                              Array.isArray(typography[key])
+                                ? typography[key].join(', ')
+                                : typography[key]
+                            )
+                          )}
+                        </td>
+                      ))}
                   <td>
                     <div className="edit-database-actions">
                     {isEditingTypography && editableTypography.id === typography.id ? (
@@ -780,8 +786,9 @@ const EditDatabase = () => {
                   </td>
                 </tr>
               ))}
-          </tbody>
-        </table>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
