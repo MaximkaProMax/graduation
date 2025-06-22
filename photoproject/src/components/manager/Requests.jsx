@@ -81,6 +81,8 @@ const Requests = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState({ open: false, id: null, type: null });
   const [users, setUsers] = useState([]);
+  const [studiosList, setStudiosList] = useState([]);
+  const [studioBookedIntervals, setStudioBookedIntervals] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -106,6 +108,13 @@ const Requests = () => {
     axios.get('http://localhost:3001/api/users', { withCredentials: true })
       .then(res => setUsers(res.data))
       .catch(() => setUsers([]));
+  }, []);
+
+  // Получение списка фотостудий с адресом и ценой
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/photostudios')
+      .then(res => setStudiosList(res.data))
+      .catch(() => setStudiosList([]));
   }, []);
 
   const fetchAllRequests = async () => {
@@ -227,6 +236,10 @@ const Requests = () => {
     if (!newStudio.address.trim()) return alert('Адрес обязателен');
     if (isNaN(Number(newStudio.final_price))) return alert('Цена должна быть числом');
     if (!newStudio.user_id) return alert('Выберите пользователя');
+    if (!newStudio.studio_name) return alert('Выберите студию');
+    if (!newStudio.date) return alert('Выберите дату');
+    if (!newStudio.time || !newStudio.end_time) return alert('Выберите время');
+    if (isStudioIntervalBusy()) return alert('Выбранное время уже занято!');
     const normalizeTime = (val) => {
       if (!val) return '';
       if (/^\d{2}:\d{2}$/.test(val)) return val + ':00';
@@ -328,6 +341,96 @@ const Requests = () => {
     }
   // eslint-disable-next-line
   }, [newTypography.number_of_spreads, newTypography.number_of_copies]);
+
+  // Получение занятых интервалов для выбранной студии, даты и адреса
+  useEffect(() => {
+    const studioObj = studiosList.find(s => s.studio === newStudio.studio_name);
+    if (!newStudio.studio_name || !newStudio.date || !studioObj) {
+      setStudioBookedIntervals([]);
+      return;
+    }
+    axios.get('http://localhost:3001/api/bookings/studios/booked', {
+      params: {
+        name: newStudio.studio_name,
+        date: newStudio.date,
+        address: studioObj.address
+      },
+      withCredentials: true
+    })
+      .then(res => {
+        if (res.data.success) {
+          setStudioBookedIntervals(
+            res.data.bookings.map(b => {
+              const [start, end] = (b.time || '').split('-');
+              return { start, end };
+            })
+          );
+        } else {
+          setStudioBookedIntervals([]);
+        }
+      })
+      .catch(() => setStudioBookedIntervals([]));
+  }, [newStudio.studio_name, newStudio.date, studiosList]);
+
+  // Автоматически подставлять адрес и цену при выборе студии
+  useEffect(() => {
+    const studioObj = studiosList.find(s => s.studio === newStudio.studio_name);
+    if (studioObj) {
+      setNewStudio(ns => ({
+        ...ns,
+        address: studioObj.address,
+        price_per_hour: studioObj.price
+      }));
+    }
+  }, [newStudio.studio_name, studiosList]);
+
+  // Автоматический расчет итоговой стоимости для студии
+  useEffect(() => {
+    const studioObj = studiosList.find(s => s.studio === newStudio.studio_name);
+    if (!studioObj) {
+      setNewStudio(ns => ({ ...ns, final_price: '' }));
+      return;
+    }
+    const pricePerHour = parseFloat(studioObj.price.replace(/[^\d.-]/g, '')) || 0;
+    if (newStudio.time && newStudio.end_time) {
+      const [startHour] = (newStudio.time || '').split(':').map(Number);
+      const [endHour] = (newStudio.end_time || '').split(':').map(Number);
+      const hours = endHour - startHour;
+      const total = hours > 0 ? hours * pricePerHour : 0;
+      setNewStudio(ns => ({ ...ns, final_price: total }));
+    } else {
+      setNewStudio(ns => ({ ...ns, final_price: '' }));
+    }
+  }, [newStudio.studio_name, newStudio.time, newStudio.end_time, studiosList]);
+
+  // Проверка на пересечение с занятыми интервалами
+  const isStudioIntervalBusy = () => {
+    if (!newStudio.time || !newStudio.end_time) return false;
+    const start = newStudio.time;
+    const end = newStudio.end_time;
+    return studioBookedIntervals.some(b => start < b.end && end > b.start);
+  };
+
+  // Генерация опций времени с учётом занятых интервалов
+  const generateTimeOptions = (start, end, isEnd = false) => {
+    const options = [];
+    for (let hour = start; hour <= end; hour++) {
+      const time = `${String(hour).padStart(2, '0')}:00`;
+      let disabled = false;
+      if (!isEnd && studioBookedIntervals.some(b => time >= b.start && time < b.end)) {
+        disabled = true;
+      }
+      if (isEnd && studioBookedIntervals.some(b => time > b.start && time <= b.end)) {
+        disabled = true;
+      }
+      options.push(
+        <option key={time} value={time} disabled={disabled}>
+          {time}{disabled ? ' (занято)' : ''}
+        </option>
+      );
+    }
+    return options;
+  };
 
   if (isLoading) {
     return <div>Загрузка...</div>;
@@ -491,10 +594,11 @@ const Requests = () => {
             style={{ minWidth: 220, maxWidth: 220 }}
           >
             <option value="" disabled>Название студии</option>
-            {STUDIO_NAME_OPTIONS.map(opt => (
-              <option key={opt} value={opt}>{opt}</option>
+            {studiosList.map(studio => (
+              <option key={studio.studio} value={studio.studio}>{studio.studio}</option>
             ))}
           </select>
+          {/* Дата */}
           <input
             name="date"
             value={newStudio.date}
@@ -503,39 +607,53 @@ const Requests = () => {
             required
             type="date"
           />
-          <input
+          {/* Время начала */}
+          <select
             name="time"
             value={newStudio.time}
             onChange={handleNewStudioChange}
-            placeholder="Время начала (HH:MM)"
             required
-            type="time"
-          />
-          <input
+            style={{ minWidth: 120, maxWidth: 120 }}
+          >
+            <option value="" disabled>Время начала</option>
+            {generateTimeOptions(9, 20, false)}
+          </select>
+          {/* Время конца */}
+          <select
             name="end_time"
             value={newStudio.end_time}
             onChange={handleNewStudioChange}
-            placeholder="Время конца (HH:MM)"
             required
-            type="time"
-          />
+            style={{ minWidth: 120, maxWidth: 120 }}
+          >
+            <option value="" disabled>Время конца</option>
+            {generateTimeOptions(10, 21, true)}
+          </select>
+          {/* Адрес (автозаполняется) */}
           <input
             name="address"
             value={newStudio.address}
-            onChange={handleNewStudioChange}
+            readOnly
             placeholder="Адрес"
             required
             type="text"
           />
+          {/* Итоговая цена (автоматически считается) */}
           <input
             name="final_price"
             value={newStudio.final_price}
-            onChange={handleNewStudioChange}
-            placeholder="Цена"
-            required
+            readOnly
+            placeholder="Итоговая цена"
             type="number"
-            step="0.01"
+            style={{ background: "#f9f9f9", fontWeight: "bold" }}
+            tabIndex={-1}
           />
+          {/* Показать предупреждение если выбранный интервал занят */}
+          {isStudioIntervalBusy() && (
+            <div style={{ color: 'red', fontWeight: 600, width: '100%' }}>
+              Выбранное время уже занято!
+            </div>
+          )}
           <button type="submit">Добавить</button>
         </form>
       </div>
