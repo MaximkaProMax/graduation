@@ -13,44 +13,44 @@ h1, h2, h3 {
   box-shadow: 0 2px 8px rgba(0,0,0,0.10);
   border-radius: 8px;
   font-size: 16px;
+  display: flex;
+  align-items: flex-start; /* Выровнять иконку и текст по верхнему краю */
+  position: relative;
   min-height: 48px;
-  /* Увеличиваем отступ слева для иконки */
-  padding-left: 16px; /* обычный отступ */
-  padding-right: 16px;
-  padding-top: 12px;
-  padding-bottom: 12px;
+  padding-left: 0;
+  padding-right: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   background: #fff;
   color: #222;
-  position: relative;
-  display: flex;
-  align-items: center;
 }
 
 .Toastify__toast-icon {
-  /* Теперь иконка будет частью flex-контейнера */
-  position: static;
-  margin-right: 16px;
-  left: unset;
-  top: unset;
-  transform: none;
-  width: 28px;
-  height: 28px;
-  min-width: 28px;
-  min-height: 28px;
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  margin: 12px 0 12px 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   pointer-events: none;
   z-index: 2;
+  position: static;
 }
 
 .Toastify__toast-body {
+  flex: 1 1 0%;
   margin: 0;
-  padding: 0;
+  padding: 12px 36px 12px 0;
   display: block;
   width: 100%;
-  /* Чтобы текст не заезжал на иконку */
   word-break: break-word;
+  white-space: normal; /* Позволяет переносить текст */
+  overflow-wrap: anywhere; /* Гарантирует перенос длинных слов */
+  /* Отступ слева для текста, чтобы не заезжал на иконку */
+  margin-left: 12px;
 }
 
 .Toastify__toast--success {
