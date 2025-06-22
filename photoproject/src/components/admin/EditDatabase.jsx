@@ -558,6 +558,7 @@ const EditDatabase = () => {
           <table className="edit-database-table requests-table">
             <thead>
               <tr>
+                {/* Переводим заголовки для фотостудий */}
                 {studios.length > 0 &&
                   Object.keys(studios[0])
                     .filter(
@@ -566,9 +567,19 @@ const EditDatabase = () => {
                         key !== 'description' &&
                         key !== 'booking'
                     )
-                    .map((key) => (
-                      <th key={key}>{key}</th>
-                    ))}
+                    .map((key) => {
+                      const headers = {
+                        id: 'ID',
+                        studio: 'Название студии',
+                        address: 'Адрес',
+                        opening_hours: 'Время работы',
+                        price: 'Цена',
+                        photo: 'Фото',
+                        date_of_creation: 'Дата создания',
+                        date_of_editing: 'Дата изменения'
+                      };
+                      return <th key={key}>{headers[key] || key}</th>;
+                    })}
                 <th>Действия</th>
               </tr>
             </thead>
@@ -618,6 +629,16 @@ const EditDatabase = () => {
                                 </>
                               )}
                             </div>
+                          ) : key === 'date_of_creation' || key === 'date_of_editing' ? (
+                            studio[key]
+                              ? new Date(studio[key]).toLocaleString('ru-RU', {
+                                  day: '2-digit',
+                                  month: '2-digit',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })
+                              : ''
                           ) : (
                             isEditingStudio && editableStudio.id === studio.id ? (
                               <input
@@ -672,11 +693,29 @@ const EditDatabase = () => {
           <table className="edit-database-table requests-table">
             <thead>
               <tr>
+                {/* Переводим заголовки для типографий */}
                 {typographies.length > 0 &&
                   Object.keys(typographies[0])
-                    .map((key) => (
-                      <th key={key}>{key}</th>
-                    ))}
+                    .map((key) => {
+                      const headers = {
+                        id: 'ID',
+                        main_card_photo: 'Обложка',
+                        main_album_name: 'Название альбома',
+                        main_card_description: 'Описание обложки',
+                        name_on_page: 'Название на странице',
+                        photos_on_page: 'Фото на странице',
+                        product_description: 'Описание продукта',
+                        additional_information: 'Доп. информация',
+                        format: 'Формат',
+                        basis_for_spread: 'Основа разворота',
+                        price_of_spread: 'Цена за разворот',
+                        lamination: 'Ламинация',
+                        copy_price: 'Цена копии',
+                        date_of_creation: 'Дата создания',
+                        date_of_editing: 'Дата изменения'
+                      };
+                      return <th key={key}>{headers[key] || key}</th>;
+                    })}
                 <th>Действия</th>
               </tr>
             </thead>
@@ -752,6 +791,30 @@ const EditDatabase = () => {
                                 </div>
                               ))}
                             </div>
+                          ) : key === 'additional_information' ? (
+                            <div
+                              style={{
+                                maxHeight: '2.8em',
+                                overflow: 'hidden',
+                                display: '-webkit-box',
+                                WebkitLineClamp: 2,
+                                WebkitBoxOrient: 'vertical',
+                                whiteSpace: 'pre-line'
+                              }}
+                              title={typography[key]}
+                            >
+                              {typography[key]}
+                            </div>
+                          ) : key === 'date_of_creation' || key === 'date_of_editing' ? (
+                            typography[key]
+                              ? new Date(typography[key]).toLocaleString('ru-RU', {
+                                  day: '2-digit',
+                                  month: '2-digit',
+                                  year: 'numeric',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })
+                              : ''
                           ) : (
                             isEditingTypography && editableTypography.id === typography.id ? (
                               <input
