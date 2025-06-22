@@ -99,72 +99,75 @@ const EditUserGroups = () => {
     <div className="edit-user-groups-container">
       <h2>Редактирование групп пользователей</h2>
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
-      <table className="edit-user-groups-table">
-        <thead>
-          <tr>
-            <th>ID роли</th>
-            <th>Название роли</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {roles.map((role) => (
-            <tr key={role.roleId}>
-              <td>{role.roleId}</td>
-              <td>
-                {editingRoleId === role.roleId ? (
-                  <input
-                    type="text"
-                    value={editingRoleName}
-                    onChange={handleRoleNameChange}
-                    autoFocus
-                  />
-                ) : (
-                  role.roleName
-                )}
-              </td>
-              <td className="actions-cell">
-                <div className="edit-user-groups-actions">
-                  {editingRoleId === role.roleId ? (
-                    <>
-                      <button
-                        className="edit-user-groups-button edit"
-                        onClick={() => handleSaveRole(role.roleId)}
-                      >
-                        Сохранить
-                      </button>
-                      <button
-                        className="edit-user-groups-button"
-                        onClick={() => {
-                          setEditingRoleId(null);
-                          setEditingRoleName('');
-                        }}
-                      >
-                        Отмена
-                      </button>
-                    </>
-                  ) : (
-                    <>
-                      <button
-                        className="edit-user-groups-button edit"
-                        onClick={() => handleEditRole(role.roleId, role.roleName)}
-                      >
-                        Редактировать
-                      </button>
-                      <button
-                        className="edit-user-groups-button delete"
-                        onClick={() => handleDeleteRole(role.roleId)}
-                      >
-                        Удалить
-                      </button>
-                    </>
-                  )}
-                </div>
-              </td>
+      {/* Добавляем фон-карточку для таблицы */}
+      <div className="requests-orders-card">
+        <table className="edit-user-groups-table">
+          <thead>
+            <tr>
+              <th>ID роли</th>
+              <th>Название роли</th>
+              <th>Действия</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {roles.map((role) => (
+              <tr key={role.roleId}>
+                <td>{role.roleId}</td>
+                <td>
+                  {editingRoleId === role.roleId ? (
+                    <input
+                      type="text"
+                      value={editingRoleName}
+                      onChange={handleRoleNameChange}
+                      autoFocus
+                    />
+                  ) : (
+                    role.roleName
+                  )}
+                </td>
+                <td className="actions-cell">
+                  <div className="edit-user-groups-actions">
+                    {editingRoleId === role.roleId ? (
+                      <>
+                        <button
+                          className="edit-user-groups-button edit"
+                          onClick={() => handleSaveRole(role.roleId)}
+                        >
+                          Сохранить
+                        </button>
+                        <button
+                          className="edit-user-groups-button"
+                          onClick={() => {
+                            setEditingRoleId(null);
+                            setEditingRoleName('');
+                          }}
+                        >
+                          Отмена
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button
+                          className="edit-user-groups-button edit"
+                          onClick={() => handleEditRole(role.roleId, role.roleName)}
+                        >
+                          Редактировать
+                        </button>
+                        <button
+                          className="edit-user-groups-button delete"
+                          onClick={() => handleDeleteRole(role.roleId)}
+                        >
+                          Удалить
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
       {showAddForm ? (
         <div className="add-role-form" style={{ marginBottom: 20 }}>
           <h3>Добавить группу</h3>
