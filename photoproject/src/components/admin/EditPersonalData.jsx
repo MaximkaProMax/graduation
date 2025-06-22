@@ -172,7 +172,11 @@ const EditPersonalData = () => {
                   type="text"
                   name="telephone"
                   value={editableUser.telephone || ''}
-                  onChange={handleInputChange}
+                  onChange={e => {
+                    // Оставляем только цифры
+                    const onlyDigits = e.target.value.replace(/\D/g, '');
+                    setEditableUser({ ...editableUser, telephone: onlyDigits });
+                  }}
                   disabled={!isEditing}
                 />
               </td>

@@ -17,23 +17,13 @@ const Booking = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Просто делаем запрос к защищённому эндпоинту
-    axios.get('http://localhost:3001/api/bookings/user', { withCredentials: true })
+    // Проверка авторизации (делаем только 1 запрос)
+    axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
       .then(response => {
-        setIsAuthenticated(true);
+        setIsAuthenticated(response.data.isAuthenticated);
         setAuthChecked(true);
-        // Проверка авторизации
-        axios.get('http://localhost:3001/api/auth/check', { withCredentials: true })
-          .then(response => {
-            setIsAuthenticated(response.data.isAuthenticated);
-            setAuthChecked(true);
-          })
-          .catch(() => {
-            setIsAuthenticated(false);
-            setAuthChecked(true);
-          });
       })
-      .catch(error => {
+      .catch(() => {
         setIsAuthenticated(false);
         setAuthChecked(true);
       });
@@ -44,11 +34,9 @@ const Booking = () => {
 
     const fetchTypographyBookings = async () => {
       try {
-        // Отправляем cookies
         const response = await axios.get('http://localhost:3001/api/bookings/user', {
           withCredentials: true,
         });
-
         if (response.data.success) {
           setTypographyBookings(response.data.bookings);
         } else {
@@ -61,11 +49,9 @@ const Booking = () => {
 
     const fetchStudioBookings = async () => {
       try {
-        // Отправляем cookies
         const response = await axios.get('http://localhost:3001/api/bookings/studios/user', {
           withCredentials: true,
         });
-
         if (response.data.success) {
           setStudioBookings(response.data.bookings);
         } else {
@@ -78,13 +64,19 @@ const Booking = () => {
 
     const fetchUserInfo = async () => {
       try {
-        // Отправляем cookies
-        const response = await axios.get('http://localhost:3001/api/user/profile', {
+        // Исправлено: правильный эндпоинт для получения профиля пользователя
+        const response = await axios.get('http://localhost:3001/api/users/user', {
           withCredentials: true,
         });
-        if (response.data && response.data.success) {
-          setUserInfo(response.data.user);
-          setEditAddress(response.data.user.address || '');
+        if (response.data) {
+          // Для совместимости с текущим кодом
+          setUserInfo({
+            fullName: response.data.name,
+            email: response.data.email,
+            phone: response.data.telephone,
+            address: response.data.address,
+          });
+          setEditAddress(response.data.address || '');
         }
       } catch (error) {
         console.error('Ошибка при получении данных пользователя:', error);
@@ -97,7 +89,7 @@ const Booking = () => {
 
     axios.get('http://localhost:3001/api/photostudios').then(res => {
       window.studios = res.data;
-      setStudiosList(res.data); // сохраняем список студий для поиска фото
+      setStudiosList(res.data);
     });
     axios.get('http://localhost:3001/api/printing').then(res => {
       window.printingOptions = res.data;
@@ -150,15 +142,37 @@ const Booking = () => {
 
   const handleSaveAddress = async () => {
     try {
-      await axios.put(
+      // Получаем актуальные данные пользователя
+      const userRes = await axios.get('http://localhost:3001/api/users/user', { withCredentials: true });
+      const userData = userRes.data;
+
+      // Собираем все поля, которые ожидает сервер (иначе сервер может отклонить запрос)
+      const payload = {
+        name: userData.name,
+        login: userData.login,
+        telephone: userData.telephone,
+        email: userData.email,
+        address: editAddress
+      };
+
+      // ВАЖНО: используем PATCH вместо PUT, чтобы не требовать userId из сессии (аутентификация по токену)
+      await axios.patch(
         'http://localhost:3001/api/users/user',
-        { address: editAddress },
+        payload,
         { withCredentials: true }
       );
       setUserInfo((prev) => ({ ...prev, address: editAddress }));
       setIsEditingAddress(false);
+      toast.success('Адрес успешно сохранён!');
     } catch (error) {
-      alert('Ошибка при сохранении адреса');
+      if (error.response && error.response.status === 401) {
+        toast.error('Сессия истекла. Пожалуйста, войдите снова.');
+        setTimeout(() => {
+          window.location.href = '/login';
+        }, 1500);
+      } else {
+        toast.error('Ошибка при сохранении адреса');
+      }
     }
   };
 
@@ -200,9 +214,24 @@ const Booking = () => {
           <h3>Контактные данные</h3>
           {userInfo ? (
             <div>
-              <p>ФИО: {userInfo.fullName || '-'}</p>
-              <p>Почта: {userInfo.email || '-'}</p>
-              <p>Телефон: {userInfo.phone || '-'}</p>
+              <p>
+                Телефон:&nbsp;
+                {isEditingAddress ? (
+                  <input
+                    type="text"
+                    inputMode="numeric"
+                    pattern="[0-9]*"
+                    value={userInfo.phone || ''}
+                    onChange={e => {
+                      const onlyDigits = e.target.value.replace(/\D/g, '');
+                      setUserInfo(prev => ({ ...prev, phone: onlyDigits }));
+                    }}
+                    className="address-input"
+                  />
+                ) : (
+                  userInfo.phone || '-'
+                )}
+              </p>
               <p>
                 Адрес доставки:&nbsp;
                 {isEditingAddress ? (
@@ -213,8 +242,47 @@ const Booking = () => {
                       onChange={handleAddressChange}
                       className="address-input"
                     />
-                    <button onClick={handleSaveAddress} className="save-btn">Сохранить</button>
-                    <button onClick={() => { setIsEditingAddress(false); setEditAddress(userInfo.address || ''); }} className="cancel-btn">Отмена</button>
+                    <button
+                      onClick={async () => {
+                        try {
+                          // Собираем все поля для PATCH
+                          const userRes = await axios.get('http://localhost:3001/api/users/user', { withCredentials: true });
+                          const userData = userRes.data;
+                          const payload = {
+                            name: userData.name,
+                            login: userData.login,
+                            telephone: userInfo.phone,
+                            email: userData.email,
+                            address: editAddress
+                          };
+                          await axios.patch(
+                            'http://localhost:3001/api/users/user',
+                            payload,
+                            { withCredentials: true }
+                          );
+                          setUserInfo(prev => ({ ...prev, address: editAddress }));
+                          setIsEditingAddress(false);
+                          toast.success('Данные успешно сохранены!');
+                        } catch (error) {
+                          if (error.response && error.response.status === 401) {
+                            toast.error('Сессия истекла. Пожалуйста, войдите снова.');
+                            setTimeout(() => {
+                              window.location.href = '/login';
+                            }, 1500);
+                          } else {
+                            toast.error('Ошибка при сохранении данных');
+                          }
+                        }
+                      }}
+                      className="save-btn"
+                    >Сохранить</button>
+                    <button
+                      onClick={() => {
+                        setIsEditingAddress(false);
+                        setEditAddress(userInfo.address || '');
+                      }}
+                      className="cancel-btn"
+                    >Отмена</button>
                   </>
                 ) : (
                   <>
@@ -255,7 +323,7 @@ const Booking = () => {
                     <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
                     <p>Ламинация: {booking.lamination || '-'}</p>
                     <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
-                    <p>Адрес доставки: {booking.address_delivery || '-'}</p>
+                    {/* <p>Адрес доставки: {booking.address_delivery || '-'}</p> */}
                     <p>Статус: {booking.status || '-'}</p>
                     <div className="booking-actions">
                       <div className="booking-price-total">
@@ -418,7 +486,7 @@ const Booking = () => {
                     <p>Кол-во разворотов: {booking.number_of_spreads || '-'}</p>
                     <p>Ламинация: {booking.lamination || '-'}</p>
                     <p>Количество экземпляров: {booking.number_of_copies || '-'}</p>
-                    <p>Адрес доставки: {booking.address_delivery || '-'}</p>
+                    {/* <p>Адрес доставки: {booking.address_delivery || '-'}</p> */}
                     <p>Статус: {booking.status || '-'}</p>
                     <div className="booking-actions">
                       <div className="booking-price-total">

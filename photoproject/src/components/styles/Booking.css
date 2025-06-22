@@ -754,3 +754,65 @@
 .booking-info .delete-button {
   /* align-self: center; */
 }
+
+/* Стили для редактируемого поля "Адрес доставки" */
+.address-input {
+  width: 100%;
+  min-width: 120px;
+  max-width: 340px;
+  box-sizing: border-box;
+  padding: 7px 8px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
+  font-size: 15px;
+  background: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+  margin-right: 10px;
+}
+
+.address-input:focus {
+  border: 1.5px solid #f5b91e;
+  box-shadow: 0 0 0 2px #ffe08255;
+}
+
+/* Кнопки "Сохранить" и "Отмена" для адреса */
+.save-btn, .cancel-btn, .edit-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 7px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-left: 6px;
+  font-size: 15px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.save-btn {
+  background-color: #F0BB29;
+  color: #fff;
+}
+
+.save-btn:hover {
+  background-color: #e0aa1e;
+}
+
+.cancel-btn {
+  background-color: #e0e0e0;
+  color: #222;
+}
+
+.cancel-btn:hover {
+  background-color: #ededed;
+  color: #222;
+}
+
+.edit-btn {
+  background-color: #e0e0e0;
+  color: #222;
+}
+
+.edit-btn:hover {
+  background-color: #ededed;
+  color: #222;
+}

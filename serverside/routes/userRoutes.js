@@ -433,4 +433,22 @@ router.get('/check-role', authenticateToken, async (req, res) => {
   }
 });
 
+// Добавьте этот маршрут для PATCH /api/users/user
+router.patch('/user', authenticateToken, async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { email: req.user.email } });
+    if (!user) return res.status(404).json({ success: false, message: 'Пользователь не найден' });
+    const { name, login, telephone, email, address } = req.body;
+    user.name = name;
+    user.login = login;
+    user.telephone = telephone;
+    user.email = email;
+    user.address = address;
+    await user.save();
+    res.json({ success: true, message: 'Данные успешно обновлены' });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Ошибка при обновлении данных' });
+  }
+});
+
 module.exports = router;
