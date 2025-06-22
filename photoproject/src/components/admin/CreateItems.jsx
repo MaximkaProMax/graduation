@@ -2,6 +2,9 @@ import React, { useState, useRef } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import '../styles/CreateItems.css';
+import Modal from 'react-modal';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const CreateItems = () => {
   const [studio, setStudio] = useState({
@@ -30,6 +33,7 @@ const CreateItems = () => {
   });
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState('');
+  const [successModal, setSuccessModal] = useState({ open: false, type: null });
   const fileInputRef = useRef(null);
   const typographyPhotoInputRef = useRef(null);
   const photosOnPageInputRef = useRef(null);
@@ -80,7 +84,6 @@ const CreateItems = () => {
       photo: photo || ''
     })
       .then(() => {
-        alert('Фотостудия добавлена!');
         setStudio({
           studio: '',
           address: '',
@@ -88,8 +91,12 @@ const CreateItems = () => {
           price: '',
           photo: ''
         });
+        setSuccessModal({ open: true, type: 'studio' });
+        toast.success('Фотостудия успешно добавлена!');
       })
-      .catch(() => alert('Ошибка при добавлении фотостудии'));
+      .catch(() => {
+        toast.error('Ошибка при добавлении фотостудии');
+      });
   };
 
   // --- Форма типографии ---
@@ -263,7 +270,6 @@ const CreateItems = () => {
       album_name
     })
       .then(() => {
-        alert('Типография добавлена!');
         setTypography({
           main_card_photo: '',
           main_album_name: '',
@@ -281,12 +287,39 @@ const CreateItems = () => {
           final_price: '',
           album_name: ''
         });
+        setSuccessModal({ open: true, type: 'typography' });
+        toast.success('Типография успешно добавлена!');
       })
-      .catch(() => alert('Ошибка при добавлении типографии'));
+      .catch(() => {
+        toast.error('Ошибка при добавлении типографии');
+      });
   };
 
   return (
     <div className="create-items-container">
+      <ToastContainer position="top-center" autoClose={3000} />
+      <Modal
+        isOpen={successModal.open}
+        onRequestClose={() => setSuccessModal({ open: false, type: null })}
+        className="modal"
+        overlayClassName="overlay"
+        ariaHideApp={false}
+      >
+        <h2>Успех!</h2>
+        <p>
+          {successModal.type === 'studio' && 'Фотостудия успешно добавлена!'}
+          {successModal.type === 'typography' && 'Типография успешно добавлена!'}
+        </p>
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 24 }}>
+          <button
+            className="submit-button"
+            style={{ minWidth: 120 }}
+            onClick={() => setSuccessModal({ open: false, type: null })}
+          >
+            ОК
+          </button>
+        </div>
+      </Modal>
       <h2>Создание элементов</h2>
       <button
         onClick={() => navigate(-1)}
