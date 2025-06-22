@@ -175,14 +175,53 @@ h2, h3 {
   color: #fff;
   font-weight: bold;
   cursor: pointer;
-  transition: background 0.2s, box-shadow 0.2s;
+  transition: background 0.2s, box-shadow 0.2s, color 0.2s;
   min-width: 120px;
   box-shadow: 0 1px 4px rgba(245,185,30,0.08);
 }
 
+/* Цвета для кнопок действий, как на edit-user-groups */
+.action-buttons .edit-user-groups-button.edit {
+  background-color: #e0e0e0;
+  color: #222;
+  transition: background 0.2s, color 0.2s;
+}
+.action-buttons .edit-user-groups-button.edit:hover {
+  background-color: #ededed;
+  color: #222;
+}
+
+.action-buttons .edit-user-groups-button.delete {
+  background-color: #e74c3c;
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+.action-buttons .edit-user-groups-button.delete:hover {
+  background-color: #ff5c5c;
+  color: #fff;
+}
+
+.action-buttons .edit-user-groups-button.save {
+  background-color: #F0BB29;
+  color: #fff;
+  transition: background 0.2s, color 0.2s;
+}
+.action-buttons .edit-user-groups-button.save:hover {
+  background-color: #ffe082;
+  color: #b97b00;
+}
+
+/* Плавная смена цвета и фильтра */
+.action-buttons .edit-user-groups-button.edit,
+.action-buttons .edit-user-groups-button.delete,
+.action-buttons .edit-user-groups-button.save {
+  transition: background-color 0.25s cubic-bezier(.4,0,.2,1), color 0.25s cubic-bezier(.4,0,.2,1), filter 0.25s cubic-bezier(.4,0,.2,1);
+}
+
+/* Для всех action-buttons button (если вдруг не попадает по классам выше) */
 .action-buttons button:hover {
-  background-color: #e0aa1e;
-  box-shadow: 0 2px 8px rgba(245,185,30,0.18);
+  filter: brightness(1.07);
+  transition: background 0.2s, color 0.2s, filter 0.2s;
 }
 
 .back-button {

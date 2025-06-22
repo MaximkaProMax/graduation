@@ -577,7 +577,7 @@ const Requests = () => {
             name="final_price"
             value={newTypography.final_price}
             readOnly
-В            placeholder="Итоговая цена"
+            placeholder="Итоговая цена"
             type="number"
             style={{ background: "#f9f9f9", fontWeight: "bold" }}
             tabIndex={-1}
@@ -810,18 +810,38 @@ const Requests = () => {
           {/* Кнопки действий оставляем вне таблицы */}
           {selectedTypographyId && !editingTypography && (
             <div className="action-buttons">
-              <button onClick={() => handleEditTypography(typographyBookings.find(b => b.booking_typographie_id === selectedTypographyId))}>
+              <button
+                className="edit-user-groups-button edit"
+                style={{ background: '#e0e0e0', color: '#222' }}
+                onClick={() => handleEditTypography(typographyBookings.find(b => b.booking_typographie_id === selectedTypographyId))}
+              >
                 Редактировать
               </button>
-              <button onClick={() => handleDeleteTypography(selectedTypographyId)}>
+              <button
+                className="edit-user-groups-button delete"
+                style={{ background: '#e74c3c', color: '#fff' }}
+                onClick={() => handleDeleteTypography(selectedTypographyId)}
+              >
                 Удалить
               </button>
             </div>
           )}
           {editingTypography && (
             <div className="action-buttons">
-              <button onClick={handleSaveTypography}>Сохранить</button>
-              <button onClick={() => setEditingTypography(null)}>Отмена</button>
+              <button
+                className="edit-user-groups-button save"
+                style={{ background: '#F0BB29', color: '#fff' }}
+                onClick={handleSaveTypography}
+              >
+                Сохранить
+              </button>
+              <button
+                className="edit-user-groups-button"
+                style={{ background: '#e0e0e0', color: '#222' }}
+                onClick={() => setEditingTypography(null)}
+              >
+                Отмена
+              </button>
             </div>
           )}
         </div>
@@ -895,18 +915,38 @@ const Requests = () => {
           {/* Кнопки действий оставляем вне таблицы */}
           {selectedStudioId && !editingStudio && (
             <div className="action-buttons">
-              <button onClick={() => handleEditStudio(studioBookings.find(b => b.booking_studio_id === selectedStudioId))}>
+              <button
+                className="edit-user-groups-button edit"
+                style={{ background: '#e0e0e0', color: '#222' }}
+                onClick={() => handleEditStudio(studioBookings.find(b => b.booking_studio_id === selectedStudioId))}
+              >
                 Редактировать
               </button>
-              <button onClick={() => handleDeleteStudio(selectedStudioId)}>
+              <button
+                className="edit-user-groups-button delete"
+                style={{ background: '#e74c3c', color: '#fff' }}
+                onClick={() => handleDeleteStudio(selectedStudioId)}
+              >
                 Удалить
               </button>
             </div>
           )}
           {editingStudio && (
             <div className="action-buttons">
-              <button onClick={handleSaveStudio}>Сохранить</button>
-              <button onClick={() => setEditingStudio(null)}>Отмена</button>
+              <button
+                className="edit-user-groups-button save"
+                style={{ background: '#F0BB29', color: '#fff' }}
+                onClick={handleSaveStudio}
+              >
+                Сохранить
+              </button>
+              <button
+                className="edit-user-groups-button"
+                style={{ background: '#e0e0e0', color: '#222' }}
+                onClick={() => setEditingStudio(null)}
+              >
+                Отмена
+              </button>
             </div>
           )}
         </div>
