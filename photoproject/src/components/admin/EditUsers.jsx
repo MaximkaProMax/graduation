@@ -3,6 +3,7 @@ import axios from 'axios';
 import '../styles/EditUsers.css';
 import { useNavigate } from 'react-router-dom';
 import { checkPageAccess } from '../../utils/checkPageAccess';
+import Modal from 'react-modal';
 
 const EditUsers = () => {
   const [users, setUsers] = useState([]);
@@ -16,6 +17,7 @@ const EditUsers = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [deleteModal, setDeleteModal] = useState({ open: false, userId: null });
   const navigate = useNavigate();
 
   const fetchUsers = () => {
@@ -183,16 +185,18 @@ const EditUsers = () => {
     setSuccessMessage('');
   };
 
-  const handleDeleteUser = (userId) => {
-    if (window.confirm('Вы уверены, что хотите удалить этого пользователя?')) {
-      axios.delete(`http://localhost:3001/api/users/${userId}`)
-        .then(() => {
-          console.log('Пользователь успешно удален');
-          fetchUsers();
-        })
-        .catch(error => {
-          console.error('Ошибка при удалении пользователя:', error);
-        });
+  const openDeleteModal = (userId) => setDeleteModal({ open: true, userId });
+  const closeDeleteModal = () => setDeleteModal({ open: false, userId: null });
+
+  const confirmDelete = async () => {
+    if (!deleteModal.userId) return closeDeleteModal();
+    try {
+      await axios.delete(`http://localhost:3001/api/users/${deleteModal.userId}`);
+      fetchUsers();
+    } catch (error) {
+      console.error('Ошибка при удалении пользователя:', error);
+    } finally {
+      closeDeleteModal();
     }
   };
 
@@ -207,6 +211,21 @@ const EditUsers = () => {
 
   return (
     <div className="edit-users-container">
+      {/* Модальное окно подтверждения удаления */}
+      <Modal
+        isOpen={deleteModal.open}
+        onRequestClose={closeDeleteModal}
+        className="modal"
+        overlayClassName="overlay"
+        ariaHideApp={false}
+      >
+        <h2>Подтвердите удаление</h2>
+        <p>Вы уверены, что хотите удалить этого пользователя?</p>
+        <div style={{ display: 'flex', gap: 16, justifyContent: 'center', marginTop: 24 }}>
+          <button className="submit-button" style={{ minWidth: 120 }} onClick={confirmDelete}>Удалить</button>
+          <button className="submit-button" style={{ minWidth: 120, background: '#ccc', color: '#222' }} onClick={closeDeleteModal}>Отмена</button>
+        </div>
+      </Modal>
       <h2>Редактирование пользователей</h2>
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
@@ -308,7 +327,7 @@ const EditUsers = () => {
                     ) : (
                       <>
                         <button className="edit-users-button edit" onClick={() => handleEditUser(user)}>Редактировать</button>
-                        <button className="edit-users-button delete" onClick={() => handleDeleteUser(user.userId)}>Удалить</button>
+                        <button className="edit-users-button delete" onClick={() => openDeleteModal(user.userId)}>Удалить</button>
                       </>
                     )}
                   </td>
