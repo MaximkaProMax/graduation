@@ -4,6 +4,8 @@ import '../styles/EditUsers.css';
 import { useNavigate } from 'react-router-dom';
 import { checkPageAccess } from '../../utils/checkPageAccess';
 import Modal from 'react-modal';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditUsers = () => {
   const [users, setUsers] = useState([]);
@@ -104,14 +106,17 @@ const EditUsers = () => {
             setEditableUser({});
             setErrorMessage('');
             setSuccessMessage('Пользователь успешно добавлен');
+            toast.success('Пользователь успешно добавлен!');
           } else {
             setErrorMessage(response.data.message || 'Ошибка при добавлении пользователя');
             setSuccessMessage('');
+            toast.error(response.data.message || 'Ошибка при добавлении пользователя');
           }
         })
         .catch(error => {
           setErrorMessage('Ошибка при добавлении пользователя');
           setSuccessMessage('');
+          toast.error('Ошибка при добавлении пользователя');
           console.error('Ошибка при добавлении пользователя:', error);
         });
       return;
@@ -133,16 +138,14 @@ const EditUsers = () => {
         if (newPassword !== confirmNewPassword) {
           setErrorMessage('Новый пароль и подтверждение пароля не совпадают');
           setSuccessMessage('');
+          toast.error('Новый пароль и подтверждение пароля не совпадают');
           return;
         }
       }
 
-      console.log('Отправка данных на сервер:', updateData);
-
       axios.put(`http://localhost:3001/api/users/${userId}`, updateData)
         .then(response => {
           if (response.data.success) {
-            console.log('Данные пользователя успешно обновлены');
             fetchUsers();
             setIsEditing(false);
             setCurrentPassword('');
@@ -150,16 +153,20 @@ const EditUsers = () => {
             setConfirmNewPassword('');
             setErrorMessage('');
             setSuccessMessage('Данные пользователя успешно обновлены');
+            toast.success('Данные пользователя успешно обновлены!');
           } else {
             setErrorMessage(response.data.message || 'Ошибка при обновлении данных пользователя');
             setSuccessMessage('');
+            toast.error(response.data.message || 'Ошибка при обновлении данных пользователя');
           }
         })
         .catch(error => {
           if (error.response && error.response.status === 400) {
             setErrorMessage('Текущий пароль неверен');
+            toast.error('Текущий пароль неверен');
           } else {
             setErrorMessage('Ошибка при обновлении данных пользователя');
+            toast.error('Ошибка при обновлении данных пользователя');
           }
           setSuccessMessage('');
           console.error('Ошибка при обновлении данных пользователя:', error);
@@ -167,6 +174,7 @@ const EditUsers = () => {
     } else {
       setErrorMessage('Все поля должны быть заполнены');
       setSuccessMessage('');
+      toast.error('Все поля должны быть заполнены');
     }
   };
 
@@ -193,8 +201,10 @@ const EditUsers = () => {
     try {
       await axios.delete(`http://localhost:3001/api/users/${deleteModal.userId}`);
       fetchUsers();
+      toast.success('Пользователь успешно удалён!');
     } catch (error) {
       console.error('Ошибка при удалении пользователя:', error);
+      toast.error('Ошибка при удалении пользователя');
     } finally {
       closeDeleteModal();
     }
@@ -211,6 +221,7 @@ const EditUsers = () => {
 
   return (
     <div className="edit-users-container">
+      <ToastContainer position="top-center" autoClose={3000} />
       {/* Модальное окно подтверждения удаления */}
       <Modal
         isOpen={deleteModal.open}
