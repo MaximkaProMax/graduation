@@ -66,25 +66,20 @@ h2, h3 {
   background-color: #e0aa1e;
 }
 
-.table-container {
-  width: 100%;
-  overflow-x: auto;
-  margin-bottom: 24px;
-  border-radius: 8px;
-  background: #fff;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-  padding: 8px 0;
-}
-
+/* --- Красивое оформление таблиц с закруглениями --- */
 .requests-table {
   width: 100%;
   border-collapse: collapse;
   margin-top: 20px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(240,187,41,0.07);
 }
 
 .requests-table th,
 .requests-table td {
-  border: 1px solid #ddd;
+  border: none;
   padding: 8px;
   text-align: left;
   font-size: 15px;
@@ -241,6 +236,21 @@ h2, h3 {
   border-radius: 12px;
   box-shadow: 0 2px 12px rgba(0,0,0,0.06);
   padding: 32px 24px 24px 24px;
+}
+
+/* Убираем двойные границы между ячейками */
+.requests-table {
+  border-spacing: 0;
+  border-collapse: separate;
+}
+
+/* Тень и фон для контейнера таблицы */
+.table-container {
+  border-radius: 18px;
+  background: #f9f7f2;
+  box-shadow: 0 2px 12px rgba(240,187,41,0.10);
+  padding: 16px 8px;
+  margin-bottom: 32px;
 }
 
 @media (max-width: 900px) {
