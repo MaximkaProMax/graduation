@@ -160,7 +160,9 @@ const Requests = () => {
   const handleDeleteTypography = (id) => openDeleteModal(id, 'typography');
 
   const handleEditStudio = (booking) => setEditingStudio({ ...booking });
-  const handleStudioChange = (e) => setEditingStudio({ ...editingStudio, [e.target.name]: e.target.value });
+  const handleStudioChange = (e) => {
+    setEditingStudio({ ...editingStudio, [e.target.name]: e.target.value });
+  };
   const handleSaveStudio = async () => {
     try {
       // Разрешаем диапазон времени вида HH:MM-HH:MM или HH:MM:SS-HH:MM:SS
@@ -192,7 +194,9 @@ const Requests = () => {
   };
 
   const handleEditTypography = (booking) => setEditingTypography({ ...booking });
-  const handleTypographyChange = (e) => setEditingTypography({ ...editingTypography, [e.target.name]: e.target.value });
+  const handleTypographyChange = (e) => {
+    setEditingTypography({ ...editingTypography, [e.target.name]: e.target.value });
+  };
   const handleSaveTypography = async () => {
     try {
       // Проверяем наличие id перед отправкой запроса
@@ -352,6 +356,44 @@ const Requests = () => {
     }
   // eslint-disable-next-line
   }, [newTypography.number_of_spreads, newTypography.number_of_copies]);
+
+  // Пересчет итоговой суммы при редактировании типографии
+  useEffect(() => {
+    if (!editingTypography) return;
+    const spreads = Math.max(Number(editingTypography.number_of_spreads) || 0, MIN_SPREADS);
+    const copies = Number(editingTypography.number_of_copies) || 0;
+    if (spreads && copies) {
+      const total = (spreads * SPREAD_PRICE) + (copies * ALBUM_PRICE);
+      setEditingTypography(et => ({ ...et, final_price: total }));
+    }
+  // eslint-disable-next-line
+  }, [editingTypography?.number_of_spreads, editingTypography?.number_of_copies]);
+
+  // Пересчет итоговой суммы при редактировании фотостудии
+  useEffect(() => {
+    if (!editingStudio) return;
+    // Найти цену за час для выбранной студии
+    let pricePerHour = 0;
+    if (editingStudio.studio_name && studiosList.length) {
+      const studioObj = studiosList.find(s => s.studio === editingStudio.studio_name);
+      if (studioObj && studioObj.price) {
+        pricePerHour = parseFloat(String(studioObj.price).replace(/[^\d.-]/g, '')) || 0;
+      }
+    }
+    // Время в формате "09:00-11:00" или "09:00:00-11:00:00"
+    let hours = 0;
+    if (editingStudio.time) {
+      const [start, end] = editingStudio.time.split('-');
+      if (start && end) {
+        const [startHour] = start.split(':').map(Number);
+        const [endHour] = end.split(':').map(Number);
+        hours = endHour - startHour;
+      }
+    }
+    const total = hours > 0 ? hours * pricePerHour : 0;
+    setEditingStudio(es => ({ ...es, final_price: total }));
+  // eslint-disable-next-line
+  }, [editingStudio?.time, editingStudio?.studio_name, studiosList]);
 
   // Получение занятых интервалов для выбранной студии, даты и адреса
   useEffect(() => {
@@ -777,7 +819,14 @@ const Requests = () => {
                     <td><input name="lamination" value={editingTypography.lamination} onChange={handleTypographyChange} /></td>
                     <td><input name="number_of_copies" value={editingTypography.number_of_copies} onChange={handleTypographyChange} /></td>
                     <td><input name="address_delivery" value={editingTypography.address_delivery} onChange={handleTypographyChange} /></td>
-                    <td><input name="final_price" value={editingTypography.final_price} onChange={handleTypographyChange} /></td>
+                    <td>
+                      <input
+                        name="final_price"
+                        value={editingTypography.final_price}
+                        readOnly
+                        style={{ background: "#f9f9f9", fontWeight: "bold" }}
+                      />
+                    </td>
                     <td><input name="album_name" value={editingTypography.album_name} onChange={handleTypographyChange} /></td>
                     <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                     <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
@@ -884,9 +933,23 @@ const Requests = () => {
                       </select>
                     </td>
                     <td><input name="date" value={editingStudio.date} onChange={handleStudioChange} /></td>
-                    <td><input name="time" value={editingStudio.time} onChange={handleStudioChange} placeholder="01:00-02:00" /></td>
+                    <td>
+                      <input
+                        name="time"
+                        value={editingStudio.time}
+                        onChange={handleStudioChange}
+                        placeholder="01:00-02:00"
+                      />
+                    </td>
                     <td><input name="address" value={editingStudio.address} onChange={handleStudioChange} /></td>
-                    <td><input name="final_price" value={editingStudio.final_price} onChange={handleStudioChange} /></td>
+                    <td>
+                      <input
+                        name="final_price"
+                        value={editingStudio.final_price}
+                        readOnly
+                        style={{ background: "#f9f9f9", fontWeight: "bold" }}
+                      />
+                    </td>
                     <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                     <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
                   </tr>
