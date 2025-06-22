@@ -115,6 +115,36 @@ h2, h3 {
   background: #fff;
 }
 
+/* --- Стили для input/select в таблицах при редактировании --- */
+.requests-table input,
+.requests-table select {
+  border-radius: 8px !important;
+  border: 1.5px solid #ddd;
+  padding: 7px 10px;
+  font-size: 15px;
+  background: #fff;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.requests-table input:focus,
+.requests-table select:focus {
+  border: 1.5px solid #f5b91e;
+  box-shadow: 0 0 0 2px #ffe08255;
+}
+
+/* Для select в таблицах: убрать стрелку в Safari и сделать скругление */
+.requests-table select {
+  appearance: none;
+  -webkit-appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,<svg width='16' height='16' fill='gray' xmlns='http://www.w3.org/2000/svg'><path d='M4 6l4 4 4-4'/></svg>");
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  background-size: 16px 16px;
+  padding-right: 30px;
+}
+
 .requests-table td:last-child, .requests-table th:last-child {
   min-width: 120px;
   text-align: center;
@@ -251,6 +281,55 @@ h2, h3 {
   box-shadow: 0 2px 12px rgba(240,187,41,0.10);
   padding: 16px 8px;
   margin-bottom: 32px;
+}
+
+/* Специально для таблицы "Заказы на фотостудии" — расширяем ширину ячеек по содержимому */
+.requests-table th:nth-child(3), /* Название студии */
+.requests-table td:nth-child(3) {
+  min-width: 220px;
+  max-width: 400px;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.requests-table th:nth-child(4), /* Статус */
+.requests-table td:nth-child(4) {
+  min-width: 140px;
+  max-width: 220px;
+  white-space: pre-line;
+}
+
+.requests-table th:nth-child(5), /* Дата */
+.requests-table td:nth-child(5) {
+  min-width: 110px;
+  max-width: 160px;
+}
+
+.requests-table th:nth-child(6), /* Время */
+.requests-table td:nth-child(6) {
+  min-width: 110px;
+  max-width: 160px;
+}
+
+.requests-table th:nth-child(7), /* Адрес */
+.requests-table td:nth-child(7) {
+  min-width: 220px;
+  max-width: 400px;
+  white-space: pre-line;
+  word-break: break-word;
+}
+
+.requests-table th:nth-child(8), /* Итоговая цена */
+.requests-table td:nth-child(8) {
+  min-width: 120px;
+  max-width: 180px;
+}
+
+.requests-table th,
+.requests-table td {
+  /* ...existing code... */
+  /* Добавим автоширину, но с max-width */
+  width: auto;
 }
 
 @media (max-width: 900px) {

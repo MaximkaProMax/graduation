@@ -813,12 +813,54 @@ const Requests = () => {
                         ))}
                       </select>
                     </td>
-                    <td><input name="format" value={editingTypography.format} onChange={handleTypographyChange} /></td>
-                    <td><input name="the_basis_of_the_spread" value={editingTypography.the_basis_of_the_spread} onChange={handleTypographyChange} /></td>
-                    <td><input name="number_of_spreads" value={editingTypography.number_of_spreads} onChange={handleTypographyChange} /></td>
-                    <td><input name="lamination" value={editingTypography.lamination} onChange={handleTypographyChange} /></td>
-                    <td><input name="number_of_copies" value={editingTypography.number_of_copies} onChange={handleTypographyChange} /></td>
-                    <td><input name="address_delivery" value={editingTypography.address_delivery} onChange={handleTypographyChange} /></td>
+                    <td>
+                      <select
+                        name="format"
+                        value={editingTypography.format}
+                        onChange={handleTypographyChange}
+                        style={{ minWidth: 100 }}
+                      >
+                        <option value="" disabled>Формат</option>
+                        {FORMAT_OPTIONS.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <select
+                        name="the_basis_of_the_spread"
+                        value={editingTypography.the_basis_of_the_spread}
+                        onChange={handleTypographyChange}
+                        style={{ minWidth: 120 }}
+                      >
+                        <option value="" disabled>Основа разворота</option>
+                        {BASIS_OPTIONS.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <input name="number_of_spreads" value={editingTypography.number_of_spreads} onChange={handleTypographyChange} />
+                    </td>
+                    <td>
+                      <select
+                        name="lamination"
+                        value={editingTypography.lamination}
+                        onChange={handleTypographyChange}
+                        style={{ minWidth: 100 }}
+                      >
+                        <option value="" disabled>Ламинация</option>
+                        {LAMINATION_OPTIONS.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    </td>
+                    <td>
+                      <input name="number_of_copies" value={editingTypography.number_of_copies} onChange={handleTypographyChange} />
+                    </td>
+                    <td>
+                      <input name="address_delivery" value={editingTypography.address_delivery} onChange={handleTypographyChange} />
+                    </td>
                     <td>
                       <input
                         name="final_price"
@@ -827,7 +869,19 @@ const Requests = () => {
                         style={{ background: "#f9f9f9", fontWeight: "bold" }}
                       />
                     </td>
-                    <td><input name="album_name" value={editingTypography.album_name} onChange={handleTypographyChange} /></td>
+                    <td>
+                      <select
+                        name="album_name"
+                        value={editingTypography.album_name}
+                        onChange={handleTypographyChange}
+                        style={{ minWidth: 120 }}
+                      >
+                        <option value="" disabled>Название альбома</option>
+                        {ALBUM_NAME_OPTIONS.map(opt => (
+                          <option key={opt} value={opt}>{opt}</option>
+                        ))}
+                      </select>
+                    </td>
                     <td>{new Date(booking.created_at).toLocaleDateString()}</td>
                     <td>{new Date(booking.updated_at).toLocaleDateString()}</td>
                   </tr>
@@ -917,13 +971,25 @@ const Requests = () => {
                   <tr key={booking.booking_studio_id}>
                     <td>{booking.booking_studio_id}</td>
                     <td>{booking.user}</td>
-                    <td><input name="studio_name" value={editingStudio.studio_name} onChange={handleStudioChange} /></td>
+                    <td>
+                      <select
+                        name="studio_name"
+                        value={editingStudio.studio_name}
+                        onChange={handleStudioChange}
+                        style={{ minWidth: 260, maxWidth: 350 }}
+                      >
+                        <option value="" disabled>Название студии</option>
+                        {studiosList.map(studio => (
+                          <option key={studio.studio} value={studio.studio}>{studio.studio}</option>
+                        ))}
+                      </select>
+                    </td>
                     <td>
                       <select
                         name="status"
                         value={editingStudio.status || ''}
                         onChange={handleStudioChange}
-                        style={{ minWidth: 120 }}
+                        style={{ minWidth: 180, maxWidth: 250 }}
                       >
                         <option value="">Выберите статус</option>
                         {STUDIO_STATUSES.map(status => (
@@ -931,22 +997,37 @@ const Requests = () => {
                         ))}
                       </select>
                     </td>
-                    <td><input name="date" value={editingStudio.date} onChange={handleStudioChange} /></td>
+                    <td>
+                      <input
+                        name="date"
+                        value={editingStudio.date}
+                        onChange={handleStudioChange}
+                        style={{ minWidth: 110, maxWidth: 160 }}
+                      />
+                    </td>
                     <td>
                       <input
                         name="time"
                         value={editingStudio.time}
                         onChange={handleStudioChange}
                         placeholder="01:00-02:00"
+                        style={{ minWidth: 110, maxWidth: 160 }}
                       />
                     </td>
-                    <td><input name="address" value={editingStudio.address} onChange={handleStudioChange} /></td>
+                    <td>
+                      <input
+                        name="address"
+                        value={editingStudio.address}
+                        onChange={handleStudioChange}
+                        style={{ minWidth: 180, maxWidth: 300 }}
+                      />
+                    </td>
                     <td>
                       <input
                         name="final_price"
                         value={editingStudio.final_price}
                         readOnly
-                        style={{ background: "#f9f9f9", fontWeight: "bold" }}
+                        style={{ background: "#f9f9f9", fontWeight: "bold", minWidth: 110, maxWidth: 160 }}
                       />
                     </td>
                     <td>{new Date(booking.created_at).toLocaleDateString()}</td>
