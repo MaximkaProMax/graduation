@@ -100,7 +100,7 @@ const Payments = () => {
           />
           <label>CVC Код</label>
           <input
-            type="text"
+            type="password"
             maxLength={3}
             value={cvc}
             onChange={e => setCvc(e.target.value.replace(/\D/g, ''))}
