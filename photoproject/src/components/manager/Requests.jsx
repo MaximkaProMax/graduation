@@ -83,6 +83,7 @@ const Requests = () => {
   const [users, setUsers] = useState([]);
   const [studiosList, setStudiosList] = useState([]);
   const [studioBookedIntervals, setStudioBookedIntervals] = useState([]);
+  const [dateError, setDateError] = useState('');
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -165,7 +166,7 @@ const Requests = () => {
       // Разрешаем диапазон времени вида HH:MM-HH:MM или HH:MM:SS-HH:MM:SS
       const timeRangePattern = /^\d{2}:\d{2}(:\d{2})?-\d{2}:\d{2}(:\d{2})?$/;
       if (!timeRangePattern.test(editingStudio.time)) {
-        alert('Время должно быть в формате HH:MM-HH:MM или HH:MM:SS-HH:MM:SS');
+        toast.error('Время должно быть в формате HH:MM-HH:MM или HH:MM:SS-HH:MM:SS');
         return;
       }
       const payload = {
@@ -186,7 +187,7 @@ const Requests = () => {
       fetchAllRequests();
     } catch (err) {
       console.error('Ошибка при сохранении заявки на фотостудию:', err);
-      alert('Ошибка при сохранении');
+      toast.error('Ошибка при сохранении');
     }
   };
 
@@ -200,7 +201,7 @@ const Requests = () => {
         !editingTypography.booking_typographie_id ||
         isNaN(Number(editingTypography.booking_typographie_id))
       ) {
-        alert('Ошибка: не найден корректный идентификатор заявки на типографию.');
+        toast.error('Ошибка: не найден корректный идентификатор заявки на типографию.');
         return;
       }
       // Для отладки: логируем id и данные
@@ -218,28 +219,38 @@ const Requests = () => {
     } catch (err) {
       console.error('Ошибка при сохранении заявки на типографию:', err);
       if (err.response && err.response.status === 404) {
-        alert('Ошибка: заявка на типографию не найдена на сервере (404).');
+        toast.error('Ошибка: заявка на типографию не найдена на сервере (404).');
       } else {
-        alert('Ошибка при сохранении');
+        toast.error('Ошибка при сохранении');
       }
     }
   };
 
-  const handleNewStudioChange = (e) => setNewStudio({ ...newStudio, [e.target.name]: e.target.value });
+  const handleNewStudioChange = (e) => {
+    const { name, value } = e.target;
+    if (name === "date") {
+      if (value.length === 10 && !validateDate(value)) {
+        setDateError('Некорректная дата');
+      } else {
+        setDateError('');
+      }
+    }
+    setNewStudio({ ...newStudio, [name]: value });
+  };
   const handleAddStudio = async (e) => {
     e.preventDefault();
     // Проверка типов
-    if (!newStudio.studio_name.trim()) return alert('Название студии обязательно');
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(newStudio.date)) return alert('Дата должна быть в формате YYYY-MM-DD');
-    if (!/^\d{2}:\d{2}$/.test(newStudio.time)) return alert('Время начала должно быть в формате HH:MM');
-    if (!/^\d{2}:\d{2}$/.test(newStudio.end_time)) return alert('Время конца должно быть в формате HH:MM');
-    if (!newStudio.address.trim()) return alert('Адрес обязателен');
-    if (isNaN(Number(newStudio.final_price))) return alert('Цена должна быть числом');
-    if (!newStudio.user_id) return alert('Выберите пользователя');
-    if (!newStudio.studio_name) return alert('Выберите студию');
-    if (!newStudio.date) return alert('Выберите дату');
-    if (!newStudio.time || !newStudio.end_time) return alert('Выберите время');
-    if (isStudioIntervalBusy()) return alert('Выбранное время уже занято!');
+    if (!newStudio.studio_name.trim()) return toast.error('Название студии обязательно');
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(newStudio.date)) return toast.error('Дата должна быть в формате YYYY-MM-DD');
+    if (!/^\d{2}:\d{2}$/.test(newStudio.time)) return toast.error('Время начала должно быть в формате HH:MM');
+    if (!/^\d{2}:\d{2}$/.test(newStudio.end_time)) return toast.error('Время конца должно быть в формате HH:MM');
+    if (!newStudio.address.trim()) return toast.error('Адрес обязателен');
+    if (isNaN(Number(newStudio.final_price))) return toast.error('Цена должна быть числом');
+    if (!newStudio.user_id) return toast.error('Выберите пользователя');
+    if (!newStudio.studio_name) return toast.error('Выберите студию');
+    if (!newStudio.date) return toast.error('Выберите дату');
+    if (!newStudio.time || !newStudio.end_time) return toast.error('Выберите время');
+    if (isStudioIntervalBusy()) return toast.error('Выбранное время уже занято!');
     const normalizeTime = (val) => {
       if (!val) return '';
       if (/^\d{2}:\d{2}$/.test(val)) return val + ':00';
@@ -279,20 +290,20 @@ const Requests = () => {
   const handleAddTypography = async (e) => {
     e.preventDefault();
     // Проверка обязательных select-полей
-    if (!newTypography.format) return alert('Выберите формат');
-    if (!newTypography.the_basis_of_the_spread) return alert('Выберите основу разворота');
-    if (!newTypography.lamination) return alert('Выберите ламинацию');
-    if (!newTypography.album_name) return alert('Выберите название альбома');
+    if (!newTypography.format) return toast.error('Выберите формат');
+    if (!newTypography.the_basis_of_the_spread) return toast.error('Выберите основу разворота');
+    if (!newTypography.lamination) return toast.error('Выберите ламинацию');
+    if (!newTypography.album_name) return toast.error('Выберите название альбома');
     // Проверка типов
-    if (!newTypography.format.trim()) return alert('Формат обязателен');
-    if (newTypography.the_basis_of_the_spread && typeof newTypography.the_basis_of_the_spread !== 'string') return alert('Основа разворота должна быть строкой');
-    if (!/^\d+$/.test(newTypography.number_of_spreads)) return alert('Кол-во разворотов должно быть целым числом');
-    if (!newTypography.lamination.trim()) return alert('Ламинация обязательна');
-    if (!/^\d+$/.test(newTypography.number_of_copies)) return alert('Кол-во копий должно быть целым числом');
-    if (newTypography.address_delivery && typeof newTypography.address_delivery !== 'string') return alert('Адрес доставки должен быть строкой');
-    if (isNaN(Number(newTypography.final_price))) return alert('Цена должна быть числом');
-    if (!newTypography.album_name.trim()) return alert('Название альбома обязательно');
-    if (!newTypography.user_id) return alert('Выберите пользователя');
+    if (!newTypography.format.trim()) return toast.error('Формат обязателен');
+    if (newTypography.the_basis_of_the_spread && typeof newTypography.the_basis_of_the_spread !== 'string') return toast.error('Основа разворота должна быть строкой');
+    if (!/^\d+$/.test(newTypography.number_of_spreads)) return toast.error('Кол-во разворотов должно быть целым числом');
+    if (!newTypography.lamination.trim()) return toast.error('Ламинация обязательна');
+    if (!/^\d+$/.test(newTypography.number_of_copies)) return toast.error('Кол-во копий должно быть целым числом');
+    if (newTypography.address_delivery && typeof newTypography.address_delivery !== 'string') return toast.error('Адрес доставки должен быть строкой');
+    if (isNaN(Number(newTypography.final_price))) return toast.error('Цена должна быть числом');
+    if (!newTypography.album_name.trim()) return toast.error('Название альбома обязательно');
+    if (!newTypography.user_id) return toast.error('Выберите пользователя');
     try {
       const payload = {
         user_id: newTypography.user_id,
@@ -432,6 +443,23 @@ const Requests = () => {
     return options;
   };
 
+  // Валидация даты для поля "date"
+  const validateDate = (dateStr) => {
+    // Проверяем формат YYYY-MM-DD и что год из 4 цифр
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) return false;
+    const [year, month, day] = dateStr.split('-').map(Number);
+    if (year < 1900 || year > 2100) return false;
+    // Проверяем существование даты
+    const d = new Date(dateStr);
+    return d && d.getFullYear() === year && d.getMonth() + 1 === month && d.getDate() === day;
+  };
+
+  // Получаем сегодняшнюю дату в формате YYYY-MM-DD (добавить в начало компонента)
+  const todayStr = React.useMemo(() => {
+    const today = new Date();
+    return today.toISOString().split('T')[0];
+  }, []);
+
   if (isLoading) {
     return <div>Загрузка...</div>;
   }
@@ -549,7 +577,7 @@ const Requests = () => {
             name="final_price"
             value={newTypography.final_price}
             readOnly
-            placeholder="Цена"
+В            placeholder="Итоговая цена"
             type="number"
             style={{ background: "#f9f9f9", fontWeight: "bold" }}
             tabIndex={-1}
@@ -602,11 +630,45 @@ const Requests = () => {
           <input
             name="date"
             value={newStudio.date}
-            onChange={handleNewStudioChange}
+            onChange={e => {
+              // Ограничиваем год 4 символами при ручном вводе
+              let v = e.target.value;
+              if (/^\d{5,}-\d{2}-\d{2}$/.test(v)) {
+                v = v.replace(/^(\d{4})\d+(-\d{2}-\d{2})$/, '$1$2');
+              }
+              setNewStudio({ ...newStudio, date: v });
+              // Валидация даты
+              if (v.length === 10 && !validateDate(v)) {
+                setDateError('Некорректная дата');
+              } else if (v && v < todayStr) {
+                setDateError('Дата не может быть раньше сегодняшней');
+              } else {
+                setDateError('');
+              }
+            }}
             placeholder="Дата (YYYY-MM-DD)"
             required
             type="date"
+            inputMode="numeric"
+            maxLength={10}
+            min={todayStr}
           />
+          {dateError && (
+            <div style={{
+              color: '#b94a48',
+              background: '#f2dede',
+              border: '1px solid #ebccd1',
+              borderRadius: 4,
+              padding: '6px 10px',
+              margin: '0 0 8px 0',
+              fontWeight: 500,
+              fontSize: 15,
+              width: '100%',
+              textAlign: 'left'
+            }}>
+              {dateError}
+            </div>
+          )}
           {/* Время начала */}
           <select
             name="time"
@@ -650,7 +712,18 @@ const Requests = () => {
           />
           {/* Показать предупреждение если выбранный интервал занят */}
           {isStudioIntervalBusy() && (
-            <div style={{ color: 'red', fontWeight: 600, width: '100%' }}>
+            <div style={{
+              color: '#b94a48',
+              background: '#f2dede',
+              border: '1px solid #ebccd1',
+              borderRadius: 4,
+              padding: '6px 10px',
+              margin: '0 0 8px 0',
+              fontWeight: 500,
+              fontSize: 15,
+              width: '100%',
+              textAlign: 'left'
+            }}>
               Выбранное время уже занято!
             </div>
           )}
