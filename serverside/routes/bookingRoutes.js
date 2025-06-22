@@ -104,6 +104,12 @@ router.put('/typography/:id', authenticateToken, async (req, res) => {
   try {
     const bookingId = req.params.id;
     const userId = req.user.userId;
+    // Получаем пользователя и его роль
+    const user = await User.findOne({
+      where: { userId },
+      include: [{ model: Role, as: 'Role', attributes: ['roleId', 'roleName'] }]
+    });
+
     const {
       status,
       format,
@@ -135,10 +141,16 @@ router.put('/typography/:id', authenticateToken, async (req, res) => {
     };
     if (payment_status) updateFields.payment_status = payment_status;
 
+    // Разрешить редактирование всем для Admin/Manager, иначе только свои
+    let whereClause = { booking_typographie_id: bookingId };
+    if (!user || (user.Role.roleId !== 16 && user.Role.roleId !== 17)) {
+      whereClause.user = userId;
+    }
+
     const [updated] = await BookingTypographie.update(
       updateFields,
       {
-        where: { booking_typographie_id: bookingId, user: userId }
+        where: whereClause
       }
     );
 
@@ -291,6 +303,12 @@ router.put('/studios/:id', authenticateToken, async (req, res) => {
   try {
     const bookingId = req.params.id;
     const userId = req.user.userId;
+    // Получаем пользователя и его роль
+    const user = await User.findOne({
+      where: { userId },
+      include: [{ model: Role, as: 'Role', attributes: ['roleId', 'roleName'] }]
+    });
+
     const {
       studio_name,
       status,
@@ -323,10 +341,16 @@ router.put('/studios/:id', authenticateToken, async (req, res) => {
     };
     if (payment_status) updateFields.payment_status = payment_status;
 
+    // Разрешить редактирование всем для Admin/Manager, иначе только свои
+    let whereClause = { booking_studio_id: bookingId };
+    if (!user || (user.Role.roleId !== 16 && user.Role.roleId !== 17)) {
+      whereClause.user = userId;
+    }
+
     const [updated] = await BookingStudio.update(
       updateFields,
       {
-        where: { booking_studio_id: bookingId, user: userId }
+        where: whereClause
       }
     );
 
