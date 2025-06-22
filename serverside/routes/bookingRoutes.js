@@ -10,7 +10,8 @@ const authenticateToken = require('../middleware/authenticateToken');
 // Добавление нового бронирования типографии
 router.post('/add', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.userId; // Получаем ID пользователя из токена
+    // Используем user_id из тела запроса, если есть, иначе из токена
+    const userId = req.body.user_id || req.user.userId;
     const { format, spreads, lamination, quantity, price, albumName } = req.body;
 
     // Проверяем, что все необходимые данные присутствуют
@@ -176,7 +177,8 @@ router.get('/studios/booked', authenticateToken, async (req, res) => {
 // Добавление нового бронирования фотостудии
 router.post('/studios/add', authenticateToken, async (req, res) => {
   try {
-    const userId = req.user.userId;
+    // Используем user_id из тела запроса, если есть, иначе из токена
+    const userId = req.body.user_id || req.user.userId;
     const { name, date, time, address, totalCost } = req.body;
 
     if (!name || !date || !time || !address || !totalCost) {

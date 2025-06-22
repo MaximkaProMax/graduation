@@ -70,16 +70,17 @@ const Requests = () => {
   const [editingStudio, setEditingStudio] = useState(null);
   const [editingTypography, setEditingTypography] = useState(null);
   const [newStudio, setNewStudio] = useState({
-    studio_name: '', date: '', time: '', end_time: '', address: '', final_price: ''
+    user_id: '', studio_name: '', date: '', time: '', end_time: '', address: '', final_price: ''
   });
   const [newTypography, setNewTypography] = useState({
-    format: '', the_basis_of_the_spread: '', number_of_spreads: '', lamination: '', number_of_copies: '', address_delivery: '', final_price: '', album_name: ''
+    user_id: '', format: '', the_basis_of_the_spread: '', number_of_spreads: '', lamination: '', number_of_copies: '', address_delivery: '', final_price: '', album_name: ''
   });
   const [selectedStudioId, setSelectedStudioId] = useState(null);
   const [selectedTypographyId, setSelectedTypographyId] = useState(null);
   const [isAuthorized, setIsAuthorized] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [deleteModal, setDeleteModal] = useState({ open: false, id: null, type: null });
+  const [users, setUsers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -99,6 +100,13 @@ const Requests = () => {
         setIsLoading(false);
       });
   }, [navigate]);
+
+  // Получение списка пользователей
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/users', { withCredentials: true })
+      .then(res => setUsers(res.data))
+      .catch(() => setUsers([]));
+  }, []);
 
   const fetchAllRequests = async () => {
     try {
@@ -218,6 +226,7 @@ const Requests = () => {
     if (!/^\d{2}:\d{2}$/.test(newStudio.end_time)) return alert('Время конца должно быть в формате HH:MM');
     if (!newStudio.address.trim()) return alert('Адрес обязателен');
     if (isNaN(Number(newStudio.final_price))) return alert('Цена должна быть числом');
+    if (!newStudio.user_id) return alert('Выберите пользователя');
     const normalizeTime = (val) => {
       if (!val) return '';
       if (/^\d{2}:\d{2}$/.test(val)) return val + ':00';
@@ -225,6 +234,7 @@ const Requests = () => {
     };
     try {
       const payload = {
+        user_id: newStudio.user_id,
         name: newStudio.studio_name,
         date: newStudio.date,
         time: `${newStudio.time}-${newStudio.end_time}`,
@@ -234,7 +244,7 @@ const Requests = () => {
       console.log('Отправка данных бронирования фотостудии:', payload);
       await axios.post('http://localhost:3001/api/bookings/studios/add', payload, { withCredentials: true });
       toast.success('Заявка на фотостудию успешно создана!');
-      setNewStudio({ studio_name: '', date: '', time: '', end_time: '', address: '', final_price: '' });
+      setNewStudio({ user_id: '', studio_name: '', date: '', time: '', end_time: '', address: '', final_price: '' });
       fetchAllRequests();
     } catch (err) {
       console.error('Ошибка при добавлении заявки на фотостудию:', err);
@@ -269,8 +279,10 @@ const Requests = () => {
     if (newTypography.address_delivery && typeof newTypography.address_delivery !== 'string') return alert('Адрес доставки должен быть строкой');
     if (isNaN(Number(newTypography.final_price))) return alert('Цена должна быть числом');
     if (!newTypography.album_name.trim()) return alert('Название альбома обязательно');
+    if (!newTypography.user_id) return alert('Выберите пользователя');
     try {
       const payload = {
+        user_id: newTypography.user_id,
         format: newTypography.format,
         spreads: newTypography.number_of_spreads,
         lamination: newTypography.lamination,
@@ -281,7 +293,7 @@ const Requests = () => {
       console.log('Отправка данных бронирования типографии:', payload);
       await axios.post('http://localhost:3001/api/bookings/add', payload, { withCredentials: true });
       toast.success('Заявка на типографию успешно создана!');
-      setNewTypography({ format: '', the_basis_of_the_spread: '', number_of_spreads: '', lamination: '', number_of_copies: '', address_delivery: '', final_price: '', album_name: '' });
+      setNewTypography({ user_id: '', format: '', the_basis_of_the_spread: '', number_of_spreads: '', lamination: '', number_of_copies: '', address_delivery: '', final_price: '', album_name: '' });
       fetchAllRequests();
     } catch (err) {
       console.error('Ошибка при добавлении заявки на типографию:', err);
@@ -350,6 +362,19 @@ const Requests = () => {
       <div className="requests-add-card">
         <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на типографию</h3>
         <form onSubmit={handleAddTypography} className="add-form">
+          {/* Пользователь (обязательный select) */}
+          <select
+            name="user_id"
+            value={newTypography.user_id}
+            onChange={handleNewTypographyChange}
+            required
+            style={{ minWidth: 220, maxWidth: 220 }}
+          >
+            <option value="" disabled>Пользователь</option>
+            {users.map(u => (
+              <option key={u.userId} value={u.userId}>{u.name} ({u.email})</option>
+            ))}
+          </select>
           {/* Формат (обязательный select) */}
           <select
             name="format"
@@ -444,6 +469,19 @@ const Requests = () => {
 
         <h3 style={{ fontSize: 'clamp(16px, 3vw, 22px)' }}>Добавить заявку на фотостудию</h3>
         <form onSubmit={handleAddStudio} className="add-form">
+          {/* Пользователь (обязательный select) */}
+          <select
+            name="user_id"
+            value={newStudio.user_id}
+            onChange={handleNewStudioChange}
+            required
+            style={{ minWidth: 220, maxWidth: 220 }}
+          >
+            <option value="" disabled>Пользователь</option>
+            {users.map(u => (
+              <option key={u.userId} value={u.userId}>{u.name} ({u.email})</option>
+            ))}
+          </select>
           {/* Выпадающий список для названия студии */}
           <select
             name="studio_name"
