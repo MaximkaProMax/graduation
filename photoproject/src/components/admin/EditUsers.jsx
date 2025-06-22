@@ -211,111 +211,115 @@ const EditUsers = () => {
       <button className="back-button" onClick={handleBackClick}>Вернуться назад</button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
       {successMessage && <div className="success-message">{successMessage}</div>}
-      <table className="edit-users-table">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>ФИО</th>
-            <th>Логин</th>
-            <th>Телефон</th>
-            <th>Email</th>
-            <th>Роль</th>
-            <th>Действия</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users.map((user) => (
-            <tr key={user.userId}>
-              <td>{user.userId}</td>
-              <td>
-                {isEditing && editableUser.userId === user.userId ? (
-                  <input
-                    type="text"
-                    name="name"
-                    value={editableUser.name || ''}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  user.name
-                )}
-              </td>
-              <td>
-                {isEditing && editableUser.userId === user.userId ? (
-                  <input
-                    type="text"
-                    name="login"
-                    value={editableUser.login || ''}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  user.login
-                )}
-              </td>
-              <td>
-                {isEditing && editableUser.userId === user.userId ? (
-                  <input
-                    type="text"
-                    name="telephone"
-                    value={editableUser.telephone || ''}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  user.telephone
-                )}
-              </td>
-              <td>
-                {isEditing && editableUser.userId === user.userId ? (
-                  <input
-                    type="email"
-                    name="email"
-                    value={editableUser.email || ''}
-                    onChange={handleInputChange}
-                  />
-                ) : (
-                  user.email
-                )}
-              </td>
-              <td>
-                {isEditing && editableUser.userId === user.userId ? (
-                  <select
-                    name="roleId"
-                    value={editableUser.roleId || ''}
-                    onChange={handleInputChange}
-                  >
-                    <option value="">Выберите роль</option>
-                    {roles.map(role => (
-                      <option key={role.roleId} value={role.roleId}>
-                        {role.roleId} — {role.roleName}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  // Показываем id и название роли, если есть
-                  (() => {
-                    const role = roles.find(r => r.roleId === user.roleId);
-                    return role ? `${role.roleId} — ${role.roleName}` : user.roleId;
-                  })()
-                )}
-              </td>
-              <td>
-                {isEditing && editableUser.userId === user.userId ? (
-                  <>
-                    <button className="edit-users-button edit" onClick={handleSaveUser}>Сохранить</button>
-                    <button className="edit-users-button" onClick={handleCancelEdit}>Отмена</button>
-                  </>
-                ) : (
-                  <>
-                    <button className="edit-users-button edit" onClick={() => handleEditUser(user)}>Редактировать</button>
-                    <button className="edit-users-button delete" onClick={() => handleDeleteUser(user.userId)}>Удалить</button>
-                  </>
-                )}
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+      {/* Карточка для таблицы */}
+      <div className="requests-orders-card">
+        <div className="edit-users-table-wrapper">
+          <table className="edit-users-table requests-table">
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>ФИО</th>
+                <th>Логин</th>
+                <th>Телефон</th>
+                <th>Email</th>
+                <th>Роль</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody>
+              {users.map((user) => (
+                <tr key={user.userId}>
+                  <td>{user.userId}</td>
+                  <td>
+                    {isEditing && editableUser.userId === user.userId ? (
+                      <input
+                        type="text"
+                        name="name"
+                        value={editableUser.name || ''}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      user.name
+                    )}
+                  </td>
+                  <td>
+                    {isEditing && editableUser.userId === user.userId ? (
+                      <input
+                        type="text"
+                        name="login"
+                        value={editableUser.login || ''}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      user.login
+                    )}
+                  </td>
+                  <td>
+                    {isEditing && editableUser.userId === user.userId ? (
+                      <input
+                        type="text"
+                        name="telephone"
+                        value={editableUser.telephone || ''}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      user.telephone
+                    )}
+                  </td>
+                  <td>
+                    {isEditing && editableUser.userId === user.userId ? (
+                      <input
+                        type="email"
+                        name="email"
+                        value={editableUser.email || ''}
+                        onChange={handleInputChange}
+                      />
+                    ) : (
+                      user.email
+                    )}
+                  </td>
+                  <td>
+                    {isEditing && editableUser.userId === user.userId ? (
+                      <select
+                        name="roleId"
+                        value={editableUser.roleId || ''}
+                        onChange={handleInputChange}
+                      >
+                        <option value="">Выберите роль</option>
+                        {roles.map(role => (
+                          <option key={role.roleId} value={role.roleId}>
+                            {role.roleId} — {role.roleName}
+                          </option>
+                        ))}
+                      </select>
+                    ) : (
+                      (() => {
+                        const role = roles.find(r => r.roleId === user.roleId);
+                        return role ? `${role.roleId} — ${role.roleName}` : user.roleId;
+                      })()
+                    )}
+                  </td>
+                  <td>
+                    {isEditing && editableUser.userId === user.userId ? (
+                      <>
+                        <button className="edit-users-button edit" onClick={handleSaveUser}>Сохранить</button>
+                        <button className="edit-users-button" onClick={handleCancelEdit}>Отмена</button>
+                      </>
+                    ) : (
+                      <>
+                        <button className="edit-users-button edit" onClick={() => handleEditUser(user)}>Редактировать</button>
+                        <button className="edit-users-button delete" onClick={() => handleDeleteUser(user.userId)}>Удалить</button>
+                      </>
+                    )}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
       {isEditing && editableUser.userId === null && (
-        <div className="add-user-form">
+        <div className="add-user-form requests-add-card">
           <h3>Добавить пользователя</h3>
           <div className="input-group">
             <label>ФИО</label>

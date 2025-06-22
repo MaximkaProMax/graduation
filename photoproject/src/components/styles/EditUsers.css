@@ -12,25 +12,44 @@
   margin-bottom: 20px;
 }
 
+/* Новый стиль таблицы как в Requests */
 .edit-users-table {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
   background: #fff;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 12px rgba(240,187,41,0.07);
 }
 
-.edit-users-table th, .edit-users-table td {
-  border: 1px solid #ddd;
-  padding: 10px;
+.edit-users-table th,
+.edit-users-table td {
+  border: none;
+  padding: 8px;
   text-align: left;
+  font-size: 15px;
+  vertical-align: middle;
 }
 
 .edit-users-table th {
-  background-color: #f2f2f2;
+  background-color: #f4f4f4;
+  font-weight: bold;
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .edit-users-table tr:nth-child(even) {
   background-color: #f9f9f9;
+}
+
+.edit-users-table tr.selected-row {
+  background-color: #ffe9b3;
+}
+
+.edit-users-table tr:hover {
+  background-color: #f5f5f5;
 }
 
 .edit-users-table input[type="text"],
@@ -39,43 +58,45 @@
   width: 100%;
   min-width: 120px;
   box-sizing: border-box;
-  padding: 6px 8px;
-  border: 1.5px solid #f5b91e;
-  border-radius: 5px;
+  padding: 7px 8px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
   font-size: 15px;
   background: #fff;
-  transition: border 0.2s;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
 }
 
 .edit-users-table input[type="text"]:focus,
 .edit-users-table input[type="email"]:focus,
 .edit-users-table input[type="number"]:focus {
-  border: 2px solid #f0bb29;
-  outline: none;
+  border: 1.5px solid #f5b91e;
+  box-shadow: 0 0 0 2px #ffe08255;
 }
 
 .edit-users-table select {
   width: 100%;
   min-width: 120px;
   box-sizing: border-box;
-  padding: 6px 8px;
-  border: 1.5px solid #f5b91e;
-  border-radius: 5px;
+  padding: 7px 8px;
+  border: 1.5px solid #ddd;
+  border-radius: 8px;
   font-size: 15px;
   background: #fff;
-  transition: border 0.2s;
+  transition: border 0.2s, box-shadow 0.2s;
+  outline: none;
 }
 
 .edit-users-table select:focus {
-  border: 2px solid #f0bb29;
-  outline: none;
+  border: 1.5px solid #f5b91e;
+  box-shadow: 0 0 0 2px #ffe08255;
 }
 
 .edit-users-table td {
   vertical-align: middle;
   min-width: 120px;
   max-width: 260px;
-  overflow: visible; /* убираем сокращение данных */
+  overflow: visible;
   text-overflow: unset;
   white-space: normal;
 }
@@ -89,7 +110,7 @@
   align-items: center;
   justify-content: center;
   box-shadow: none;
-  border: 1px solid #ddd;
+  border: none;
   padding: 10px;
 }
 
@@ -107,6 +128,7 @@
   margin: 0;
 }
 
+/* Кнопки как в Requests */
 .edit-users-button {
   padding: 8px 12px;
   border: none;
@@ -120,21 +142,19 @@
   box-sizing: border-box;
 }
 
-/* Кнопка "Редактировать" */
 .edit-users-button.edit {
-  background-color: #e0e0e0; /* Светло-серый */
+  background-color: #e0e0e0;
   color: #222;
 }
 
 .edit-users-button.edit:hover,
 .edit-users-button:hover:not(.delete) {
-  background-color: #ededed; /* Светлее при наведении */
+  background-color: #ededed;
   color: #222;
 }
 
-/* Кнопка "Удалить" */
 .edit-users-button.delete {
-  background-color: #e74c3c; /* Красный */
+  background-color: #e74c3c;
   color: #fff;
 }
 
@@ -167,6 +187,24 @@
 
 .back-button:hover {
   background-color: #5a6268;
+}
+
+/* Карточка для таблицы */
+.requests-orders-card {
+  background: #f4f6fa;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 32px 24px 24px 24px;
+  margin-bottom: 32px;
+}
+
+/* Карточка для формы добавления */
+.requests-add-card {
+  background: #f9f7f2;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(240,187,41,0.08);
+  padding: 32px 24px 24px 24px;
+  margin-bottom: 32px;
 }
 
 /* Обёртка для горизонтальной прокрутки таблицы на мобильных устройствах */
