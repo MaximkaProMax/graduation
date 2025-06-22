@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import '../styles/EditPersonalData.css';
 import { useNavigate } from 'react-router-dom';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const EditPersonalData = () => {
   const [user, setUser] = useState({});
@@ -63,40 +65,47 @@ const EditPersonalData = () => {
         if (newPassword !== confirmNewPassword) {
           setErrorMessage('Новый пароль и подтверждение пароля не совпадают');
           setSuccessMessage('');
+          toast.error('Новый пароль и подтверждение пароля не совпадают');
           return;
         }
       }
 
-      console.log('Отправка данных на сервер:', updateData);
-
       axios.put('http://localhost:3001/api/users/update-password', updateData, { withCredentials: true })
         .then(response => {
           if (response.data.success) {
-            console.log('Данные пользователя успешно обновлены');
             fetchUserData();
             setIsEditing(false);
             setCurrentPassword('');
             setNewPassword('');
             setConfirmNewPassword('');
             setErrorMessage('');
-            setSuccessMessage('Пароль успешно изменен');
+            setSuccessMessage('');
+            // Показываем toast для каждого измененного поля
+            if (user.name !== name) toast.success('ФИО успешно изменено!');
+            if (user.login !== login) toast.success('Логин успешно изменён!');
+            if (user.telephone !== telephone) toast.success('Телефон успешно изменён!');
+            if (user.email !== email) toast.success('Email успешно изменён!');
+            if (currentPassword && newPassword) toast.success('Пароль успешно изменён!');
           } else {
             setErrorMessage(response.data.message || 'Ошибка при обновлении данных пользователя');
             setSuccessMessage('');
+            toast.error(response.data.message || 'Ошибка при обновлении данных пользователя');
           }
         })
         .catch(error => {
           if (error.response && error.response.status === 400) {
             setErrorMessage('Текущий пароль неверен');
+            toast.error('Текущий пароль неверен');
           } else {
             setErrorMessage('Ошибка при обновлении данных пользователя');
+            toast.error('Ошибка при обновлении данных пользователя');
           }
           setSuccessMessage('');
-          console.error('Ошибка при обновлении данных пользователя:', error);
         });
     } else {
       setErrorMessage('Все поля должны быть заполнены');
       setSuccessMessage('');
+      toast.error('Все поля должны быть заполнены');
     }
   };
 
@@ -120,6 +129,7 @@ const EditPersonalData = () => {
 
   return (
     <div className="edit-personal-data-container">
+      <ToastContainer position="top-center" autoClose={3000} />
       <h2>Редактирование личных данных</h2>
       <button className="back-button" onClick={handleBackClick}>Вернуться на главную</button>
       {errorMessage && <div className="error-message">{errorMessage}</div>}
