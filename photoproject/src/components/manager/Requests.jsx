@@ -161,7 +161,18 @@ const Requests = () => {
 
   const handleEditStudio = (booking) => setEditingStudio({ ...booking });
   const handleStudioChange = (e) => {
-    setEditingStudio({ ...editingStudio, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    // Если меняется студия — автоматически подставляем адрес
+    if (name === "studio_name") {
+      const studioObj = studiosList.find(s => s.studio === value);
+      setEditingStudio({
+        ...editingStudio,
+        studio_name: value,
+        address: studioObj ? studioObj.address : ''
+      });
+    } else {
+      setEditingStudio({ ...editingStudio, [name]: value });
+    }
   };
   const handleSaveStudio = async () => {
     try {
