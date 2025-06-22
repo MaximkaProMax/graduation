@@ -89,7 +89,7 @@ function Login({ setIsAuthenticated }) {
           <button type="submit">Войти</button>
           {isTwoFactorRequired && (
             <div className="input-group">
-              <label>Код 2FA</label>
+              <label>Код подтверждения</label>
               <input
                 type="text"
                 value={twoFactorCode}

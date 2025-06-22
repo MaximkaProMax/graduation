@@ -124,7 +124,8 @@ const Reviews = () => {
               <th>Отзыв</th>
               <th>Студия</th>
               <th>Типография</th>
-              {isAuthenticated && <th>Действие</th>}
+              {/* Показываем "Действие" только если есть хотя бы один отзыв, который пользователь может удалить */}
+              {isAuthenticated && reviews.some(r => currentUserId && r.user_id === currentUserId) && <th>Действие</th>}
             </tr>
           </thead>
           <tbody>
@@ -135,9 +136,9 @@ const Reviews = () => {
                 <td>{review.comment || 'Не указано'}</td>
                 <td>{review.photostudio || 'Не указано'}</td>
                 <td>{review.printing || 'Не указано'}</td>
-                {isAuthenticated && (
+                {/* Показываем кнопку "Удалить" только если это отзыв текущего пользователя */}
+                {isAuthenticated && reviews.some(r => currentUserId && r.user_id === currentUserId) && (
                   <td>
-                    {/* Кнопка "Удалить" только для владельца */}
                     {currentUserId && review.user_id === currentUserId && (
                       <button
                         onClick={() => handleDelete(review.review_id)}
