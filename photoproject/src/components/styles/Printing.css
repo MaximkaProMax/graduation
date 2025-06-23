@@ -1,0 +1,529 @@
+/* src/components/Printing.css */
+
+.printing {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 36px 32px 36px 32px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 4px 24px rgba(34, 63, 74, 0.10), 0 1.5px 4px rgba(245,185,30,0.07);
+  box-sizing: border-box;
+  font-family: 'Montserrat', Arial, sans-serif;
+}
+
+.main-content {
+  text-align: center;
+}
+
+.printing h2 {
+  text-align: center;
+  margin-bottom: 28px;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: #223F4A;
+  letter-spacing: 0.5px;
+}
+
+.printing-list {
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
+  width: 100%;
+  box-sizing: border-box;
+  align-items: center;
+}
+
+.printing-row {
+  display: flex;
+  flex-direction: row;
+  gap: 36px;
+  justify-content: center;
+  width: 100%;
+  max-width: 900px;
+}
+
+.printing-card {
+  background-color: #fff;
+  border: 1.5px solid #ececec;
+  border-radius: 12px;
+  width: 100%;
+  max-width: 490px;
+  min-width: 220px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Кнопка всегда внизу */
+  transition: box-shadow 0.2s, border 0.2s;
+  box-sizing: border-box;
+  overflow: hidden;
+  height: 100%; /* Для выравнивания по высоте */
+  min-height: 570px; /* Минимальная высота для одинаковых карточек */
+}
+
+.printing-card.modern,
+.printing-card.modern:hover {
+  background: #fff;
+  border-radius: 18px !important;
+  box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: box-shadow 0.18s !important;
+  border: none !important;
+  min-width: 260px;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+  padding: 0 !important;
+  outline: none !important;
+}
+
+.printing-card.modern:hover,
+.printing-card.modern:focus,
+.printing-card.modern:active {
+  box-shadow: 0 8px 32px rgba(245,185,30,0.18), 0 2px 8px rgba(245,185,30,0.13) !important;
+}
+
+.printing-card:hover {
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+  border: 1.5px solid #f5b91e;
+}
+
+.printing-image {
+  width: 100%;
+  display: block;
+  background-position: center;
+  background-size: cover;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  min-height: 270px;
+  height: 270px;
+  max-height: 270px;
+  transition: height 0.2s;
+  flex-shrink: 0;
+}
+
+.printing-image.layflat {
+  background-image: url('/src/components/assets/images/Printing/LayFlat.jpg');
+}
+
+.printing-image.flexbind {
+  background-image: url('/src/components/assets/images/Printing/FlexBind.jpg');
+}
+
+.printing-info {
+  padding: 22px 22px 18px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: transparent;
+  flex: 1 1 auto;
+}
+
+.printing-main-info h3 {
+  margin: 0 0 4px 0;
+  font-size: 1.35rem;
+  color: #C17900;
+  font-weight: 700;
+  text-align: left;
+  line-height: 1.2;
+}
+
+.printing-description {
+  color: #223F4A;
+  font-size: 1.02rem;
+  margin-bottom: 0;
+  text-align: left;
+  opacity: 0.85;
+}
+
+.printing-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 1.05rem;
+  margin: 8px 0 0 0;
+}
+
+.printing-formats {
+  color: #222; /* было #888, теперь чёрный */
+  font-size: 0.98rem;
+  font-weight: bold;
+}
+
+.printing-price {
+  color: #222;
+  font-weight: 600;
+  font-size: 1.08rem;
+  background: #FFF7E0;
+  border-radius: 7px;
+  padding: 4px 12px;
+  margin-left: 8px;
+}
+
+.action-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  margin-top: auto; /* Прижимаем к низу карточки */
+  gap: 10px;
+  min-height: 56px; /* Минимальная высота для выравнивания кнопок */
+}
+
+.action-container.modern {
+  margin-top: 18px;
+  padding: 0;
+}
+
+.action-inner-grid {
+  display: grid;
+  grid-template-columns: 1fr 48px;
+  align-items: center;
+  width: 100%;
+  min-width: 0;
+  gap: 0 8px;
+  padding: 0 4px;
+}
+
+.order-button {
+  width: 70%; /* Уменьшена ширина кнопки */
+  background-color: #F0BB29;
+  border: none;
+  padding: 10px 24px;
+  cursor: pointer;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #fff;
+  transition: background 0.2s;
+  margin-right: 0;
+}
+
+.order-button.modern {
+  width: 100%;
+  background: #F0BB29 !important;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 12px 0; /* Увеличили отступы для большей кнопки */
+  font-size: 1.08rem; /* Увеличили размер шрифта */
+  font-weight: 700; /* Сделали текст жирным */
+  cursor: pointer;
+  transition: background 0.2s, box-shadow 0.2s;
+  box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+  margin: 0;
+  display: block;
+  min-width: 0;
+  max-width: none;
+}
+
+.order-button:hover {
+  background-color: #e0aa1e;
+}
+
+.order-button.modern:hover {
+  background: #e0aa1e !important;
+  box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+}
+
+.favorite-icon {
+  cursor: pointer;
+  font-size: 22px;
+  color: #bbb;
+  margin-left: auto; /* Иконка выровнена по правому краю */
+  transition: color 0.2s;
+  position: static;
+}
+
+.favorite-icon.modern {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  height: 48px;
+  width: 48px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.favorite-icon.modern img {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+/* Уникальные стили для страницы типографии */
+.printing-action-inner-grid {
+  display: grid;
+  grid-template-columns: 1fr auto; /* Кнопка и сердце на одной линии */
+  align-items: center; /* Выравнивание по вертикали */
+  gap: 0 12px; /* Увеличили gap для лучшего визуального восприятия */
+  padding: 0 4px;
+}
+
+.printing-favorяite-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 40px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0; /* Убрали лишние отступы */
+}
+
+.printing-favorite-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  width: 48px;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  margin: 0;
+}
+
+.printing-favorite-icon img {
+  width: 32px;
+  height: 32px;
+  display: block;
+}
+
+.printing-favorite-icon.favorite img {
+  /* Убираем drop-shadow */
+  filter: none;
+}
+
+.printing-favorite-icon:hover img {
+  /* Убираем drop-shadow при наведении */
+  filter: brightness(1.1);
+}
+
+@media (min-width: 769px) and (max-width: 1199px) {
+  .printing-list {
+    justify-content: center;
+  }
+  .printing-card {
+    flex: 0 1 calc(50% - 12px);
+    max-width: 490px;
+    min-width: 320px;
+    box-sizing: border-box;
+  }
+}
+
+@media (max-width: 900px) {
+  .printing {
+    max-width: 98vw;
+    padding: 18px 6vw 18px 6vw;
+  }
+  .printing-list {
+    flex-direction: column;
+    align-items: center;
+    gap: 18px;
+  }
+  .printing-row {
+    flex-direction: column;
+    gap: 18px;
+    max-width: 100%;
+    width: 100%;
+    align-items: center;
+  }
+  .printing-card,
+  .printing-card.modern {
+    width: 100% !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin-bottom: 18px;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+    padding: 0 !important;
+    min-height: 320px;
+    margin-left: auto;
+    margin-right: auto;
+    background: #fff;
+  }
+  .printing-image {
+    width: 100%;
+    min-height: 180px;
+    max-height: 220px;
+    height: 180px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+  }
+  .printing-info {
+    padding: 22px 22px 18px 22px;
+    font-size: 1rem;
+  }
+  .order-button.modern {
+    width: 100%;
+    font-size: 1.08rem;
+    padding: 12px 0;
+    min-width: 0;
+    border-radius: 8px;
+  }
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
+  }
+  .printing-details-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    margin: 8px 0 0 0;
+    justify-content: space-between;
+  }
+  .action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0 4px; /* уменьшили горизонтальный gap */
+    padding: 0 4px;
+  }
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
+    justify-self: end;
+    margin-right: 4px; /* Добавлен небольшой отступ справа */
+  }
+}
+
+@media (max-width: 600px) {
+  .printing {
+    padding: 6px 0 6px 0;
+    border-radius: 0;
+    box-shadow: none;
+    margin-top: 8px !important;
+    margin-bottom: 8px !important;
+  }
+  .printing-list {
+    gap: 10px;
+    width: 100%;
+    padding-left: 3vw;
+    padding-right: 3vw;
+    box-sizing: border-box;
+  }
+  .printing-row {
+    flex-direction: column;
+    gap: 10px;
+    width: 100%;
+    align-items: center;
+    max-width: 100%;
+  }
+  .printing-card,
+  .printing-card.modern {
+    width: 100% !important;
+    max-width: 420px !important;
+    min-width: 0 !important;
+    margin-bottom: 10px;
+    border-radius: 18px !important;
+    padding: 0;
+    min-height: 220px;
+    margin-left: auto;
+    margin-right: auto;
+    box-sizing: border-box;
+    box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+    background: #fff;
+  }
+  .printing-image {
+    width: 100%;
+    min-height: 120px;
+    height: 120px;
+    max-height: 140px;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+  }
+  .printing-info {
+    padding: 14px 10px 14px 10px;
+    font-size: 0.98rem;
+  }
+  .order-button.modern {
+    width: 100%;
+    font-size: 1rem;
+    padding: 10px 0;
+    min-width: 0;
+    border-radius: 8px;
+  }
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
+  }
+  .printing-details-row {
+    flex-direction: row;
+    align-items: center;
+    gap: 0;
+    margin: 8px 0 0 0;
+    justify-content: space-between;
+  }
+  .action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 44px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0 10px; /* Добавлен горизонтальный gap между кнопкой и сердечком */
+    padding: 0 2px;
+  }
+  .printing .favorite-icon.modern {
+    font-size: 2rem;
+    margin-left: 0 !important;
+    align-self: center;
+    justify-self: end;
+    margin-right: 2px; /* Добавлен небольшой отступ справа */
+  }
+}
+
+/* Мобильная версия */
+@media (max-width: 800px) {
+  .printing-action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 44px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0 8px;
+    padding: 0 2px;
+  }
+
+  .order-button.modern {
+    width: 100%;
+    min-width: 0 !important;
+    max-width: none;
+    font-size: 1rem;
+    padding: 10px 0;
+    border-radius: 8px;
+    height: 44px;
+    line-height: 44px;
+    margin: 0;
+  }
+
+  .favorite-icon.modern {
+    height: 44px;
+    width: 44px;
+    font-size: 2rem;
+    align-self: center !important;
+    justify-self: end;
+    margin: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .favorite-icon.modern img {
+    width: 28px;
+    height: 28px;
+  }
+}

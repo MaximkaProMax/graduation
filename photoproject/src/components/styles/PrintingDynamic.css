@@ -1,0 +1,379 @@
+/* --- Основная обертка страницы и layout --- */
+.printing-dynamic,
+.printing-dynamic-page,
+.printing-dynamic-page--responsive {
+  display: flex;
+  flex-direction: column;
+  margin: 40px auto;
+  max-width: 1200px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  padding: 32px;
+  min-height: 600px;
+  box-sizing: border-box;
+}
+
+/* --- Кнопка "Вернуться назад" --- */
+.printing-dynamic-back-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+/* --- Контент карточки: левая и правая части, мобильный стек --- */
+.printing-dynamic-content,
+.printing-dynamic-content--responsive,
+.printing-card-mobile-stack {
+  display: flex;
+  width: 100%;
+  flex-direction: row;
+  gap: 32px;
+}
+
+/* --- Левая и правая секции карточки --- */
+.left-section,
+.left-section--responsive {
+  flex: 1;
+  margin-right: 20px;
+  min-width: 0;
+}
+
+.right-section,
+.right-section--responsive {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  padding-top: 20px;
+  text-align: left;
+  min-width: 0;
+}
+
+/* --- Фото товара (адаптивно) --- */
+.printing-dynamic-image,
+.printing-dynamic-image--responsive {
+  width: 100%;
+  height: 500px;
+  min-height: 220px;
+  max-height: 350px;
+  background-image: url('/src/components/assets/images/Printing/LayFlat_1.jpg');
+  background-position: center;
+  background-size: cover;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  transition: min-height 0.2s, max-height 0.2s;
+}
+.printing-dynamic-image--responsive.printing-dynamic-image--mobile {
+  /* mobile overrides ниже */
+}
+
+/* --- Галерея --- */
+.gallery-container {
+  position: relative;
+  width: 100%;
+  min-height: 220px;
+  max-height: 350px;
+  height: 350px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 18px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #fafafa;
+}
+.gallery-image {
+  width: 100%;
+  height: 350px;
+  min-height: 220px;
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 12px;
+  transition: opacity 0.2s;
+  background: #eee;
+  display: block;
+}
+.gallery-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(34, 34, 34, 0.18);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 38px;
+  height: 38px;
+  font-size: 22px;
+  opacity: 0;
+  cursor: pointer;
+  z-index: 2;
+  transition: opacity 0.2s, background 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+.gallery-arrow-left {
+  left: 12px;
+}
+.gallery-arrow-right {
+  right: 12px;
+}
+.gallery-container:hover .gallery-arrow,
+.gallery-container:focus-within .gallery-arrow {
+  opacity: 1;
+  pointer-events: auto;
+}
+.gallery-arrow:hover {
+  background: rgba(34, 34, 34, 0.32);
+}
+.gallery-dots {
+  position: absolute;
+  bottom: 12px;
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  gap: 7px;
+  z-index: 2;
+}
+.gallery-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #ddd;
+  display: inline-block;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.gallery-dot.active {
+  background: #C17900;
+}
+
+/* --- Описание товара --- */
+.product-description,
+.product-description--responsive {
+  margin-top: 20px;
+  text-align: left;
+  font-size: 16px;
+  margin-bottom: 18px;
+}
+
+/* --- Заголовки --- */
+h2 {
+  margin-top: 0;
+}
+
+/* --- Опции выбора (форматы, ламинация и т.д.) --- */
+.options,
+.options--responsive {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 14px;
+}
+
+.option label {
+  flex: 1;
+}
+
+.option select,
+.option input {
+  flex: 2;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+/* --- Итоговая цена и кнопка бронирования (одинаковая высота и стиль) --- */
+.total-price,
+.total-price.booking-btn-same-height {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: 600;
+  background-color: #C17900;
+  padding: 10px;
+  border-radius: 8px;
+  color: white;
+  margin-bottom: 12px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.booking-btn-same-height {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.booking-button,
+.booking-button.booking-btn-same-height {
+  background: #f0bb29;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+  min-height: 48px;
+  font-weight: 600;
+  font-size: 18px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.booking-button.booking-btn-same-height:hover,
+.booking-button:hover {
+  background: #e6b800;
+}
+
+/* --- Сообщение об ошибке --- */
+.error {
+  color: #e74c3c;
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+/* --- Мобильная адаптация (адаптивные стили) --- */
+@media (max-width: 900px) {
+  .printing-card-mobile-stack {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .printing-dynamic-image--responsive.printing-dynamic-image--mobile {
+    min-height: 160px;
+    max-height: 220px;
+    border-radius: 10px;
+  }
+  .printing-dynamic,
+  .printing-dynamic-content,
+  .printing-dynamic-content--responsive,
+  .printing-card-mobile-stack {
+    flex-direction: column;
+    gap: 18px;
+  }
+  .left-section,
+  .left-section--responsive,
+  .right-section,
+  .right-section--responsive {
+    width: 100%;
+    margin-right: 0;
+    min-width: 0;
+  }
+  .printing-dynamic-image--responsive.printing-dynamic-image--mobile,
+  .printing-dynamic-image.printing-dynamic-image--responsive.printing-dynamic-image--mobile {
+    min-height: 160px;
+    max-height: 220px;
+    border-radius: 10px;
+    height: auto;
+  }
+  .gallery-container,
+  .gallery-image {
+    min-height: 160px;
+    max-height: 220px;
+    height: 220px;
+    border-radius: 10px;
+  }
+}
+
+@media (max-width: 768px) {
+  .printing-dynamic {
+    flex-direction: column;
+    align-items: center;
+  }
+  .left-section,
+  .right-section {
+    width: 100%;
+    margin-right: 0;
+  }
+  .left-section {
+    order: 1;
+  }
+  .product-description {
+    order: 2;
+  }
+  .right-section {
+    order: 3;
+  }
+  .total-price {
+    order: 4;
+    width: 100%;
+  }
+  .option {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .option label,
+  .option select,
+  .option input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .printing-dynamic-page--responsive {
+    padding: 0 2vw;
+  }
+  .printing-card-mobile-stack {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .printing-dynamic-image--responsive.printing-dynamic-image--mobile,
+  .printing-dynamic-image.printing-dynamic-image--responsive.printing-dynamic-image--mobile {
+    min-height: 110px;
+    max-height: 140px;
+    border-radius: 7px;
+    margin-bottom: 8px;
+    height: auto;
+  }
+  .product-description--responsive,
+  .product-description {
+    font-size: 14px;
+    margin-bottom: 10px;
+  }
+  .right-section--responsive h2,
+  .right-section h2 {
+    font-size: 18px;
+  }
+  .options--responsive .option label,
+  .option label {
+    font-size: 14px;
+  }
+  .options--responsive .option input,
+  .options--responsive .option select,
+  .option input,
+  .option select {
+    font-size: 14px;
+    padding: 6px 8px;
+  }
+  .booking-btn-same-height,
+  .booking-button.booking-btn-same-height {
+    min-height: 42px;
+    font-size: 15px;
+    padding: 10px 0;
+  }
+  .gallery-container,
+  .gallery-image {
+    min-height: 110px;
+    max-height: 140px;
+    height: 140px;
+    border-radius: 7px;
+  }
+}
+
+/* --- Конец стилей для PrintingDynamic.jsx --- */

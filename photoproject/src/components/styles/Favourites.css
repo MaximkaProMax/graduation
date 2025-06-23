@@ -1,0 +1,779 @@
+.photostudios {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: white;
+    color: black;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+  }
+  
+  .studio-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  
+  .studio-card {
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 490px;
+    margin-bottom: 20px;
+  }
+  
+  .studio-image {
+    width: 490px;
+    height: 370px;
+    background-position: center;
+    background-size: cover;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+  }
+  
+  .studio-image.replace {
+    background-image: url('/src/components/assets/images/Photostudios/Replace.jpg');
+  }
+  
+  .studio-image.apart {
+    background-image: url('/src/components/assets/images/Photostudios/APART.jpg');
+  }
+  
+  .studio-image.hot-yellow {
+    background-image: url('/src/components/assets/images/Photostudios/Hot Yellow.png');
+  }
+  
+  .studio-image.white-garden {
+    background-image: url('/src/components/assets/images/Photostudios/White Garden.jpeg');
+  }
+  
+  .studio-info {
+    padding: 20px;
+    text-align: center;
+  }
+  
+  .studio-info h3 {
+    margin: 10px 0 5px 0;
+    min-height: 48px;
+    line-height: 1.2;
+  }
+  
+  .studio-info p {
+    margin: 5px 0;
+  }
+  
+  .book-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
+  }
+  
+  .book-button {
+    background-color: #ffeb3b;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-right: 10px;
+    width: 300px; /* фиксированная ширина */
+    min-width: 0;
+  }
+  
+  .favorite-icon {
+    cursor: pointer;
+    font-size: 18px;
+    color: red;
+  }
+  
+  .action-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 24px; /* увеличенный отступ снизу для пространства */
+  }
+  
+  .favorite-icon {
+    position: absolute;
+    top: 50%;
+    right: 10px;
+    transform: translateY(-50%);
+  }
+  
+  .favorite-icon.favorite {
+    color: #ff0000;
+  }
+  
+  .remove-icon {
+    cursor: pointer;
+    font-size: 18px;
+    color: red;
+    margin-left: 10px;
+  }
+  
+  .remove-icon:hover {
+    color: darkred;
+  }
+  
+  .favourites {
+    max-width: 1200px;
+    margin: 40px auto 40px auto; /* Добавлен верхний и нижний отступ */
+    padding: 20px;
+    background: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+  
+  /* Центрирование и отступы для карточек на десктопе */
+  @media (min-width: 769px) and (max-width: 1199px) {
+    .studio-list {
+      justify-content: center;
+    }
+  
+    .studio-card {
+      margin: 10px; /* Добавляем отступы */
+    }
+  }
+  
+  /* Медиа-запросы для мобильной оптимизации */
+  @media (max-width: 768px) {
+    .studio-list {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .studio-card {
+      width: 100%;
+      max-width: 360px; /* Уменьшаем ширину карточки */
+      margin-bottom: 20px;
+    }
+  
+    .studio-image {
+      width: 100%;
+      height: 270px; /* Пропорционально устанавливаем высоту изображений */
+      background-position: center;
+      background-size: cover;
+    }
+  
+    .studio-info {
+      padding: 15px;
+    }
+  
+    .book-button {
+      width: 100%;
+      margin-right: 0;
+    }
+  
+    .favorite-icon {
+      position: static;
+      margin-left: 10px;
+    }
+  }
+
+  .printing-image {
+    width: 100%;
+    display: block;
+    background-position: center;
+    background-size: cover;
+    border-top-left-radius: 12px;
+    border-top-right-radius: 12px;
+    min-height: 270px;
+    height: 270px;
+    max-height: 270px;
+    transition: height 0.2s;
+    flex-shrink: 0;
+  }
+  
+  .printing-image.layflat {
+    background-image: url('/src/components/assets/images/Printing/LayFlat.jpg');
+  }
+  
+  .printing-image.flexbind {
+    background-image: url('/src/components/assets/images/Printing/FlexBind.jpg');
+  }
+  
+  .printing-info {
+    padding: 22px 18px 18px 18px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #222;
+    flex: 1 1 auto;
+    justify-content: flex-start;
+  }
+  
+  .printing-info h3 {
+    margin: 10px 0 5px 0;
+    min-height: 48px;
+    line-height: 1.2;
+    font-size: 1.25rem;
+    color: #C17900;
+    font-weight: 700;
+  }
+  
+  .printing-info p {
+    margin: 5px 0;
+    color: #222;
+    font-size: 1.05rem;
+  }
+
+  .printing-card {
+    background-color: #fff;
+    border: 1.5px solid #ececec;
+    border-radius: 12px;
+    width: 100%;
+    max-width: 490px;
+    min-width: 220px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    transition: box-shadow 0.2s, border 0.2s;
+    box-sizing: border-box;
+    overflow: hidden;
+    height: 100%;
+    min-height: 570px;
+  }
+  
+  .printing-card:hover {
+    box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+    border: 1.5px solid #f5b91e;
+  }
+  
+  .printing-action-container {
+    display: flex;
+    justify-content: center; /* Центрируем кнопку "Заказать" */
+    align-items: center;
+    position: relative;
+    margin-top: auto;
+    gap: 10px;
+    min-height: 56px;
+    margin-bottom: 24px; /* добавлен отступ снизу */
+  }
+  
+  .printing-order-button {
+    background-color: #F0BB29;
+    border: none;
+    padding: 10px 24px;
+    cursor: pointer;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    transition: background 0.2s;
+    width: 300px; /* одинаковая фиксированная ширина */
+    min-width: 0;
+  }
+  
+  .printing-order-button:hover {
+    background-color: #e0aa1e;
+  }
+
+  .favourites-section h3 {
+    margin-top: 20px; /* Добавлен отступ сверху */
+    margin-bottom: 20px; /* Сохраняем отступ снизу */
+  }
+
+  .favourites-items-centered {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+    width: 100%;
+    align-items: center;
+  }
+
+  .favourites-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 36px;
+    justify-content: center;
+    width: 100%;
+    max-width: 900px;
+  }
+
+  .fav-card.studio-card,
+  .fav-card.printing-card {
+    flex: 1 1 380px;
+    max-width: 420px;
+    min-width: 260px;
+    width: 100%;
+    min-height: 570px;
+    height: 570px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+    overflow: hidden;
+    transition: box-shadow 0.18s;
+    border: none;
+    padding: 0;
+  }
+  
+  /* Исправление: убираем любые изменения box-shadow, border, padding, margin, transform, outline на :hover для избранных карточек */
+.fav-card.printing-card,
+.fav-card.studio-card {
+  box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  transition: box-shadow 0.18s;
+}
+
+/* ВОЗВРАЩАЕМ смену цвета тени при наведении */
+.fav-card.studio-card:hover,
+.fav-card.printing-card:hover,
+.fav-card.studio-card:focus,
+.fav-card.printing-card:focus,
+.fav-card.studio-card:active,
+.fav-card.printing-card:active {
+  box-shadow: 0 8px 32px rgba(245,185,30,0.18), 0 2px 8px rgba(245,185,30,0.13);
+  border: none;
+  outline: none;
+  padding: 0;
+  margin: 0;
+  transform: none;
+  transition: box-shadow 0.18s;
+}
+
+  .fav-card.studio-card .studio-image,
+  .fav-card.printing-card .printing-image {
+    width: 100%;
+    min-height: 220px;
+    max-height: 260px;
+    background-position: center;
+    background-size: cover;
+    border-top-left-radius: 18px;
+    border-top-right-radius: 18px;
+    flex-shrink: 0;
+  }
+  
+  .fav-card .studio-info,
+  .fav-card .printing-info {
+    padding: 22px 22px 18px 22px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: transparent;
+    flex: 1 1 auto;
+    width: 100%;
+    justify-content: flex-start;
+  }
+  
+  .fav-card .studio-main-info h3,
+  .fav-card .printing-main-info h3 {
+    margin: 0 0 4px 0;
+    font-size: 1.35rem;
+    color: #C17900;
+    font-weight: 700;
+    text-align: left;
+    line-height: 1.2;
+  }
+  
+  .fav-card .studio-address,
+  .fav-card .studio-hours,
+  .fav-card .studio-price,
+  .fav-card .printing-description,
+  .fav-card .printing-formats,
+  .fav-card .printing-price {
+    margin: 0;
+    color: #223F4A;
+    font-size: 1.05rem;
+    text-align: left;
+  }
+  
+  .fav-card .studio-details-row,
+  .fav-card .printing-details-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 1.05rem;
+    margin: 8px 0 0 0;
+  }
+  
+  .fav-card .printing-price {
+    color: #222;
+    font-weight: 600;
+    font-size: 1.08rem;
+    background: #FFF7E0;
+    border-radius: 7px;
+    padding: 4px 12px;
+    margin-left: 8px;
+  }
+  
+  .fav-card .fav-actions,
+  .fav-card .action-container.modern {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    margin-top: auto;
+    width: 100%;
+    padding: 0 16px 16px 16px;
+  }
+  
+  .fav-card .action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 40px;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 0;
+    padding: 0 4px;
+  }
+  
+  .fav-card .book-button.modern,
+  .fav-card .order-button.modern {
+    background: #f0bb29;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.08rem;
+    padding: 12px 0;
+    width: 100%;
+    border: none;
+    transition: background 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 8px rgba(245,185,30,0.07);
+    cursor: pointer;
+    margin: 0 auto;
+    display: block;
+    min-width: 220px;
+    max-width: 100%;
+    flex-shrink: 0;
+  }
+  
+  .fav-card .book-button.modern:hover,
+  .fav-card .order-button.modern:hover {
+    background: #e0aa1e;
+    box-shadow: 0 4px 16px rgba(245,185,30,0.18);
+  }
+  
+  .fav-card .remove-icon.modern {
+    cursor: pointer;
+    font-size: 1.4rem; /* уменьшили размер крестика */
+    color: #ff3b3b;
+    margin-left: 18px; /* увеличили отступ от кнопки */
+    align-self: center;
+    user-select: none;
+    transition: color 0.2s;
+    line-height: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fav-card .remove-icon.modern:hover {
+    color: #C17900;
+  }
+  
+  /* Одна карточка по центру */
+  .favourites-row > .fav-card:only-child {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  /* Мобильная версия */
+  @media (max-width: 900px) {
+    .favourites-row {
+      flex-direction: column;
+      gap: 24px;
+      align-items: center;
+      max-width: 100vw;
+    }
+    .favourites-row > .fav-card {
+      max-width: 420px;
+      min-width: 260px;
+      width: 100%;
+      margin: 0 auto 18px auto;
+      min-height: 570px;
+      height: 570px;
+      border-radius: 18px;
+      box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+      background: #fff;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      transition: box-shadow 0.18s;
+    }
+    .fav-card .studio-image,
+    .fav-card .printing-image {
+      width: 100%;
+      min-height: 220px;
+      max-height: 260px;
+      height: 220px;
+      border-top-left-radius: 18px;
+      border-top-right-radius: 18px;
+      object-fit: cover;
+    }
+    .fav-card .studio-info,
+    .fav-card .printing-info {
+      padding: 22px 22px 18px 22px;
+      font-size: 1.08rem;
+      gap: 10px;
+    }
+    .fav-card .book-button.modern,
+    .fav-card .order-button.modern {
+      width: 100%;
+      font-size: 1.08rem;
+      padding: 12px 0;
+      min-width: 220px;
+      border-radius: 8px;
+    }
+    .fav-card .remove-icon.modern {
+      font-size: 1.4rem;
+      margin-left: 18px;
+    }
+    .fav-card .action-inner-grid {
+      display: grid !important;
+      grid-template-columns: 1fr 40px;
+      align-items: center;
+      width: 100%;
+      min-width: 0;
+      gap: 0;
+      padding: 0 4px;
+    }
+  }
+
+  /* --- Для очень маленьких экранов: чуть компактнее, но сохраняем ПК-вид --- */
+@media (max-width: 600px) {
+    .favourites-row > .fav-card {
+      max-width: 100%;
+      min-width: 0;
+      border-radius: 14px;
+      margin-bottom: 12px;
+      min-height: 400px;
+      height: auto;
+      padding: 0;
+    }
+    .fav-card .studio-image,
+    .fav-card .printing-image {
+      min-height: 120px;
+      max-height: 180px;
+      height: 120px;
+      border-radius: 14px 14px 0 0;
+      object-fit: cover;
+    }
+    .fav-card .studio-info,
+    .fav-card .printing-info {
+      padding: 10px 6px 8px 6px;
+      font-size: 0.98rem;
+      gap: 7px;
+    }
+    .fav-card .studio-main-info h3,
+    .fav-card .printing-main-info h3 {
+      font-size: 1.08rem;
+    }
+    .fav-card .book-button.modern,
+    .fav-card .order-button.modern {
+      font-size: 0.98rem;
+      padding: 8px 0;
+      border-radius: 7px;
+      min-width: 0;
+    }
+    .fav-card .remove-icon.modern {
+      font-size: 1.1rem;
+      margin-left: 10px;
+    }
+    .fav-card .action-inner-grid {
+      gap: 0;
+      padding: 0 2px;
+    }
+  }
+
+  /* --- Исправление: карточки избранного всегда как на ПК, только одна в ряд на мобильных --- */
+.fav-card.studio-card,
+.fav-card.printing-card {
+  flex: 1 1 380px;
+  max-width: 420px;
+  min-width: 260px;
+  width: 100%;
+  min-height: 570px;
+  height: 570px;
+  background: #fff;
+  border-radius: 18px;
+  box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13);
+  overflow: hidden;
+  transition: box-shadow 0.18s;
+  border: none;
+  padding: 0;
+}
+
+/* Для всех экранов до 1200px — карточки не становятся шире/уже, просто идут друг под другом */
+@media (max-width: 1200px) {
+  .favourites-row > .fav-card {
+    max-width: 420px !important;
+    min-width: 260px !important;
+    width: 100% !important;
+    margin: 0 auto 18px auto !important;
+    min-height: 570px !important;
+    height: 570px !important;
+    border-radius: 18px !important;
+    box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13) !important;
+    background: #fff !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    transition: box-shadow 0.18s !important;
+  }
+  .fav-card .studio-image,
+  .fav-card .printing-image {
+    width: 100% !important;
+    min-height: 220px !important;
+    max-height: 260px !important;
+    height: 220px !important;
+    border-top-left-radius: 18px !important;
+    border-top-right-radius: 18px !important;
+    object-fit: cover !important;
+  }
+  .fav-card .studio-info,
+  .fav-card .printing-info {
+    padding: 22px 22px 18px 22px !important;
+    font-size: 1.08rem !important;
+    gap: 10px !important;
+  }
+  .fav-card .book-button.modern,
+  .fav-card .order-button.modern {
+    width: 100% !important;
+    font-size: 1.08rem !important;
+    padding: 12px 0 !important;
+    min-width: 220px !important;
+    border-radius: 8px !important;
+  }
+  .fav-card .remove-icon.modern {
+    font-size: 1.4rem !important;
+    margin-left: 18px !important;
+  }
+  .fav-card .action-inner-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 40px !important;
+    align-items: center !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    gap: 0 !important;
+    padding: 0 4px !important;
+  }
+}
+
+/* --- Для очень маленьких экранов: сохраняем ПК-вид, только ширина 100% --- */
+@media (max-width: 600px) {
+  .favourites-row > .fav-card {
+    max-width: 420px !important;
+    min-width: 260px !important;
+    width: 100% !important;
+    border-radius: 18px !important;
+    margin-bottom: 12px !important;
+    min-height: 570px !important;
+    height: 570px !important;
+    padding: 0 !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .fav-card .studio-image,
+  .fav-card .printing-image {
+    min-height: 220px !important;
+    max-height: 260px !important;
+    height: 220px !important;
+    border-radius: 18px 18px 0 0 !important;
+    object-fit: cover !important;
+  }
+  .fav-card .studio-info,
+  .fav-card .printing-info {
+    padding: 22px 22px 18px 22px !important;
+    font-size: 1.08rem !important;
+    gap: 10px !important;
+  }
+  .fav-card .studio-main-info h3,
+  .fav-card .printing-main-info h3 {
+    font-size: 1.35rem !important;
+  }
+  .fav-card .book-button.modern,
+  .fav-card .order-button.modern {
+    font-size: 1.08rem !important;
+    padding: 12px 0 !important;
+    border-radius: 8px !important;
+    min-width: 220px !important;
+  }
+  .fav-card .remove-icon.modern {
+    font-size: 1.4rem !important;
+    margin-left: 18px !important;
+  }
+  .fav-card .action-inner-grid {
+    gap: 0 !important;
+    padding: 0 4px !important;
+  }
+}
+
+/* Базовые стили для карточек избранного */
+.fav-card.studio-card,
+.fav-card.printing-card {
+  box-shadow: 0 8px 32px rgba(34, 63, 74, 0.14), 0 2px 8px rgba(245,185,30,0.13) !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transition: box-shadow 0.18s !important;
+  will-change: box-shadow;
+}
+
+/* --- УБИРАЕМ "ПРЫЖКИ" ПРИ НАВЕДЕНИИ ДЛЯ ФОТОСТУДИЙ --- */
+.fav-card.studio-card:hover,
+.fav-card.studio-card:focus,
+.fav-card.studio-card:active {
+  box-shadow: 0 8px 32px rgba(245,185,30,0.18), 0 2px 8px rgba(245,185,30,0.13) !important;
+  border: none !important;
+  outline: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
+  transform: none !important;
+  min-width: 260px !important;
+  max-width: 420px !important;
+  width: 100% !important;
+  min-height: 570px !important;
+  height: 570px !important;
+  box-sizing: border-box !important;
+}
+
+/* --- МОБИЛЬНАЯ ВЕРСИЯ: убираем любые изменения размеров при наведении --- */
+@media (max-width: 900px) {
+  .fav-card.studio-card:hover,
+  .fav-card.studio-card:focus,
+  .fav-card.studio-card:active {
+    box-shadow: 0 8px 32px rgba(245,185,30,0.18), 0 2px 8px rgba(245,185,30,0.13) !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 260px !important;
+    max-width: 420px !important;
+    width: 100% !important;
+    min-height: 570px !important;
+    height: 570px !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+    /* никаких изменений размеров! */
+  }
+}
+
+@media (max-width: 600px) {
+  .fav-card.studio-card:hover,
+  .fav-card.studio-card:focus,
+  .fav-card.studio-card:active {
+    box-shadow: 0 8px 32px rgba(245,185,30,0.18), 0 2px 8px rgba(245,185,30,0.13) !important;
+    border: none !important;
+    outline: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+    min-width: 260px !important;
+    max-width: 420px !important;
+    width: 100% !important;
+    min-height: 570px !important;
+    height: 570px !important;
+    box-sizing: border-box !important;
+    transform: none !important;
+  }
+}

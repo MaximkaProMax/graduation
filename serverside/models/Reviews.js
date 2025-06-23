@@ -1,5 +1,6 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const User = require('./User');
 
 const Review = sequelize.define('Review', {
   reviewId: {
@@ -9,6 +10,10 @@ const Review = sequelize.define('Review', {
   },
   content: {
     type: DataTypes.TEXT,
+    allowNull: false,
+  },
+  rating: {
+    type: DataTypes.ENUM('плохо', 'нормально', 'хорошо', 'очень хорошо', 'отлично'),
     allowNull: false,
   },
   userId: {
@@ -28,5 +33,7 @@ const Review = sequelize.define('Review', {
     defaultValue: DataTypes.NOW,
   },
 });
+
+Review.belongsTo(User, { foreignKey: 'userId', as: 'User' });
 
 module.exports = Review;

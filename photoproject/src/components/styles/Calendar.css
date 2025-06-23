@@ -1,0 +1,296 @@
+.calendar-page {
+  display: flex;
+  justify-content: space-between;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  color: black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  align-items: flex-start;
+}
+
+.left-section,
+.right-section {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.aligned-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.calendar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.month-selection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px; /* Увеличиваем расстояние между элементами */
+  margin-bottom: 20px; /* Добавляем отступ снизу */
+}
+
+.month-selection label {
+  font-weight: bold;
+  margin-right: 5px;
+}
+
+.month-button {
+  background-color: #ffc107;
+  border: none;
+  color: white;
+  font-size: 18px;
+  font-weight: bold;
+  padding: 10px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.month-button:hover {
+  background-color: #e0a800;
+}
+
+.month-year-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.month-select,
+.year-select {
+  padding: 10px;
+  font-size: 16px;
+  border: 2px solid #ffc107;
+  border-radius: 5px;
+  background-color: white;
+  color: black;
+  cursor: pointer;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.month-select:hover,
+.year-select:hover {
+  border-color: #e0a800;
+}
+
+.month-select:focus,
+.year-select:focus {
+  outline: none;
+  border-color: #e0a800;
+  box-shadow: 0 0 5px rgba(224, 168, 0, 0.5);
+}
+
+.calendar {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  justify-content: center;
+}
+
+.day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  margin: 5px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.day.today {
+  border: 2px solid #ffc107;
+  background-color: #fff8e1;
+  color: #000;
+  font-weight: bold;
+}
+
+.day.selected {
+  background-color: #ffc107;
+  color: white;
+  font-weight: bold;
+  border: none;
+}
+
+.day:hover {
+  background-color: #ffe082;
+}
+
+.empty-day {
+  background-color: transparent;
+  cursor: default;
+}
+
+.day-of-week {
+  text-align: center;
+  font-weight: bold;
+}
+
+.booking-form {
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 10px;
+}
+
+.input-group label {
+  margin-bottom: 5px;
+}
+
+.input-group input,
+.input-group select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+button {
+  background-color: #C17900;
+  border: none;
+  padding: 10px;
+  color: white;
+  cursor: pointer;
+  border-radius: 5px;
+  width: 100%;
+  font-size: 16px;
+}
+
+/* Обертка для мобильного стека */
+.calendar-mobile-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+  align-items: stretch; /* Исправление: растягиваем по высоте */
+  justify-content: center; /* Исправление: выравнивание по центру */
+  width: 100%;
+}
+
+@media (max-width: 900px) {
+  .calendar-mobile-stack {
+    flex-direction: column;
+    gap: 18px;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+  .booked-intervals-block {
+    max-width: 95vw;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
+}
+
+@media (max-width: 600px) {
+  .calendar-mobile-stack {
+    flex-direction: column;
+    gap: 10px;
+  }
+  .booked-intervals-block {
+    max-width: 99vw;
+    width: 100%;
+    padding-left: 2vw;
+    padding-right: 2vw;
+    font-size: 15px;
+  }
+}
+
+/* Медиа-запросы для мобильной оптимизации */
+@media (max-width: 768px) {
+  .calendar-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-section,
+  .right-section {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .left-section {
+    order: 1; /* Календарь отображается первым в мобильной версии */
+  }
+
+  .right-section {
+    order: 2; /* Раздел "Добавить бронирование" отображается под календарем */
+  }
+}
+
+/* Стили для блока занятых интервалов */
+.booked-intervals-block {
+  background: #fff8e1;
+  border: 1.5px solid #ffc107;
+  border-radius: 8px;
+  padding: 16px 8px 10px 8px; /* уменьшили отступы слева и справа */
+  margin: 18px auto 0 auto;   /* центрирование по горизонтали */
+  box-shadow: 0 2px 8px rgba(255, 193, 7, 0.08);
+  font-size: 16px;
+  max-width: 320px;           /* чуть меньше ширина */
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.booked-intervals-title {
+  font-weight: 600;
+  color: #b00;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 17px;
+  justify-content: center; /* Центрирование текста и иконки */
+}
+
+.booked-intervals-title .intervals-icon {
+  font-size: 20px;
+  color: #C17900;
+}
+
+.booked-intervals-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Центрирование элементов списка */
+}
+
+.booked-intervals-list li {
+  padding: 4px 0 4px 0;
+  color: #333;
+  font-weight: 500;
+  border-bottom: 1px dashed #ffe082;
+  font-size: 15px;
+  width: 100%;
+  text-align: center; /* Центрирование текста интервала */
+}
+
+.booked-intervals-list li:last-child {
+  border-bottom: none;
+}

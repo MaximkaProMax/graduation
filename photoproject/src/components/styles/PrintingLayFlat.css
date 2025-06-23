@@ -1,0 +1,231 @@
+.printing-layflat {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start; /* Выровняем элементы по верхнему краю */
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: white;
+  color: black;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+}
+
+.printing-layflat-page {
+  margin: 40px auto;
+  max-width: 1200px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+  padding: 32px;
+  min-height: 600px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.printing-layflat-back-btn-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.printing-layflat-content {
+  display: flex;
+  width: 100%;
+}
+
+.left-section {
+  flex: 1;
+  margin-right: 20px;
+}
+
+.layflat-image {
+  width: 100%;
+  height: 500px;
+  background-image: url('/src/components/assets/images/Printing/LayFlat_1.jpg'); /* Правильный путь */
+  background-position: center;
+  background-size: cover;
+  border-radius: 5px;
+  margin-bottom: 20px;
+}
+
+.layflat-image--responsive {
+  width: 100%;
+  min-height: 220px;
+  max-height: 350px;
+  background-size: cover;
+  background-position: center;
+  border-radius: 12px;
+  margin-bottom: 18px;
+  transition: min-height 0.2s, max-height 0.2s;
+}
+
+.product-description {
+  margin-top: 20px;
+  text-align: left; /* Центрирование по левому краю */
+}
+
+.right-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* Центрирование по верхнему краю */
+  padding-top: 20px; /* Обеспечиваем, чтобы блок параметров начинался на одной высоте с картинкой */
+  text-align: left; /* Центрирование по левому краю */
+}
+
+h2 {
+  margin-top: 0;
+}
+
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.option {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.option label {
+  flex: 1;
+}
+
+.option select,
+.option input {
+  flex: 2;
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
+
+.total-price {
+  text-align: center; /* Центрирование по центру */
+  margin-top: 20px;
+  font-size: 18px;
+  font-weight: bold;
+  background-color: #C17900; /* Цвет прямоугольника */
+  padding: 10px;
+  border-radius: 5px;
+  color: white; /* Цвет текста белый */
+}
+
+/* Обертка для мобильного стека */
+.printing-card-mobile-stack {
+  display: flex;
+  flex-direction: row;
+  gap: 32px;
+}
+
+.booking-btn-same-height {
+  min-height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  box-sizing: border-box;
+  font-weight: 600; /* одинаковая жирность */
+  font-size: 18px;
+}
+
+.total-price.booking-btn-same-height {
+  background: #c17900;
+  color: #fff;
+  border-radius: 8px;
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.booking-button.booking-btn-same-height {
+  background: #f0bb29;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+  text-align: center;
+}
+
+.booking-button.booking-btn-same-height:hover {
+  background: #e6b800;
+}
+
+@media (max-width: 768px) {
+  .printing-layflat {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .left-section,
+  .right-section {
+    width: 100%;
+    margin-right: 0;
+  }
+
+  .left-section {
+    order: 1; /* Картинка отображается первой в мобильной версии */
+  }
+
+  .product-description {
+    order: 2; /* Описание товара отображается вторым */
+  }
+
+  .right-section {
+    order: 3; /* Параметры альбома отображаются третьими */
+  }
+
+  .total-price {
+    order: 4; /* Итоговая цена отображается последней */
+    width: 100%;
+  }
+
+  .option {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .option label,
+  .option select,
+  .option input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
+@media (max-width: 900px) {
+  .layflat-image--responsive.layflat-image--mobile {
+    min-height: 160px;
+    max-height: 220px;
+    border-radius: 10px;
+  }
+
+  .printing-card-mobile-stack {
+    flex-direction: column;
+    gap: 18px;
+  }
+}
+
+@media (max-width: 600px) {
+  .layflat-image--responsive.layflat-image--mobile {
+    min-height: 110px;
+    max-height: 140px;
+    border-radius: 7px;
+    margin-bottom: 8px;
+  }
+
+  .printing-card-mobile-stack {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .booking-btn-same-height {
+    min-height: 42px;
+    font-size: 15px;
+    padding: 10px 0;
+  }
+}
