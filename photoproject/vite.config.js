@@ -5,7 +5,8 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000, // Порт для разработки
+    port: 3000,
+    allowedHosts:true, // Порт для разработки
     host: 'localhost', // Настройка хоста (можно изменить на 0.0.0.0 для доступа в локальной сети)
     proxy: {
       '/api': 'http://localhost:3001', // Прокси для API
